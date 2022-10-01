@@ -1,5 +1,9 @@
 {
   "pipeline": {
+    "test": {
+      "dependsOn": ["build"],
+      "inputs": ["**/*.{ts,tsx,js,jsx}"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", ".expo/**"]
