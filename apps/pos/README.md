@@ -1,9 +1,13 @@
 ### About github actions
 
 In order to run github actions correctly one have to add EXPO_TOKEN to github's
-workflows secrets.
+actions secrets.
 
 # About setting up eas to build and publish app
+
+Dependencies required:
+
+- expo-dev-client
 
 Steps:
 
