@@ -1,0 +1,16 @@
+version: '3.1'
+
+volumes:
+  dabase:
+    driver: local
+
+services:
+  postgres:
+    platform: linux/amd64
+    image: postgres:14
+    container_name: iomis_postgres
+    restart: always
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: dev_only

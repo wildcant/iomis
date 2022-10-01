@@ -1,0 +1,26 @@
+name: preview
+
+on: workflow_dispatch
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Setup repository
+        uses: actions/checkout@v3
+
+      - name: 🏗 Setup monorepo
+        uses: ./.github/actions/setup-monorepo
+        with:
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 👷 Build packages
+        run: pnpm run -w build
+
+      - name: 🚀 Publish preview
+        working-directory: apps/mobile
+        run: eas update --branch=main --message=preview
