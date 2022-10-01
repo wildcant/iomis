@@ -17,5 +17,14 @@
   "devDependencies": {
     "prettier": "latest",
     "turbo": "latest"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@babel/*",
+        "expo-modules-*",
+        "typescript"
+      ]
+    }
   }
 }

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "pos",
-    "slug": "expo",
+    "name": "Restaurante",
+    "slug": "iomis-restaurant-pos",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,10 +25,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.testing.wc.iomisrestaurantpos"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "97a31ad9-77b4-417d-bbcf-52c124793459"
+      }
     }
   }
 }
