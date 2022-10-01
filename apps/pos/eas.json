@@ -17,9 +17,6 @@
         "buildType": "apk"
       }
     },
-    "preview": {
-      "distribution": "internal"
-    },
     "production": {
       "extends": "monorepo",
       "distribution": "store",
@@ -27,8 +24,5 @@
         "buildType": "app-bundle"
       }
     }
-  },
-  "submit": {
-    "production": {}
   }
 }
