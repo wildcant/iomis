@@ -16,7 +16,7 @@ if (process.env.APP_ENV === 'production') {
 export default {
   expo: {
     name: 'Restaurante',
-    slug: 'iomis-restaurant-pos',
+    slug: 'restaurant',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
@@ -29,7 +29,7 @@ export default {
     },
     updates: {
       fallbackToCacheTimeout: 0,
-      url: 'https://u.expo.dev/97a31ad9-77b4-417d-bbcf-52c124793459',
+      url: 'https://u.expo.dev/f8ff43c4-1cbd-49d0-aea3-477bcb5a2651',
     },
     assetBundlePatterns: ['**/*'],
     ios: {
@@ -49,7 +49,7 @@ export default {
     },
     extra: {
       eas: {
-        projectId: '97a31ad9-77b4-417d-bbcf-52c124793459',
+        projectId: 'f8ff43c4-1cbd-49d0-aea3-477bcb5a2651',
       },
       ...Config,
     },

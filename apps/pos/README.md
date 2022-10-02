@@ -38,3 +38,12 @@ cache is then reused when publishing previews.
 [Environment variables in Expo](https://docs.expo.dev/guides/environment-variables/)
 
 ## Development Mode Tips -> [Docs](https://docs.expo.dev/build-reference/variables/)
+
+## EAS Update
+
+If an update makes a change to the native layer then it won't be compatible with an
+existing build, therefore we won't be able to run it in expo go.
+
+In order to run it again we'll need to make another build.
+
+[Runtime versions and updates](https://docs.expo.dev/eas-update/runtime-versions/)
