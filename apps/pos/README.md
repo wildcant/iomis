@@ -8,6 +8,9 @@ actions secrets.
 Dependencies required:
 
 - expo-dev-client
+  In order to build, expo-dev-client needs to be installed
+- expo-updates
+  In order to publish an update, expo-updates needs to be installed
 
 Steps:
 

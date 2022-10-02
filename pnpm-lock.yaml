@@ -77,6 +77,7 @@ importers:
       expo: ~46.0.10
       expo-dev-client: ^1.2.1
       expo-status-bar: ~1.4.0
+      expo-updates: ^0.14.6
       jest: ^27.0.0
       jest-expo: ^46.0.1
       nativewind: ^2.0.5
@@ -98,6 +99,7 @@ importers:
       expo: 46.0.13_@babel+core@7.19.3
       expo-dev-client: 1.2.1_expo@46.0.13
       expo-status-bar: 1.4.0
+      expo-updates: 0.14.6_expo@46.0.13
       nativewind: 2.0.11_6kr4mtdt3bvcjmnwlephhdmsee
       react: 18.0.0
       react-dom: 18.0.0_react@18.0.0
@@ -5199,6 +5201,10 @@ packages:
       - supports-color
     dev: false
 
+  /expo-eas-client/0.3.0:
+    resolution: {integrity: sha512-dBD00lJ629ayh5abbmgn6I1Z5NOaWM1iea2ODLd/EF1ZcS1P3yiPm6blpvL/tD+uewL8gxxmla/Ac+SiDdYAYA==}
+    dev: false
+
   /expo-error-recovery/3.2.0_expo@46.0.13:
     resolution: {integrity: sha512-XZ630ks5HNxa9oc2Ya1hEn1ez031Cy4VnyxerPC2o9fKNKSrD/64cRqGF9NkGM3X2uf8+PCB9adxVflAIXBf6w==}
     requiresBuild: true
@@ -5270,12 +5276,40 @@ packages:
     resolution: {integrity: sha512-vh98g8qMIjig/2XTBsoAWS6Vo2dIIwDWjB3/GiuZ9Lazpxc9GO/APfJ4dar7MibzIDUKIrjotrcL6rLdPH13Ew==}
     dev: false
 
+  /expo-structured-headers/2.2.1:
+    resolution: {integrity: sha512-nY6GuvoS/U5XdhfBNmvXGRoGzIXywXpSZs2wdiP+FbS79P9UWyEqzgARrBTF+6pQxUVMs6/vdffxRpwhjwYPug==}
+    dev: false
+
   /expo-updates-interface/0.7.0_expo@46.0.13:
     resolution: {integrity: sha512-saThnbrYDSjKxfMFFguAvh5o5KGabvAOHItkJRwq2L3c0T/3q26Q0kM83880h/+TTtAVsl1+Vhny9d+ImD3yvQ==}
     peerDependencies:
       expo: '*'
     dependencies:
       expo: 46.0.13_@babel+core@7.19.3
+    dev: false
+
+  /expo-updates/0.14.6_expo@46.0.13:
+    resolution: {integrity: sha512-JmE3nsbL8cUAV2slhIqqNIG+jEYCJJvPzSYcUBd15s0sg0xxRbasNaEfnSIrYtZMjhl/YNwMgQzUkU6C2NtXyg==}
+    hasBin: true
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      '@expo/code-signing-certificates': 0.0.2
+      '@expo/config': 7.0.1
+      '@expo/config-plugins': 5.0.1
+      '@expo/metro-config': 0.4.0
+      arg: 4.1.0
+      expo: 46.0.13_@babel+core@7.19.3
+      expo-eas-client: 0.3.0
+      expo-manifests: 0.3.1
+      expo-structured-headers: 2.2.1
+      expo-updates-interface: 0.7.0_expo@46.0.13
+      fbemitter: 3.0.0
+      resolve-from: 5.0.0
+      uuid: 3.4.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
     dev: false
 
   /expo/46.0.13_@babel+core@7.19.3:
