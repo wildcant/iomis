@@ -5,26 +5,26 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native'
-import {FlashList} from '@shopify/flash-list'
-import type {inferProcedureOutput} from '@trpc/server'
-import type {AppRouter} from '@iomis/api'
-import {trpc} from '../utils/trpc'
+import { FlashList } from '@shopify/flash-list'
+import type { inferProcedureOutput } from '@trpc/server'
+import type { AppRouter } from '@iomis/api'
+import { trpc } from '../utils/trpc'
 import React from 'react'
 
 const PostCard: React.FC<{
   post: inferProcedureOutput<AppRouter['post']['all']>[number]
-}> = ({post}) => {
+}> = ({ post }) => {
   return (
-    <View className="p-4 border-2 border-gray-500 rounded-lg">
-      <Text className="text-xl font-semibold text-gray-800">{post.title}</Text>
-      <Text className="text-gray-600">{post.content}</Text>
+    <View className='p-4 border-2 border-gray-500 rounded-lg'>
+      <Text className='text-xl font-semibold text-gray-800'>{post.title}</Text>
+      <Text className='text-gray-600'>{post.content}</Text>
     </View>
   )
 }
 
 const CreatePost: React.FC = () => {
   const utils = trpc.useContext()
-  const {mutate} = trpc.post.create.useMutation({
+  const { mutate } = trpc.post.create.useMutation({
     async onSuccess() {
       await utils.post.all.invalidate()
     },
@@ -34,19 +34,19 @@ const CreatePost: React.FC = () => {
   const [content, onChangeContent] = React.useState('')
 
   return (
-    <View className="p-4 border-t-2 border-gray-500 flex flex-col">
+    <View className='p-4 border-t-2 border-gray-500 flex flex-col'>
       <TextInput
-        className="border-2 border-gray-500 rounded p-2 mb-2"
+        className='border-2 border-gray-500 rounded p-2 mb-2'
         onChangeText={onChangeTitle}
-        placeholder="Title"
+        placeholder='Title'
       />
       <TextInput
-        className="border-2 border-gray-500 rounded p-2 mb-2"
+        className='border-2 border-gray-500 rounded p-2 mb-2'
         onChangeText={onChangeContent}
-        placeholder="Content"
+        placeholder='Content'
       />
       <TouchableOpacity
-        className="bg-indigo-500 rounded p-2"
+        className='bg-indigo-500 rounded p-2'
         onPress={() => {
           mutate({
             title,
@@ -54,7 +54,7 @@ const CreatePost: React.FC = () => {
           })
         }}
       >
-        <Text className="text-white font-semibold">Publish post</Text>
+        <Text className='text-white font-semibold'>Publish post</Text>
       </TouchableOpacity>
     </View>
   )
@@ -66,27 +66,27 @@ export const HomeScreen = () => {
 
   return (
     <SafeAreaView>
-      <View className="h-full w-full p-4">
-        <Text className="text-5xl font-bold mx-auto pb-2">
-          Create <Text className="text-indigo-500">T3</Text> Turbo
+      <View className='h-full w-full p-4'>
+        <Text className='text-5xl font-bold mx-auto pb-2'>
+          Lista de compras
         </Text>
 
-        <View className="py-2">
+        <View className='py-2'>
           {showPost ? (
             <Text>
-              <Text className="font-semibold">Selected post:</Text>
+              <Text className='font-semibold'>Selected post:</Text>
               {showPost}
             </Text>
           ) : (
-            <Text className="italic font-semibold">Press on a post</Text>
+            <Text className='italic font-semibold'>Press on a post</Text>
           )}
         </View>
 
         <FlashList
           data={postQuery.data}
           estimatedItemSize={20}
-          ItemSeparatorComponent={() => <View className="h-2" />}
-          renderItem={p => (
+          ItemSeparatorComponent={() => <View className='h-2' />}
+          renderItem={(p) => (
             <TouchableOpacity onPress={() => setShowPost(p.item.id)}>
               <PostCard post={p.item} />
             </TouchableOpacity>

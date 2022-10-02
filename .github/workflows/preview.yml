@@ -24,9 +24,3 @@ jobs:
       - name: 🚀 Publish preview
         working-directory: apps/pos
         run: expo publish --release-channel=staging
-
-      - name: 💬 Comment preview
-        uses: expo/expo-github-action/preview-comment@v7
-        with:
-          project: apps/pos
-          channel: preview-${{ github.event.number }}
