@@ -1,15 +1,16 @@
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-} from 'react-native'
+import type { AppRouter } from '@iomis/api'
 import { FlashList } from '@shopify/flash-list'
 import type { inferProcedureOutput } from '@trpc/server'
-import type { AppRouter } from '@iomis/api'
-import { trpc } from '../utils/trpc'
 import React from 'react'
+import {
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+
+import { trpc } from '../utils/trpc'
 
 const PostCard: React.FC<{
   post: inferProcedureOutput<AppRouter['post']['all']>[number]

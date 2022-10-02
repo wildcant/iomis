@@ -5,7 +5,8 @@
       "inputs": ["**/*.{ts,tsx,js,jsx}"]
     },
     "build": {
-      "dependsOn": ["^build"],
+      "env": ["VERCEL_URL", "PORT"],
+      "dependsOn": ["^build", "$VERCEL_URL", "$PORT"],
       "outputs": [".next/**", ".expo/**"]
     },
     "lint": {

@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm ios",
+    "lint": "eslint --ext js,ts,tsx .",
     "start": "expo start",
     "test": "jest",
     "build": "expo export --output-dir ./build --platform all",
@@ -34,10 +35,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.1",
+    "@iomis/eslint-config": "*",
     "@testing-library/react-native": "11.0.0",
     "@types/jest": "^27.0.0",
     "@types/react": "^18.0.21",
     "@types/react-native": "~0.69.6",
+    "eslint": "^8.24.0",
+    "eslint-config-universe": "^11.1.0",
     "jest": "^27.0.0",
     "jest-expo": "^46.0.1",
     "react-test-renderer": "18.0.0",
@@ -49,6 +53,19 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/build/"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "@iomis/eslint-config",
+      "eslint-config-universe"
+    ],
+    "ignorePatterns": [
+      ".expo-shared",
+      ".turbo",
+      "assets",
+      "build",
+      "node_modules"
     ]
   }
 }

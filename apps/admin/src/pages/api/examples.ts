@@ -1,5 +1,5 @@
-import type {NextApiRequest, NextApiResponse} from 'next'
-import {prisma} from '@iomis/db'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { prisma } from '@iomis/db'
 
 const examples = async (req: NextApiRequest, res: NextApiResponse) => {
   const posts = await prisma.post.findMany()

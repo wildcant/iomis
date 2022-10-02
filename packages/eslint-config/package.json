@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "name": "@iomis/eslint-config",
+  "version": "1.0.0",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "lint": "eslint --ext js,ts,tsx ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "eslint": "^8.0.1",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "typescript": "*",
+    "eslint-config-turbo": "latest"
+  },
+  "eslintConfig": {
+    "extends": "."
+  }
+}

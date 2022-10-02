@@ -11,6 +11,9 @@
       }
     },
     "development": {
+      "env": {
+        "API_URL": "https://iomis-pos-restaurant-admin-8a11tbb4r-cwirl.vercel.app"
+      },
       "extends": "monorepo",
       "distribution": "internal",
       "android": {
@@ -18,6 +21,9 @@
       }
     },
     "production": {
+      "env": {
+        "API_URL": "https://iomis-pos-restaurant-admin-8a11tbb4r-cwirl.vercel.app"
+      },
       "extends": "monorepo",
       "distribution": "store",
       "android": {

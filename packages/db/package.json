@@ -7,13 +7,28 @@
   "scripts": {
     "dev": "prisma studio --port 5556",
     "db-push": "prisma db push",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "seed": "tsx seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.3.1"
   },
   "devDependencies": {
+    "@iomis/eslint-config": "*",
+    "@faker-js/faker": "^7.5.0",
+    "@types/lodash": "^4.14.186",
+    "eslint": "8.22.0",
+    "lodash": "^4.17.21",
     "prisma": "^4.3.1",
+    "tsx": "^3.9.0",
     "typescript": "^4.8.3"
+  },
+  "eslintConfig": {
+    "extends": "@iomis/eslint-config",
+    "ignorePatterns": [
+      "node_modules",
+      ".next",
+      ".turbo"
+    ]
   }
 }
