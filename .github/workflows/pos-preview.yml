@@ -22,11 +22,5 @@ jobs:
         run: pnpm run -w build
 
       - name: 🚀 Publish preview
-        working-directory: apps/pos
-        run: expo publish --release-channel=staging
-
-      - name: 💬 Comment preview
-        uses: expo/expo-github-action/preview-comment@v7
-        with:
-          project: apps/pos
-          channel: pr-${{ github.event.number }}
+        working-directory: apps/mobile
+        run: eas update --branch=main --message=preview

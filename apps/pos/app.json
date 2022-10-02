@@ -13,9 +13,12 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/97a31ad9-77b4-417d-bbcf-52c124793459"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "bundleIdentifier": "com.testing.wc.iomisrestaurantpos",
       "buildNumber": "1.0.0",
@@ -35,6 +38,9 @@
       "eas": {
         "projectId": "97a31ad9-77b4-417d-bbcf-52c124793459"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }
