@@ -31,3 +31,10 @@ cache is then reused when publishing previews.
 ### Useful Links
 
 - https://docs.expo.dev/build/setup/
+
+## About Environment variables
+
+[Environment variables and secrets](https://docs.expo.dev/build-reference/variables/)
+[Environment variables in Expo](https://docs.expo.dev/guides/environment-variables/)
+
+## Development Mode Tips -> [Docs](https://docs.expo.dev/build-reference/variables/)

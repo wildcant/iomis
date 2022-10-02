@@ -31,5 +31,7 @@ module.exports = {
     'no-console': 'warn',
     'import/order': 'off',
     '@typescript-eslint/triple-slash-reference': 'off',
+    // TODO: Double check docs on env vars effect in turbo cache
+    'turbo/no-undeclared-env-vars': 'off',
   },
 }

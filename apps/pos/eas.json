@@ -1,6 +1,5 @@
 {
   "cli": {
-    "version": ">= 2.1.0",
     "promptToConfigurePushNotifications": false
   },
   "build": {
@@ -11,8 +10,9 @@
       }
     },
     "development": {
+      "channel": "staging",
       "env": {
-        "API_URL": "https://iomis-pos-restaurant-admin-8a11tbb4r-cwirl.vercel.app"
+        "APP_ENV": "staging"
       },
       "extends": "monorepo",
       "distribution": "internal",
@@ -21,8 +21,9 @@
       }
     },
     "production": {
+      "channel": "production",
       "env": {
-        "API_URL": "https://iomis-pos-restaurant-admin-8a11tbb4r-cwirl.vercel.app"
+        "APP_ENV": "production"
       },
       "extends": "monorepo",
       "distribution": "store",

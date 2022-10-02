@@ -4,9 +4,10 @@
   "main": "src/_app.tsx",
   "private": true,
   "scripts": {
-    "dev": "pnpm ios",
+    "dev": "pnpm start",
     "lint": "eslint --ext js,ts,tsx .",
     "start": "expo start",
+    "start:prod": "expo start --no-dev --minify",
     "test": "jest",
     "build": "expo export --output-dir ./build --platform all",
     "android": "expo start --android",
@@ -67,6 +68,9 @@
       "assets",
       "build",
       "node_modules"
-    ]
+    ],
+    "rules": {
+      "import/order": "off"
+    }
   }
 }
