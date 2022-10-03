@@ -23,6 +23,8 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'warn',
     'multiline-ternary': 'off',
     '@typescript-eslint/no-misused-promises': 'off',
+    '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/promise-function-async': 'off',
     indent: 'off',
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/consistent-type-definitions': 'off',
@@ -33,5 +35,8 @@ module.exports = {
     '@typescript-eslint/triple-slash-reference': 'off',
     // TODO: Double check docs on env vars effect in turbo cache
     'turbo/no-undeclared-env-vars': 'off',
+    'no-return-await': 'off',
+    '@typescript-eslint/return-await': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'off',
   },
 }

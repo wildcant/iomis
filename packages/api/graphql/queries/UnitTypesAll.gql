@@ -1,0 +1,10 @@
+query UnitTypesAll {
+  unitTypesAll {
+    id
+    name
+    deleted
+    ingredients {
+      id
+    }
+  }
+}

@@ -4,16 +4,13 @@ import React from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import { HomeScreen } from './screens/home'
-import { TRPCProvider } from './utils/trpc'
 
 const App = () => {
   return (
-    <TRPCProvider>
-      <SafeAreaProvider>
-        <HomeScreen />
-        <StatusBar />
-      </SafeAreaProvider>
-    </TRPCProvider>
+    <SafeAreaProvider>
+      <HomeScreen />
+      <StatusBar />
+    </SafeAreaProvider>
   )
 }
 

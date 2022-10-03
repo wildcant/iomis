@@ -1,0 +1,134 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Post {
+    id      String @id @default(cuid())
+    title   String
+    content String
+}
+
+model Company {
+    id          String     @id @default(uuid()) @db.Uuid
+    deleted     Boolean    @default(false)
+    logo        String     @db.VarChar(255)
+    website     String     @db.VarChar(255)
+    phone       String     @db.VarChar(255)
+    street      String     @db.VarChar(255)
+    street2     String     @db.VarChar(255)
+    city        String     @db.VarChar(255)
+    state       String     @db.VarChar(255)
+    zip         String     @db.VarChar(255)
+    contact     Contact[]
+    ingredients Supplier[]
+}
+
+enum EContactType {
+    CONTACT
+    INVOICE
+    DELIVERY
+    OTHER
+    PRIVATE
+}
+
+model Contact {
+    id        String       @id @default(uuid()) @db.Uuid
+    deleted   Boolean      @default(false)
+    type      EContactType @default(CONTACT)
+    companyId String       @db.Uuid
+    company   Company      @relation(fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contact_companyid_foreign")
+}
+
+model Product {
+    id            String              @id @default(uuid()) @db.Uuid
+    deleted       Boolean             @default(false)
+    archived      Boolean             @default(false)
+    barcode       String?             @db.VarChar(255)
+    cost          Float?
+    description   String?             @db.VarChar(255)
+    factoryCode   String?             @db.VarChar(255)
+    forPurchase   Boolean?
+    forSale       Boolean?
+    hasStock      Boolean?
+    image         String?             @db.VarChar(255)
+    name          String              @db.VarChar(255)
+    purchasePrice Float?
+    sku           String?             @db.VarChar(255)
+    subtotal      Float?
+    tags          String[]
+    total         Float?
+    units         Float?
+    weight        Float?
+    categories    ProductCategories[]
+}
+
+model ProductCategories {
+    id         String   @id @default(uuid()) @db.Uuid
+    categoryId String   @db.Uuid
+    productId  String   @db.Uuid
+    category   Category @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "productcategories_categoryid_foreign")
+    product    Product  @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "productcategories_productid_foreign")
+}
+
+model Category {
+    id          String              @id @default(uuid()) @db.Uuid
+    deleted     Boolean             @default(false)
+    name        String              @db.VarChar(255)
+    description String?
+    vat         String?
+    deliveryVat String?
+    takeawayVat String?
+    course      Int?
+    image       String?             @db.VarChar(255)
+    visible     Boolean             @default(false)
+    // printer
+    // printTemplateId String              @db.Uuid
+    // printTemplateIds PrintTemplate[]
+    // printOrder      Int?
+    // notificationTemplateIds NotificationTemplate[]
+    // moddifiers      Modiffier[]
+    // companyId    Company?
+    // type         String?
+    products    ProductCategories[]
+    menus       Menu[]
+}
+
+model Supplier {
+    id           String     @id @default(uuid()) @db.Uuid
+    companyId    String     @db.Uuid
+    ingredientId String     @db.Uuid
+    company      Company    @relation(fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "supplier_companyid_foreign")
+    ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "supplier_productid_foreign")
+}
+
+model Menu {
+    id         String     @id @default(uuid()) @db.Uuid
+    deleted    Boolean    @default(false)
+    name       String     @db.VarChar(255)
+    categories Category[]
+}
+
+model Ingredient {
+    id         String     @id @default(uuid()) @db.Uuid
+    deleted    Boolean    @default(false)
+    name       String     @db.VarChar(255)
+    sku        String     @db.VarChar(255)
+    unitTypeId String     @db.Uuid
+    unitCost   Float?
+    visible    Boolean    @default(false)
+    barcode    String?
+    unitType   UnitType   @relation(fields: [unitTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ingredientunittype_unitypeid_foreign")
+    suppliers  Supplier[]
+}
+
+model UnitType {
+    id         String       @id @default(uuid()) @db.Uuid
+    deleted    Boolean      @default(false)
+    name       String       @db.VarChar(255)
+    Ingredient Ingredient[]
+}

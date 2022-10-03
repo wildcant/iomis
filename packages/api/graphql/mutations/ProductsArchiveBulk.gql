@@ -1,0 +1,5 @@
+mutation ProductsArchiveBulk($query: ArchiveBulk!) {
+  productsArchiveBulk(query: $query) {
+    count
+  }
+}

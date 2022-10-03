@@ -19,10 +19,6 @@
   "dependencies": {
     "@iomis/api": "*",
     "@shopify/flash-list": "1.1.0",
-    "@tanstack/react-query": "^4.7.2",
-    "@trpc/client": "10.0.0-proxy-beta.9",
-    "@trpc/react": "10.0.0-proxy-beta.9",
-    "@trpc/server": "10.0.0-proxy-beta.9",
     "expo": "^46.0.0",
     "expo-dev-client": "~1.2.1",
     "expo-status-bar": "~1.4.0",
@@ -64,10 +60,12 @@
       "eslint-config-universe"
     ],
     "ignorePatterns": [
+      ".expo",
       ".expo-shared",
       ".turbo",
       "assets",
       "build",
+      "dist",
       "node_modules"
     ],
     "rules": {

@@ -1,0 +1,5 @@
+mutation MenuUpdate($id: ID!, $input: MenuUpdateInput!) {
+  menuUpdate(id: $id, input: $input) {
+    id
+  }
+}

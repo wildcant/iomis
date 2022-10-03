@@ -1,0 +1,24 @@
+query Categories($offset: Int, $limit: Int) {
+  categories(offset: $offset, limit: $limit) {
+    nodes {
+      id
+      deleted
+      name
+      description
+      vat
+      deliveryVat
+      takeawayVat
+      course
+      image
+      visible
+      _count {
+        products
+      }
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}

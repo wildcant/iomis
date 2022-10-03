@@ -1,0 +1,5 @@
+mutation IngredientUpdate($id: ID!, $input: IngredientUpdateInput!) {
+  ingredientUpdate(id: $id, input: $input) {
+    id
+  }
+}

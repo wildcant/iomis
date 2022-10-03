@@ -1,0 +1,5 @@
+mutation MenuCreate($input: MenuCreateInput!) {
+  menuCreate(input: $input) {
+    id
+  }
+}

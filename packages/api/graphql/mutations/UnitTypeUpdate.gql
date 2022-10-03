@@ -1,0 +1,5 @@
+mutation UnitTypeUpdate($id: ID!, $input: UnitTypeUpdateInput!) {
+  unitTypeUpdate(id: $id, input: $input) {
+    id
+  }
+}

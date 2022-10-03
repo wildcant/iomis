@@ -1,0 +1,5 @@
+mutation ProductUpdate($id: ID!, $input: ProductUpdateInput!) {
+  productUpdate(id: $id, input: $input) {
+    id
+  }
+}
