@@ -1,0 +1,31 @@
+query Products($offset: Int, $limit: Int, $query: ProductQueryArgs) {
+  products(offset: $offset, limit: $limit, query: $query) {
+    nodes {
+      id
+      deleted
+      archived
+      barcode
+      cost
+      description
+      factoryCode
+      forPurchase
+      forSale
+      hasStock
+      image
+      name
+      purchasePrice
+      sku
+      subtotal
+      tags
+      total
+      units
+      weight
+      categories
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}

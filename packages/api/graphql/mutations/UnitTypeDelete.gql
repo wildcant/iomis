@@ -1,0 +1,5 @@
+mutation UnitTypeDelete($id: ID!) {
+  unitTypeDelete(id: $id) {
+    id
+  }
+}

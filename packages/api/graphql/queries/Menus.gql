@@ -1,0 +1,14 @@
+query Menus($offset: Int, $limit: Int) {
+  menus(offset: $offset, limit: $limit) {
+    nodes {
+      id
+      deleted
+      name
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}

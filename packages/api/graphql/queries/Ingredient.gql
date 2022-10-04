@@ -1,0 +1,12 @@
+query Ingredient($id: ID!) {
+  ingredient(id: $id) {
+    id
+    deleted
+    name
+    sku
+    unitTypeId
+    unitCost
+    visible
+    barcode
+  }
+}

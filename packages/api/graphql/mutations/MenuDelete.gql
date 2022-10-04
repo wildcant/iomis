@@ -1,0 +1,5 @@
+mutation MenuDelete($id: ID!) {
+  menuDelete(id: $id) {
+    id
+  }
+}

@@ -1,0 +1,22 @@
+query Ingredients($offset: Int, $limit: Int) {
+  ingredients(offset: $offset, limit: $limit) {
+    nodes {
+      id
+      deleted
+      name
+      sku
+      unitTypeId
+      unitCost
+      unitType {
+        name
+      }
+      visible
+      barcode
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}

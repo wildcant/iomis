@@ -1,0 +1,16 @@
+query CategoriesAll {
+  categoriesAll {
+    id
+    name
+    description
+    vat
+    deliveryVat
+    takeawayVat
+    course
+    image
+    visible
+    _count {
+      products
+    }
+  }
+}

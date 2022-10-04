@@ -1,0 +1,5 @@
+mutation IngredientCreate($input: IngredientCreateInput!) {
+  ingredientCreate(input: $input) {
+    id
+  }
+}

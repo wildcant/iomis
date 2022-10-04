@@ -1,0 +1,279 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Product {
+  id: ID!
+  deleted: Boolean!
+  archived: Boolean!
+  barcode: String
+  cost: Float!
+  description: String!
+  factoryCode: String!
+  forPurchase: Boolean!
+  forSale: Boolean!
+  hasStock: Boolean!
+  image: String!
+  name: String!
+  purchasePrice: Float!
+  sku: String!
+  subtotal: Float!
+  tags: String!
+  total: Float!
+  units: Float!
+  weight: Float!
+  categories: String!
+}
+
+type PageInfo {
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type ProductConnection {
+  totalCount: Float!
+  pageInfo: PageInfo!
+  nodes: [Product]!
+}
+
+type BatchResponse {
+  count: Int!
+}
+
+type UnitType {
+  id: ID!
+  name: String!
+  deleted: Boolean!
+  ingredients: [Ingredient!]
+}
+
+type Ingredient {
+  id: ID!
+  deleted: Boolean!
+  name: String!
+  sku: String!
+  unitTypeId: ID!
+  unitCost: Float
+  visible: Boolean!
+  barcode: String
+  unitType: UnitType
+}
+
+type IngredientConnection {
+  totalCount: Float!
+  pageInfo: PageInfo!
+  nodes: [Ingredient]!
+}
+
+type Menu {
+  id: ID!
+  deleted: Boolean!
+  name: String!
+  categories: [Category!]
+}
+
+type Category {
+  id: ID!
+  deleted: Boolean!
+  name: String!
+  description: String!
+  vat: String!
+  deliveryVat: String!
+  takeawayVat: String!
+  course: Int!
+  image: String!
+  visible: Boolean!
+  products: [Product!]!
+  menus: [Menu!]
+}
+
+type CategoryNodeCount {
+  products: Int!
+}
+
+type CategoryNode {
+  id: ID!
+  deleted: Boolean!
+  name: String!
+  description: String!
+  vat: String!
+  deliveryVat: String!
+  takeawayVat: String!
+  course: Int!
+  image: String!
+  visible: Boolean!
+  products: [Product!]!
+  menus: [Menu!]
+  _count: CategoryNodeCount!
+}
+
+type CategoryConnection {
+  totalCount: Float!
+  pageInfo: PageInfo!
+  nodes: [CategoryNode]!
+}
+
+type MenuConnection {
+  totalCount: Float!
+  pageInfo: PageInfo!
+  nodes: [Menu]!
+}
+
+type UnitTypeConnection {
+  totalCount: Float!
+  pageInfo: PageInfo!
+  nodes: [UnitType]!
+}
+
+type Query {
+  ingredients(offset: Int, limit: Int): IngredientConnection!
+  ingredient(id: ID!): Ingredient!
+  products(offset: Int, limit: Int, query: ProductQueryArgs): ProductConnection!
+  product(id: ID!): Product!
+  categories(offset: Int, limit: Int): CategoryConnection!
+  categoriesAll: [CategoryNode!]!
+  category(id: ID!): Category!
+  menus(offset: Int, limit: Int): MenuConnection!
+  menu(id: ID!): Menu!
+  unitTypes(offset: Int, limit: Int): UnitTypeConnection!
+  unitTypesAll: [UnitType!]!
+  unitType(id: ID!): UnitType!
+}
+
+input ProductQueryArgs {
+  archived: Boolean
+}
+
+type Mutation {
+  ingredientCreate(input: IngredientCreateInput!): Ingredient!
+  ingredientUpdate(id: ID!, input: IngredientUpdateInput!): Ingredient!
+  ingredientDelete(id: ID!): Ingredient!
+  productCreate(input: ProductCreateInput!): Product!
+  productUpdate(id: ID!, input: ProductUpdateInput!): Product!
+  productDelete(id: ID!): Product!
+  productsArchiveBulk(query: ArchiveBulk!): BatchResponse!
+  productsDeleteBulk(query: DeleteBulk!): BatchResponse!
+  categoryCreate(input: CategoryCreateInput!): Category!
+  categoryUpdate(id: ID!, input: CategoryUpdateInput!): Category!
+  categoryDelete(id: ID!): Category!
+  menuCreate(input: MenuCreateInput!): Menu!
+  menuUpdate(id: ID!, input: MenuUpdateInput!): Menu!
+  menuDelete(id: ID!): Menu!
+  unitTypeCreate(input: UnitTypeCreateInput!): UnitType!
+  unitTypeUpdate(id: ID!, input: UnitTypeUpdateInput!): UnitType!
+  unitTypeDelete(id: ID!): UnitType!
+}
+
+input IngredientCreateInput {
+  name: String!
+  sku: String!
+  unitTypeId: ID!
+  unitCost: Float
+  visible: Boolean!
+  barcode: String
+}
+
+input IngredientUpdateInput {
+  name: String
+  sku: String
+  unitTypeId: ID
+  unitCost: Float
+  visible: Boolean
+  barcode: String
+}
+
+input ProductCreateInput {
+  archived: Boolean!
+  barcode: String
+  cost: Float!
+  description: String!
+  factoryCode: String!
+  forPurchase: Boolean!
+  forSale: Boolean!
+  hasStock: Boolean!
+  image: String!
+  name: String!
+  purchasePrice: Float!
+  sku: String!
+  subtotal: Float!
+  tags: String!
+  total: Float!
+  units: Float!
+  weight: Float!
+  categories: String!
+}
+
+input ProductUpdateInput {
+  archived: Boolean
+  barcode: String
+  cost: Float
+  description: String
+  factoryCode: String
+  forPurchase: Boolean
+  forSale: Boolean
+  hasStock: Boolean
+  image: String
+  name: String
+  purchasePrice: Float
+  sku: String
+  subtotal: Float
+  tags: String
+  total: Float
+  units: Float
+  weight: Float
+  categories: String
+}
+
+input ArchiveBulk {
+  id: StringFilter
+  archived: Boolean = true
+}
+
+input StringFilter {
+  equals: String
+  in: [String]
+}
+
+input DeleteBulk {
+  id: StringFilter
+}
+
+input CategoryCreateInput {
+  name: String!
+  description: String!
+  vat: String!
+  deliveryVat: String!
+  takeawayVat: String!
+  course: Int!
+  image: String!
+  visible: Boolean!
+}
+
+input CategoryUpdateInput {
+  name: String
+  description: String
+  vat: String
+  deliveryVat: String
+  takeawayVat: String
+  course: Int
+  image: String
+  visible: Boolean
+}
+
+input MenuCreateInput {
+  name: String!
+  categories: [ID]
+}
+
+input MenuUpdateInput {
+  name: String
+  categories: [ID!]
+}
+
+input UnitTypeCreateInput {
+  name: String!
+}
+
+input UnitTypeUpdateInput {
+  name: String
+}

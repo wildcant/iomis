@@ -1,0 +1,17 @@
+query UnitTypes($offset: Int, $limit: Int) {
+  unitTypes(offset: $offset, limit: $limit) {
+    nodes {
+      id
+      name
+      deleted
+      ingredients {
+        id
+      }
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}

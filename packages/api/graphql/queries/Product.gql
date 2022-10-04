@@ -1,0 +1,24 @@
+query Product($id: ID!) {
+  product(id: $id) {
+    id
+    deleted
+    archived
+    barcode
+    cost
+    description
+    factoryCode
+    forPurchase
+    forSale
+    hasStock
+    image
+    name
+    purchasePrice
+    sku
+    subtotal
+    tags
+    total
+    units
+    weight
+    categories
+  }
+}

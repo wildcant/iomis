@@ -1,5 +1,4 @@
 // @ts-check
-import {env} from './src/env/server.mjs'
 import withTM from 'next-transpile-modules'
 
 /**
@@ -14,9 +13,10 @@ function defineNextConfig(config) {
   return config
 }
 
-export default withTM(['@iomis/api', '@iomis/db'])(
+export default withTM(['@iomis/api'])(
   defineNextConfig({
     reactStrictMode: true,
     swcMinify: true,
-  }),
+    images: { domains: ['loremflickr.com'] },
+  })
 )
