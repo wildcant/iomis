@@ -74,7 +74,7 @@ export default function Categories() {
       <Table
         data={(nodes ?? []) as CategoryNode[]}
         columns={columns}
-        loading={loading}
+        isLoading={loading}
         totalCount={totalCount}
         pagination={{ pageIndex, pageSize }}
         setPagination={setPagination}

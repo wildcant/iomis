@@ -5,14 +5,14 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "turbo run postinstall",
-    "db-push": "pnpm run db-push -w @iomis/be",
-    "build": "turbo run build",
     "dev": "turbo run dev --parallel",
+    "db-push": "pnpm run db-push -w @iomis/be",
     "clean": "find . -name node_modules -o -name .next -o -name .expo -type d -prune | xargs rm -rf",
-    "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "test": "turbo test"
+    "lint": "turbo run lint",
+    "test": "turbo test",
+    "build": "turbo run build",
+    "postinstall": "turbo run postinstall"
   },
   "devDependencies": {
     "prettier": "latest",

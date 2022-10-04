@@ -16,7 +16,6 @@ import {
   getCoreRowModel,
   OnChangeFn,
   PaginationState,
-  RowData,
   RowSelectionState,
   useReactTable,
 } from '@tanstack/react-table'
@@ -26,8 +25,6 @@ import { TablePagination } from './TablePagination'
 
 export const DEFAULT_PAGE_SIZE = 10
 export type { TableAction } from './TableActions'
-
-type EntityIdentifier = { id: string }
 
 type RowSelectionProps =
   | {
@@ -39,7 +36,7 @@ type RowSelectionProps =
       withRowSelection: false
     }
 
-export interface ITableProps<TData extends RowData & EntityIdentifier> {
+export interface ITableProps<TData> {
   isLoading: boolean
   data: TData[]
   columns: ColumnDef<TData>[]
@@ -56,9 +53,7 @@ export interface ITableProps<TData extends RowData & EntityIdentifier> {
   totalCount?: number
 }
 
-export function Table<TData extends RowData & EntityIdentifier>(
-  props: ITableProps<TData>
-) {
+export function Table<TData>(props: ITableProps<TData>) {
   const {
     isLoading,
     data: dataProp,
@@ -116,9 +111,14 @@ export function Table<TData extends RowData & EntityIdentifier>(
     typeof rowSelection !== 'undefined'
       ? (Object.keys(rowSelection)
           .filter((r) => rowSelection?.[r])
-          .map((rowIndex) =>
-            dataProp ? dataProp[Number(rowIndex)]?.id : []
-          ) as string[])
+          .map((rowIndex) => {
+            if (dataProp) {
+              const a = dataProp[Number(rowIndex)] as { id: string }
+              return a.id
+            } else {
+              return []
+            }
+          }) as string[])
       : []
 
   return (

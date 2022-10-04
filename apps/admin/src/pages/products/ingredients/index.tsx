@@ -1,12 +1,11 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import { Ingredient, useIngredientsQuery } from '@iomis/api'
-import { ColumnDef, PaginationState } from '@tanstack/react-table'
 import { Link } from 'components/atoms'
 import { DEFAULT_PAGE_SIZE, Table } from 'components/organisms'
-import { Layout } from 'components/templates'
 import { useHandleError } from 'hooks/useHandleError'
 import { ERoutes } from 'hooks/useNavigation'
 import { useState } from 'react'
+import { ColumnDef, PaginationState } from '@tanstack/react-table'
 
 const columns: ColumnDef<Ingredient>[] = [
   {
@@ -62,7 +61,7 @@ export default function Ingredients() {
       <Table
         data={(nodes ?? []) as Ingredient[]}
         columns={columns}
-        loading={loading}
+        isLoading={loading}
         totalCount={totalCount}
         pagination={{ pageIndex, pageSize }}
         setPagination={setPagination}
@@ -70,5 +69,3 @@ export default function Ingredients() {
     </>
   )
 }
-
-Ingredients.Layout = Layout

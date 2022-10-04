@@ -9,11 +9,11 @@ import {
   MenuList,
 } from '@chakra-ui/react'
 import {
+  Category,
+  Menu,
+  Refetch,
   useMenuDeleteMutation,
   useMenusQuery,
-  Refetch,
-  Menu,
-  Category,
 } from '@iomis/api'
 import { CellContext, ColumnDef, PaginationState } from '@tanstack/react-table'
 import { Link } from 'components/atoms'
@@ -148,7 +148,7 @@ export default function Menus() {
         <Table
           data={(nodes ?? []) as Menu[]}
           columns={columns}
-          loading={loading}
+          isLoading={loading}
           totalCount={totalCount}
           pagination={{ pageIndex, pageSize }}
           setPagination={setPagination}

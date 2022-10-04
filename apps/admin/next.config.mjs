@@ -18,6 +18,5 @@ export default withTM(['@iomis/api'])(
     reactStrictMode: true,
     swcMinify: true,
     images: { domains: ['loremflickr.com'] },
-    experimental: { images: { allowFutureImage: true } },
   })
 )

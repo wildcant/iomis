@@ -60,7 +60,7 @@ export default function NewMenu() {
           type='submit'
           colorScheme={'blue'}
           disabled={loading}
-          loading={loading}
+          isLoading={loading}
           size={{ base: 'xs', md: 'md' }}
         >
           Guardar
