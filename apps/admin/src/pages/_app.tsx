@@ -1,10 +1,7 @@
-import { ChakraProvider } from '@chakra-ui/react'
-import { ApolloProvider } from '@iomis/api'
-import { ModalProvider } from 'components/organisms'
 import { NextPage } from 'next'
 import type { AppProps } from 'next/app'
+import { Providers } from 'providers'
 import { ComponentType, ReactNode } from 'react'
-import { theme } from 'theme'
 
 interface DefaultLayoutProps {
   children: ReactNode
@@ -24,14 +21,10 @@ type Props = AppProps & {
 export default function App({ Component, pageProps }: Props) {
   const Layout = Component.Layout ?? DefaultLayout
   return (
-    <ApolloProvider>
-      <ChakraProvider theme={theme}>
-        <ModalProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ModalProvider>
-      </ChakraProvider>
-    </ApolloProvider>
+    <Providers>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </Providers>
   )
 }

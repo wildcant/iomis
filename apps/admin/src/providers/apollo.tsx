@@ -3,11 +3,11 @@ import {
   InMemoryCache,
   ApolloProvider as ApolloClientProvider,
 } from '@apollo/client'
-import {} from '@apollo/client'
-import * as React from 'react'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080'
 
 export const apolloClient = new ApolloClient({
-  uri: 'http://localhost:8080/graphql',
+  uri: `${API_URL}/graphql`,
   cache: new InMemoryCache(),
 })
 

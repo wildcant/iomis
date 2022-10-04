@@ -1,0 +1,16 @@
+# nixpacks.toml
+
+[phases.setup]
+nixPkgs = ['nodejs-18_x']
+
+[phases.install]
+cmds = ['npm i']
+
+[phases.build]
+cmds = ['npm run build']
+
+[start]
+cmd = 'npm run start:prod'
+
+[variables]
+NODE_ENV = 'production'

@@ -17,9 +17,10 @@
     "eas-build-post-install": "pnpm run -w build"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.0",
     "@iomis/api": "*",
-    "@shopify/flash-list": "1.1.0",
     "expo": "^46.0.0",
+    "expo-constants": "^13.2.4",
     "expo-dev-client": "~1.2.1",
     "expo-status-bar": "~1.4.0",
     "expo-updates": "~0.14.5",

@@ -352,10 +352,16 @@ export default function NewIngredient() {
   const { handleSubmit, control } = useForm<IngredientForm>()
 
   const saveIngredient = async (formData: IngredientForm) => {
-    const { uniType, ...rest } = formData
+    const { uniType, unitCost, ...rest } = formData
 
     addIngredient({
-      variables: { input: { ...rest, unitTypeId: uniType.value } },
+      variables: {
+        input: {
+          ...rest,
+          unitCost: Number(unitCost),
+          unitTypeId: uniType.value,
+        },
+      },
     })
   }
 
