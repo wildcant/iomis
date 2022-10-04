@@ -29,6 +29,8 @@ import {
 import { Link } from 'components/atoms'
 import { NavItem, NAV_ITEMS } from './navItems'
 
+const NAME = 'Wilmer Cantillo'
+
 export function Navbar() {
   const { isOpen, onToggle } = useDisclosure()
   const isLoggedIn = true
@@ -85,32 +87,23 @@ export function Navbar() {
                   cursor={'pointer'}
                   minW={0}
                 >
-                  <Avatar
-                    size={'sm'}
-                    src={'https://avatars.dicebear.com/api/male/username.svg'}
-                  />
+                  <Avatar size={'sm'} name={NAME} />
                 </MenuButton>
                 <MenuList alignItems={'center'}>
                   <br />
                   <Center>
-                    <Avatar
-                      size={'md'}
-                      src={'https://avatars.dicebear.com/api/male/username.svg'}
-                    />
+                    <Avatar size={'md'} name={NAME} />
                   </Center>
                   <br />
                   <Center>
-                    <Text fontSize='sm'>Username</Text>
+                    <Text fontSize='sm'>{NAME}</Text>
                   </Center>
                   <MenuDivider />
                   <MenuItem>
-                    <Text fontSize='sm'>Your Servers</Text>
+                    <Text fontSize='sm'>Configuraciones</Text>
                   </MenuItem>
                   <MenuItem>
-                    <Text fontSize='sm'>Account Settings</Text>
-                  </MenuItem>
-                  <MenuItem>
-                    <Text fontSize='sm'>Logout</Text>
+                    <Text fontSize='sm'>Cerrar session</Text>
                   </MenuItem>
                 </MenuList>
               </Menu>
@@ -130,7 +123,7 @@ export function Navbar() {
               variant={'link'}
               href={'#'}
             >
-              Sign In
+              Login
             </Button>
             <Button
               display={{ base: 'none', md: 'inline-flex' }}
@@ -143,7 +136,7 @@ export function Navbar() {
                 bg: 'blue.300',
               }}
             >
-              Sign Up
+              Registrarse
             </Button>
           </Stack>
         )}
