@@ -27,18 +27,18 @@ export type BatchResponse = {
 
 export type Category = {
   __typename?: 'Category';
-  course: Scalars['Int'];
+  course?: Maybe<Scalars['Int']>;
   deleted: Scalars['Boolean'];
-  deliveryVat: Scalars['String'];
-  description: Scalars['String'];
+  deliveryVat?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  image: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
   menus?: Maybe<Array<Menu>>;
-  name: Scalars['String'];
-  products: Array<Product>;
-  takeawayVat: Scalars['String'];
-  vat: Scalars['String'];
-  visible: Scalars['Boolean'];
+  name?: Maybe<Scalars['String']>;
+  products?: Maybe<Array<Product>>;
+  takeawayVat?: Maybe<Scalars['String']>;
+  vat?: Maybe<Scalars['String']>;
+  visible?: Maybe<Scalars['Boolean']>;
 };
 
 export type CategoryConnection = {
@@ -49,31 +49,31 @@ export type CategoryConnection = {
 };
 
 export type CategoryCreateInput = {
-  course: Scalars['Int'];
-  deliveryVat: Scalars['String'];
-  description: Scalars['String'];
-  image: Scalars['String'];
-  name: Scalars['String'];
-  takeawayVat: Scalars['String'];
-  vat: Scalars['String'];
-  visible: Scalars['Boolean'];
+  course?: InputMaybe<Scalars['Int']>;
+  deliveryVat?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  takeawayVat?: InputMaybe<Scalars['String']>;
+  vat?: InputMaybe<Scalars['String']>;
+  visible?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CategoryNode = {
   __typename?: 'CategoryNode';
   _count: CategoryNodeCount;
-  course: Scalars['Int'];
+  course?: Maybe<Scalars['Int']>;
   deleted: Scalars['Boolean'];
-  deliveryVat: Scalars['String'];
-  description: Scalars['String'];
+  deliveryVat?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  image: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
   menus?: Maybe<Array<Menu>>;
-  name: Scalars['String'];
-  products: Array<Product>;
-  takeawayVat: Scalars['String'];
-  vat: Scalars['String'];
-  visible: Scalars['Boolean'];
+  name?: Maybe<Scalars['String']>;
+  products?: Maybe<Array<Product>>;
+  takeawayVat?: Maybe<Scalars['String']>;
+  vat?: Maybe<Scalars['String']>;
+  visible?: Maybe<Scalars['Boolean']>;
 };
 
 export type CategoryNodeCount = {
@@ -583,19 +583,19 @@ export type CategoriesQueryVariables = Exact<{
 }>;
 
 
-export type CategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'CategoryConnection', totalCount: number, nodes: Array<{ __typename?: 'CategoryNode', id: string, deleted: boolean, name: string, description: string, vat: string, deliveryVat: string, takeawayVat: string, course: number, image: string, visible: boolean, _count: { __typename?: 'CategoryNodeCount', products: number } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type CategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'CategoryConnection', totalCount: number, nodes: Array<{ __typename?: 'CategoryNode', id: string, deleted: boolean, name?: string | null, description?: string | null, vat?: string | null, deliveryVat?: string | null, takeawayVat?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, _count: { __typename?: 'CategoryNodeCount', products: number } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type CategoriesAllQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CategoriesAllQuery = { __typename?: 'Query', categoriesAll: Array<{ __typename?: 'CategoryNode', id: string, name: string, description: string, vat: string, deliveryVat: string, takeawayVat: string, course: number, image: string, visible: boolean, _count: { __typename?: 'CategoryNodeCount', products: number } }> };
+export type CategoriesAllQuery = { __typename?: 'Query', categoriesAll: Array<{ __typename?: 'CategoryNode', id: string, name?: string | null, description?: string | null, vat?: string | null, deliveryVat?: string | null, takeawayVat?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, _count: { __typename?: 'CategoryNodeCount', products: number } }> };
 
 export type CategoryQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, deleted: boolean, name: string, description: string, vat: string, deliveryVat: string, takeawayVat: string, course: number, image: string, visible: boolean } };
+export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, deleted: boolean, name?: string | null, description?: string | null, vat?: string | null, deliveryVat?: string | null, takeawayVat?: string | null, course?: number | null, image?: string | null, visible?: boolean | null } };
 
 export type IngredientQueryVariables = Exact<{
   id: Scalars['ID'];

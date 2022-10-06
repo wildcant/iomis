@@ -75,15 +75,15 @@ type Menu {
 type Category {
   id: ID!
   deleted: Boolean!
-  name: String!
-  description: String!
-  vat: String!
-  deliveryVat: String!
-  takeawayVat: String!
-  course: Int!
-  image: String!
-  visible: Boolean!
-  products: [Product!]!
+  name: String
+  description: String
+  vat: String
+  deliveryVat: String
+  takeawayVat: String
+  course: Int
+  image: String
+  visible: Boolean
+  products: [Product!]
   menus: [Menu!]
 }
 
@@ -94,15 +94,15 @@ type CategoryNodeCount {
 type CategoryNode {
   id: ID!
   deleted: Boolean!
-  name: String!
-  description: String!
-  vat: String!
-  deliveryVat: String!
-  takeawayVat: String!
-  course: Int!
-  image: String!
-  visible: Boolean!
-  products: [Product!]!
+  name: String
+  description: String
+  vat: String
+  deliveryVat: String
+  takeawayVat: String
+  course: Int
+  image: String
+  visible: Boolean
+  products: [Product!]
   menus: [Menu!]
   _count: CategoryNodeCount!
 }
@@ -239,14 +239,14 @@ input DeleteBulk {
 }
 
 input CategoryCreateInput {
-  name: String!
-  description: String!
-  vat: String!
-  deliveryVat: String!
-  takeawayVat: String!
-  course: Int!
-  image: String!
-  visible: Boolean!
+  name: String
+  description: String
+  vat: String
+  deliveryVat: String
+  takeawayVat: String
+  course: Int
+  image: String
+  visible: Boolean = false
 }
 
 input CategoryUpdateInput {
@@ -257,7 +257,7 @@ input CategoryUpdateInput {
   takeawayVat: String
   course: Int
   image: String
-  visible: Boolean
+  visible: Boolean = false
 }
 
 input MenuCreateInput {

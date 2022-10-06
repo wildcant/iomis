@@ -25,7 +25,7 @@ export default {
     splash: {
       image: './assets/splash.png',
       resizeMode: 'contain',
-      backgroundColor: '#ffffff',
+      backgroundColor: '#FCFCFC',
     },
     updates: {
       fallbackToCacheTimeout: 0,
@@ -41,7 +41,7 @@ export default {
       package: 'com.testing.wc.iomisrestaurantpos',
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#FCFCFC',
       },
     },
     web: {

@@ -11,32 +11,32 @@ export class Category {
   @Field(() => Boolean)
   deleted: boolean
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   name: string
 
-  @Field(() => String)
-  description: string
+  @Field(() => String, { nullable: true })
+  description?: string
 
-  @Field(() => String)
-  vat: string
+  @Field(() => String, { nullable: true })
+  vat?: string
 
-  @Field(() => String)
-  deliveryVat: string
+  @Field(() => String, { nullable: true })
+  deliveryVat?: string
 
-  @Field(() => String)
-  takeawayVat: string
+  @Field(() => String, { nullable: true })
+  takeawayVat?: string
 
-  @Field(() => Int)
-  course: number
+  @Field(() => Int, { nullable: true })
+  course?: number
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   image: string
 
-  @Field(() => Boolean)
-  visible: boolean
+  @Field(() => Boolean, { defaultValue: false, nullable: true })
+  visible?: boolean
 
-  @Field(() => [Product])
-  products: Product[]
+  @Field(() => [Product], { nullable: true })
+  products?: Product[]
 
   @Field(() => [Menu], { nullable: true })
   menus?: Menu[]
