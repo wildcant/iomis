@@ -128,20 +128,30 @@ type UnitTypeConnection {
 type Query {
   ingredients(offset: Int, limit: Int): IngredientConnection!
   ingredient(id: ID!): Ingredient!
-  products(offset: Int, limit: Int, query: ProductQueryArgs): ProductConnection!
+  products(offset: Int, limit: Int, query: ProductsQueryArgs): ProductConnection!
   product(id: ID!): Product!
   categories(offset: Int, limit: Int): CategoryConnection!
-  categoriesAll: [CategoryNode!]!
+  categoriesAll(query: CategoriesQueryArgs): [CategoryNode!]!
   category(id: ID!): Category!
   menus(offset: Int, limit: Int): MenuConnection!
+  menusAll: [Menu!]!
   menu(id: ID!): Menu!
   unitTypes(offset: Int, limit: Int): UnitTypeConnection!
   unitTypesAll: [UnitType!]!
   unitType(id: ID!): UnitType!
 }
 
-input ProductQueryArgs {
+input ProductsQueryArgs {
   archived: Boolean
+}
+
+input CategoriesQueryArgs {
+  menus: StringFilter
+}
+
+input StringFilter {
+  equals: String
+  in: [String]
 }
 
 type Mutation {
@@ -227,11 +237,6 @@ input ProductUpdateInput {
 input ArchiveBulk {
   id: StringFilter
   archived: Boolean = true
-}
-
-input StringFilter {
-  equals: String
-  in: [String]
 }
 
 input DeleteBulk {

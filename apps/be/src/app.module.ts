@@ -8,6 +8,7 @@ import { IngredientResolver } from 'resolvers/ingredient.resolvers'
 import { CategoryResolver } from 'resolvers/category.resolvers'
 import { MenuResolver } from 'resolvers/menu.resolvers'
 import { UnitTypeResolver } from 'resolvers/unit-type.resolvers'
+// import { ParseInfoService } from 'utils/parse-info.service'
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UnitTypeResolver } from 'resolvers/unit-type.resolvers'
   ],
   controllers: [],
   providers: [
+    // ParseInfoService,
     PrismaService,
     IngredientResolver,
     ProductResolver,

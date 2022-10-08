@@ -1,7 +1,9 @@
 import { HttpException, HttpStatus, Type } from '@nestjs/common'
 import {
   ArgsType,
+  createUnionType,
   Field,
+  InputType,
   Int,
   ObjectType,
   registerEnumType,
@@ -64,4 +66,18 @@ export const throwUnexpectedError = (e: any) => {
     },
     HttpStatus.INTERNAL_SERVER_ERROR
   )
+}
+
+export const StringEnumerable = createUnionType({
+  name: 'StringEnumerable',
+  types: () => [String],
+})
+
+@InputType()
+export class StringFilter {
+  @Field({ nullable: true })
+  equals?: string;
+
+  @Field(() => [String], { nullable: 'itemsAndList' })
+  in?: string[]
 }

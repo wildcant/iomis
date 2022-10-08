@@ -1,9 +1,47 @@
 const MAX_WIDTH = 200
 const MAX_HEIGHT = 200
 
+export const resizeImage = async (
+  image: HTMLImageElement,
+  fileType = 'image/png'
+): Promise<string> =>
+  await new Promise((resolve) => {
+    // have to wait till it's loaded
+    let width = image.width
+    let height = image.height
+
+    // calculate the width and height, constraining the proportions
+    if (width > height) {
+      if (width > MAX_WIDTH) {
+        // height *= MAX_WIDTH / width;
+        height = Math.round((height *= MAX_WIDTH / width))
+        width = MAX_WIDTH
+      }
+    } else {
+      if (height > MAX_HEIGHT) {
+        // width *= MAX_HEIGHT / height;
+        width = Math.round((width *= MAX_HEIGHT / height))
+        height = MAX_HEIGHT
+      }
+    }
+
+    const canvas = document.createElement('canvas')
+    // resize the canvas and draw the image data into it
+    canvas.width = width
+    canvas.height = height
+    const ctx = canvas.getContext('2d')
+    if (!ctx) {
+      throw new Error("'Not able to get ctx from canvas.'")
+    }
+
+    ctx.drawImage(image, 0, 0, width, height)
+    // get the data from canvas as 70% PNG (can be also JPG, etc.)
+    resolve(canvas.toDataURL(fileType, 0.7))
+  })
+
 export const resizeImageFromBlob = async (
   imgBlob: string,
-  fileType = 'image/jpeg'
+  fileType = 'image/png'
 ): Promise<string> =>
   await new Promise((resolve) => {
     // helper Image object
@@ -11,41 +49,14 @@ export const resizeImageFromBlob = async (
 
     image.src = imgBlob
 
-    image.onload = () => {
-      // have to wait till it's loaded
-      let width = image.width
-      let height = image.height
+    image.onload = async () => {
+      const resp = await resizeImage(image, fileType)
 
-      // calculate the width and height, constraining the proportions
-      if (width > height) {
-        if (width > MAX_WIDTH) {
-          // height *= MAX_WIDTH / width;
-          height = Math.round((height *= MAX_WIDTH / width))
-          width = MAX_WIDTH
-        }
-      } else {
-        if (height > MAX_HEIGHT) {
-          // width *= MAX_HEIGHT / height;
-          width = Math.round((width *= MAX_HEIGHT / height))
-          height = MAX_HEIGHT
-        }
-      }
-
-      const canvas = document.createElement('canvas')
-      // resize the canvas and draw the image data into it
-      canvas.width = width
-      canvas.height = height
-      const ctx = canvas.getContext('2d')
-      if (!ctx) {
-        throw new Error("'Not able to get ctx from canvas.'")
-      }
-      ctx.drawImage(image, 0, 0, width, height)
-
-      // get the data from canvas as 70% JPG (can be also PNG, etc.)
-      resolve(canvas.toDataURL(fileType, 0.7))
+      resolve(resp)
     }
 
-    image.onerror = () => {
+    image.onerror = (err) => {
+      window.console.error(err)
       throw new Error('Error occurred loading image.')
     }
   })

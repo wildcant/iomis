@@ -132,7 +132,7 @@ export default function NewProduct() {
         <InputField control={control} name='tags' />
       </Panel>
       <Panel title='Imágenes'>
-        <DropzoneField control={control} name='image' />
+        <DropzoneField control={control} name='image' fileName='product' />
       </Panel>
     </form>
   )

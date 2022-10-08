@@ -1,4 +1,4 @@
-query Products($offset: Int, $limit: Int, $query: ProductQueryArgs) {
+query Products($offset: Int, $limit: Int, $query: ProductsQueryArgs) {
   products(offset: $offset, limit: $limit, query: $query) {
     nodes {
       id

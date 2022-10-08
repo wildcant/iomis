@@ -18,6 +18,7 @@ const orders = [
     id: '3',
     name: 'Salad with chicken',
     price: 34.0,
+    image: 'https://www.dropbox.com/s/c5dce66ex0k4rww/bottle-service.png?raw=1',
   },
 ]
 
@@ -25,12 +26,14 @@ function OrderList() {
   return (
     <View className='rounded-xl shadow-sm p-2'>
       <View className='flex flex-col'>
-        {orders.map(({ id, name, price }) => (
+        {orders.map(({ id, name, price, image }) => (
           <View key={id} className='bg-white w-full rounded-2xl shadow-sm'>
             <View className='h-20 w-full overflow-hidden flex flex-row justify-center'>
               <Image
                 className='w-20 h-20 -top-6'
-                source={require('../../assets/product.png')}
+                source={
+                  image ? { uri: image } : require('../../assets/product.png')
+                }
               />
             </View>
             <View className='p-4 pt-0'>

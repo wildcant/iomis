@@ -23,6 +23,7 @@ importers:
       '@types/react': ^18.0.21
       '@types/react-dom': ^18.0.5
       chakra-react-select: ^4.2.4
+      dropbox: ^10.32.0
       eslint: 8.22.0
       eslint-config-next: 12.3.1
       framer-motion: ^7.5.1
@@ -41,6 +42,7 @@ importers:
       '@iomis/api': link:../../packages/api
       '@tanstack/react-table': 8.5.15_ef5jwxihqo6n7gxfmzogljlgcm
       chakra-react-select: 4.2.4_yqdu7la7msbzcmya3xtijqnxxa
+      dropbox: 10.32.0_@types+node-fetch@2.6.2
       framer-motion: 7.5.1_ef5jwxihqo6n7gxfmzogljlgcm
       next: 12.3.1_ef5jwxihqo6n7gxfmzogljlgcm
       react: 18.1.0
@@ -5735,6 +5737,13 @@ packages:
   /@types/mime/3.0.1:
     resolution: {integrity: sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==}
 
+  /@types/node-fetch/2.6.2:
+    resolution: {integrity: sha512-DHqhlq5jeESLy19TYhLakJ07kNumXWjcDdxXsLUMJZ6ue8VZJj4kLPQVE/2mdHh3xZziNF1xppu5lwmS53HR+A==}
+    dependencies:
+      '@types/node': 18.7.23
+      form-data: 3.0.1
+    dev: false
+
   /@types/node/10.17.60:
     resolution: {integrity: sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==}
     dev: false
@@ -8124,6 +8133,18 @@ packages:
     resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
     engines: {node: '>=12'}
     dev: true
+
+  /dropbox/10.32.0_@types+node-fetch@2.6.2:
+    resolution: {integrity: sha512-vnkcp8HNTmqYwI+VYfxE061YP9rXB2feWljAzzzF0ud4npB8H31eYKJuf6cPzFRsr8RpwVlj/SfsJkFqF2QeYA==}
+    engines: {node: '>=0.10.3'}
+    peerDependencies:
+      '@types/node-fetch': ^2.5.7
+    dependencies:
+      '@types/node-fetch': 2.6.2
+      node-fetch: 2.6.7
+    transitivePeerDependencies:
+      - encoding
+    dev: false
 
   /dset/3.1.2:
     resolution: {integrity: sha512-g/M9sqy3oHe477Ar4voQxWtaPIFw1jTdKZuomOjhCcBx9nHUNn0pu6NopuFFrTh/TRZIKEj+76vLWFu9BNKk+Q==}

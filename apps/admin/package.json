@@ -16,6 +16,7 @@
     "@iomis/api": "*",
     "@tanstack/react-table": "^8.5.15",
     "chakra-react-select": "^4.2.4",
+    "dropbox": "^10.32.0",
     "framer-motion": "^7.5.1",
     "next": "12.3.1",
     "react": "18.0.0",

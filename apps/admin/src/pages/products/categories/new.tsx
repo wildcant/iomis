@@ -1,30 +1,13 @@
 import { Box, Button, Flex, Heading, Text, useToast } from '@chakra-ui/react'
-import baguette from 'assets/categories/baguette.png'
-import beer from 'assets/categories/beer.png'
-import bottleService from 'assets/categories/bottle-service.png'
-import bread from 'assets/categories/bread.png'
-import breakfast from 'assets/categories/breakfast.png'
-import burger from 'assets/categories/burger.png'
-import cakes from 'assets/categories/cakes.png'
-import cheese from 'assets/categories/cheese.png'
-import chicken from 'assets/categories/chicken.png'
-import cocktails from 'assets/categories/cocktails.png'
-import coffeeAndTea from 'assets/categories/coffee-and-tea.png'
-import combos from 'assets/categories/combos.png'
-import croissants from 'assets/categories/croissants.png'
-import dessert from 'assets/categories/dessert.png'
-import discounts from 'assets/categories/discounts.png'
-import eggs from 'assets/categories/eggs.png'
-import fish from 'assets/categories/fish.png'
-import foodRail from 'assets/categories/food-rail.png'
-import food from 'assets/categories/food.png'
-import general from 'assets/categories/general.png'
+import { CategoryCreateInput, useCategoryCreateMutation } from '@iomis/api'
 import { CheckboxField, InputField, Panel } from 'components/atoms'
 import { DropzoneField } from 'components/molecules'
 import { useCustomModal } from 'components/organisms'
 import { Layout } from 'components/templates'
 import { useHandleError } from 'hooks/useHandleError'
-import Image, { ImageProps, StaticImageData } from 'next/future/image'
+import { usePageNavigation } from 'hooks/useNavigation'
+import _ from 'lodash'
+import Image from 'next/future/image'
 import { useEffect, useState } from 'react'
 import {
   FieldValues,
@@ -32,32 +15,31 @@ import {
   UseControllerProps,
   useForm,
 } from 'react-hook-form'
-import _ from 'lodash'
-import { usePageNavigation } from 'hooks/useNavigation'
-import { CategoryCreateInput, useCategoryCreateMutation } from '@iomis/api'
 
-const images: ImageProps[] = [
-  { src: baguette, alt: 'baguette' },
-  { src: beer, alt: 'beer' },
-  { src: bottleService, alt: 'bottleService' },
-  { src: bread, alt: 'bread' },
-  { src: breakfast, alt: 'breakfast' },
-  { src: burger, alt: 'burger' },
-  { src: cakes, alt: 'cakes' },
-  { src: cheese, alt: 'cheese' },
-  { src: chicken, alt: 'chicken' },
-  { src: cocktails, alt: 'cocktails' },
-  { src: coffeeAndTea, alt: 'coffeeAndTea' },
-  { src: combos, alt: 'combos' },
-  { src: croissants, alt: 'croissants' },
-  { src: dessert, alt: 'dessert' },
-  { src: discounts, alt: 'discounts' },
-  { src: eggs, alt: 'eggs' },
-  { src: fish, alt: 'fish' },
-  { src: foodRail, alt: 'foodRail' },
-  { src: food, alt: 'food' },
-  { src: general, alt: 'general' },
+const images = [
+  { src: '/assets/categories/baguette.png', alt: 'baguette' },
+  { src: '/assets/categories/beer.png', alt: 'beer' },
+  { src: '/assets/categories/bottle-service.png', alt: 'bottleService' },
+  { src: '/assets/categories/bread.png', alt: 'bread' },
+  { src: '/assets/categories/breakfast.png', alt: 'breakfast' },
+  { src: '/assets/categories/burger.png', alt: 'burger' },
+  { src: '/assets/categories/cakes.png', alt: 'cakes' },
+  { src: '/assets/categories/cheese.png', alt: 'cheese' },
+  { src: '/assets/categories/chicken.png', alt: 'chicken' },
+  { src: '/assets/categories/cocktails.png', alt: 'cocktails' },
+  { src: '/assets/categories/coffee-and-tea.png', alt: 'coffeeAndTea' },
+  { src: '/assets/categories/combos.png', alt: 'combos' },
+  { src: '/assets/categories/croissants.png', alt: 'croissants' },
+  { src: '/assets/categories/dessert.png', alt: 'dessert' },
+  { src: '/assets/categories/discounts.png', alt: 'discounts' },
+  { src: '/assets/categories/eggs.png', alt: 'eggs' },
+  { src: '/assets/categories/fish.png', alt: 'fish' },
+  { src: '/assets/categories/food-rail.png', alt: 'foodRail' },
+  { src: '/assets/categories/food.png', alt: 'food' },
+  { src: '/assets/categories/general.png', alt: 'general' },
 ]
+
+const defaultImage = `${process.env.NEXT_PUBLIC_ADMIN_URL}${images[0]}`
 
 interface IUseCategoriesImagesModalArgs<TValues extends FieldValues>
   extends UseControllerProps<TValues> {}
@@ -92,19 +74,28 @@ function useCategoriesImagesSelector<TValues extends FieldValues>({
               key={img.alt}
               padding={1}
               cursor={'pointer'}
-              onClick={() => {
-                const image = img.src as StaticImageData
-                setSelectedImage(image.src)
+              onClick={async () => {
+                const localImageUrl = `${process.env.NEXT_PUBLIC_ADMIN_URL}${img.src}`
+                setSelectedImage(localImageUrl)
                 close()
               }}
             >
-              <Image key={img.alt} {...img} alt={img.alt} />
+              <Image
+                key={img.alt}
+                {...img}
+                alt={img.alt}
+                width={70}
+                height={70}
+              />
             </Box>
           ))}
         </Flex>
         <br />
         <input {...field} type='hidden' value={selectedImage} />
-        <DropzoneField {...{ control, name }} onImageSelected={() => close()} />
+        <DropzoneField
+          {...{ control, name, fileName: 'category' }}
+          onImageSelected={() => close()}
+        />
       </>
     ),
   })
@@ -115,12 +106,12 @@ export default function NewCategory() {
   const { goToCategoryDetails } = usePageNavigation()
   const [addMenu, { loading, error, data, called }] =
     useCategoryCreateMutation()
-  const isSuccess = called && !error
+  const isSuccess = called && data
   useHandleError(error)
 
   const { handleSubmit, control, watch } = useForm<CategoryCreateInput>({
     defaultValues: {
-      image: baguette.src,
+      image: defaultImage,
       visible: true,
     },
   })
@@ -217,7 +208,7 @@ export default function NewCategory() {
         />
         <br />
         <Box cursor={'pointer'} onClick={open} w={'fit-content'}>
-          <Image src={watch('image')} alt={'beer'} width={100} height={100} />
+          <Image src={watch('image')!} alt={'beer'} width={100} height={100} />
         </Box>
       </Panel>
     </form>

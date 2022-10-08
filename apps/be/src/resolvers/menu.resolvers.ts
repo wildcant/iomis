@@ -3,6 +3,7 @@ import {
   Args,
   Field,
   ID,
+  // Info,
   InputType,
   Mutation,
   ObjectType,
@@ -11,10 +12,12 @@ import {
   Query,
   Resolver,
 } from '@nestjs/graphql'
+import { Prisma } from '@prisma/client'
 import { Menu } from 'models/Menu'
 import { PrismaService } from 'prisma.service'
 import { EntityConnection, Pagination, throwUnexpectedError } from 'shared'
 import { createEntityConnection, DEFAULT_PAGE_SIZE } from 'utils'
+// import { ParseInfoService } from 'utils/parse-info.service'
 
 @ObjectType()
 class MenuConnection extends EntityConnection(Menu) {}
@@ -34,19 +37,53 @@ class MenuUpdateInput extends PartialType(MenuCreateInput) {}
 
 @Resolver(Menu)
 export class MenuResolver {
-  constructor(@Inject(PrismaService) private prisma: PrismaService) {}
+  constructor(
+    @Inject(PrismaService) private prisma: PrismaService // @Inject(ParseInfoService) private parseInfo: ParseInfoService
+  ) {}
 
   @Query(() => MenuConnection)
-  async menus(@Args({ nullable: true }) pagination?: Pagination) {
+  async menus(
+    /* @Info() info, */ @Args({ nullable: true }) pagination?: Pagination
+  ) {
     const { limit = DEFAULT_PAGE_SIZE, offset = 0 } = pagination ?? {}
+
+    const menuFindManyArgs: Prisma.MenuFindManyArgs = {
+      take: limit,
+      skip: offset,
+      include: { categories: true }, // TODO: we could improve performance by adding projection from info,
+    }
+
+    /*
+    TODO: parse info to improve performance, reduce data retrieved from db when necessary.
+    // Parse info to fined out if user is requesting categories.
+    const parsedInfo = this.parseInfo.getFields(info) as any
+    const nodeFields = Object.keys(parsedInfo.nodes?.fieldsByTypeName.Menu)
+    if (nodeFields.includes('categories')) {
+      // TODO: request categories ids without making join.
+      menuFindManyArgs.select(categories: {id: true})
+    }
+    */
 
     const [count, nodes] = await this.prisma.$transaction([
       this.prisma.menu.count(),
-      this.prisma.menu.findMany({ take: limit, skip: offset }),
+      this.prisma.menu.findMany(menuFindManyArgs),
     ])
 
     return createEntityConnection({ nodes, count, offset, limit })
   }
+
+  @Query(() => [Menu])
+  async menusAll() {
+    return this.prisma.menu.findMany()
+  }
+
+  /*
+  TODO: Use resolver chain to make it more generic and more scalable.
+  @ResolveField('categories', () => [Category])
+  async categories(@Parent() menu: Menu) {
+    return []
+  }
+  */
 
   @Query(() => Menu)
   async menu(@Args('id', { type: () => ID }) id: string) {

@@ -12,9 +12,15 @@ import {
   Query,
   Resolver,
 } from '@nestjs/graphql'
+import { Prisma } from '@prisma/client'
 import { Category } from 'models/Category'
 import { PrismaService } from 'prisma.service'
-import { EntityConnection, Pagination, throwUnexpectedError } from 'shared'
+import {
+  EntityConnection,
+  Pagination,
+  StringFilter,
+  throwUnexpectedError,
+} from 'shared'
 import { createEntityConnection, DEFAULT_PAGE_SIZE } from 'utils'
 
 @ObjectType()
@@ -40,6 +46,12 @@ class CategoryCreateInput extends OmitType(
 ) {}
 
 @InputType()
+class CategoriesQueryArgs {
+  @Field(() => StringFilter, { nullable: true })
+  menus: StringFilter
+}
+
+@InputType()
 class CategoryUpdateInput extends PartialType(CategoryCreateInput) {}
 
 @Resolver(Category)
@@ -63,8 +75,19 @@ export class CategoryResolver {
   }
 
   @Query(() => [CategoryNode])
-  async categoriesAll() {
+  async categoriesAll(
+    @Args('query', { type: () => CategoriesQueryArgs, nullable: true })
+    query?: CategoriesQueryArgs
+  ) {
+    const where: Prisma.CategoryWhereInput = {}
+    if (query?.menus) {
+      where.menus = {
+        some: { id: query.menus },
+      }
+    }
+
     return this.prisma.category.findMany({
+      where,
       include: { _count: { select: { products: true } } },
     })
   }

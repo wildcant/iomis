@@ -1,7 +1,6 @@
 import { Inject } from '@nestjs/common'
 import {
   Args,
-  createUnionType,
   Field,
   ID,
   InputType,
@@ -16,11 +15,16 @@ import {
 import { Prisma } from '@prisma/client'
 import { Product } from 'models/Product'
 import { PrismaService } from 'prisma.service'
-import { EntityConnection, Pagination, throwUnexpectedError } from 'shared'
+import {
+  EntityConnection,
+  Pagination,
+  StringFilter,
+  throwUnexpectedError,
+} from 'shared'
 import { createEntityConnection, DEFAULT_PAGE_SIZE } from 'utils'
 
 @InputType()
-class ProductQueryArgs {
+class ProductsQueryArgs {
   @Field({ nullable: true })
   archived?: boolean
 }
@@ -37,20 +41,6 @@ class ProductUpdateInput extends PartialType(ProductCreateInput) {}
 
 @ObjectType()
 class ProductConnection extends EntityConnection(Product) {}
-
-export const StringEnumerable = createUnionType({
-  name: 'StringEnumerable',
-  types: () => [String],
-})
-
-@InputType()
-class StringFilter {
-  @Field({ nullable: true })
-  equals?: string;
-
-  @Field(() => [String], { nullable: 'itemsAndList' })
-  in?: string[]
-}
 
 @InputType()
 class ArchiveBulk {
@@ -80,7 +70,7 @@ export class ProductResolver {
   @Query(() => ProductConnection)
   async products(
     @Args({ nullable: true }) pagination?: Pagination,
-    @Args('query', { nullable: true }) query?: ProductQueryArgs
+    @Args('query', { nullable: true }) query?: ProductsQueryArgs
   ) {
     const { limit = DEFAULT_PAGE_SIZE, offset = 0 } = pagination ?? {}
     const { archived } = query ?? {}

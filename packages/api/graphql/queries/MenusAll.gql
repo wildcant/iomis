@@ -1,0 +1,11 @@
+query MenusAll {
+  menusAll {
+    id
+    deleted
+    name
+    categories {
+      id
+      name
+    }
+  }
+}

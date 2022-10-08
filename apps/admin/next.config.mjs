@@ -17,6 +17,8 @@ export default withTM(['@iomis/api'])(
   defineNextConfig({
     reactStrictMode: true,
     swcMinify: true,
-    images: { domains: ['loremflickr.com'] },
+    images: {
+      domains: ['loremflickr.com', 'www.dropbox.com', 'localhost'],
+    },
   })
 )

@@ -25,6 +25,10 @@ export type BatchResponse = {
   count: Scalars['Int'];
 };
 
+export type CategoriesQueryArgs = {
+  menus?: InputMaybe<StringFilter>;
+};
+
 export type Category = {
   __typename?: 'Category';
   course?: Maybe<Scalars['Int']>;
@@ -328,10 +332,6 @@ export type ProductCreateInput = {
   weight: Scalars['Float'];
 };
 
-export type ProductQueryArgs = {
-  archived?: InputMaybe<Scalars['Boolean']>;
-};
-
 export type ProductUpdateInput = {
   archived?: InputMaybe<Scalars['Boolean']>;
   barcode?: InputMaybe<Scalars['String']>;
@@ -353,6 +353,10 @@ export type ProductUpdateInput = {
   weight?: InputMaybe<Scalars['Float']>;
 };
 
+export type ProductsQueryArgs = {
+  archived?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   categories: CategoryConnection;
@@ -362,6 +366,7 @@ export type Query = {
   ingredients: IngredientConnection;
   menu: Menu;
   menus: MenuConnection;
+  menusAll: Array<Menu>;
   product: Product;
   products: ProductConnection;
   unitType: UnitType;
@@ -373,6 +378,11 @@ export type Query = {
 export type QueryCategoriesArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryCategoriesAllArgs = {
+  query?: InputMaybe<CategoriesQueryArgs>;
 };
 
 
@@ -411,7 +421,7 @@ export type QueryProductArgs = {
 export type QueryProductsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  query?: InputMaybe<ProductQueryArgs>;
+  query?: InputMaybe<ProductsQueryArgs>;
 };
 
 
@@ -585,7 +595,9 @@ export type CategoriesQueryVariables = Exact<{
 
 export type CategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'CategoryConnection', totalCount: number, nodes: Array<{ __typename?: 'CategoryNode', id: string, deleted: boolean, name?: string | null, description?: string | null, vat?: string | null, deliveryVat?: string | null, takeawayVat?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, _count: { __typename?: 'CategoryNodeCount', products: number } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
-export type CategoriesAllQueryVariables = Exact<{ [key: string]: never; }>;
+export type CategoriesAllQueryVariables = Exact<{
+  query?: InputMaybe<CategoriesQueryArgs>;
+}>;
 
 
 export type CategoriesAllQuery = { __typename?: 'Query', categoriesAll: Array<{ __typename?: 'CategoryNode', id: string, name?: string | null, description?: string | null, vat?: string | null, deliveryVat?: string | null, takeawayVat?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, _count: { __typename?: 'CategoryNodeCount', products: number } }> };
@@ -618,7 +630,12 @@ export type MenusQueryVariables = Exact<{
 }>;
 
 
-export type MenusQuery = { __typename?: 'Query', menus: { __typename?: 'MenuConnection', totalCount: number, nodes: Array<{ __typename?: 'Menu', id: string, deleted: boolean, name: string } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type MenusQuery = { __typename?: 'Query', menus: { __typename?: 'MenuConnection', totalCount: number, nodes: Array<{ __typename?: 'Menu', id: string, deleted: boolean, name: string, categories?: Array<{ __typename?: 'Category', id: string, name?: string | null }> | null } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type MenusAllQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MenusAllQuery = { __typename?: 'Query', menusAll: Array<{ __typename?: 'Menu', id: string, deleted: boolean, name: string, categories?: Array<{ __typename?: 'Category', id: string, name?: string | null }> | null }> };
 
 export type ProductQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -630,7 +647,7 @@ export type ProductQuery = { __typename?: 'Query', product: { __typename?: 'Prod
 export type ProductsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
-  query?: InputMaybe<ProductQueryArgs>;
+  query?: InputMaybe<ProductsQueryArgs>;
 }>;
 
 
@@ -1272,8 +1289,8 @@ export type CategoriesQueryHookResult = ReturnType<typeof useCategoriesQuery>;
 export type CategoriesLazyQueryHookResult = ReturnType<typeof useCategoriesLazyQuery>;
 export type CategoriesQueryResult = Apollo.QueryResult<CategoriesQuery, CategoriesQueryVariables>;
 export const CategoriesAllDocument = gql`
-    query CategoriesAll {
-  categoriesAll {
+    query CategoriesAll($query: CategoriesQueryArgs) {
+  categoriesAll(query: $query) {
     id
     name
     description
@@ -1302,6 +1319,7 @@ export const CategoriesAllDocument = gql`
  * @example
  * const { data, loading, error } = useCategoriesAllQuery({
  *   variables: {
+ *      query: // value for 'query'
  *   },
  * });
  */
@@ -1462,6 +1480,10 @@ export const MenusDocument = gql`
       id
       deleted
       name
+      categories {
+        id
+        name
+      }
     }
     totalCount
     pageInfo {
@@ -1500,6 +1522,46 @@ export function useMenusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Menu
 export type MenusQueryHookResult = ReturnType<typeof useMenusQuery>;
 export type MenusLazyQueryHookResult = ReturnType<typeof useMenusLazyQuery>;
 export type MenusQueryResult = Apollo.QueryResult<MenusQuery, MenusQueryVariables>;
+export const MenusAllDocument = gql`
+    query MenusAll {
+  menusAll {
+    id
+    deleted
+    name
+    categories {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useMenusAllQuery__
+ *
+ * To run a query within a React component, call `useMenusAllQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMenusAllQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMenusAllQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMenusAllQuery(baseOptions?: Apollo.QueryHookOptions<MenusAllQuery, MenusAllQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MenusAllQuery, MenusAllQueryVariables>(MenusAllDocument, options);
+      }
+export function useMenusAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MenusAllQuery, MenusAllQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MenusAllQuery, MenusAllQueryVariables>(MenusAllDocument, options);
+        }
+export type MenusAllQueryHookResult = ReturnType<typeof useMenusAllQuery>;
+export type MenusAllLazyQueryHookResult = ReturnType<typeof useMenusAllLazyQuery>;
+export type MenusAllQueryResult = Apollo.QueryResult<MenusAllQuery, MenusAllQueryVariables>;
 export const ProductDocument = gql`
     query Product($id: ID!) {
   product(id: $id) {
@@ -1555,7 +1617,7 @@ export type ProductQueryHookResult = ReturnType<typeof useProductQuery>;
 export type ProductLazyQueryHookResult = ReturnType<typeof useProductLazyQuery>;
 export type ProductQueryResult = Apollo.QueryResult<ProductQuery, ProductQueryVariables>;
 export const ProductsDocument = gql`
-    query Products($offset: Int, $limit: Int, $query: ProductQueryArgs) {
+    query Products($offset: Int, $limit: Int, $query: ProductsQueryArgs) {
   products(offset: $offset, limit: $limit, query: $query) {
     nodes {
       id

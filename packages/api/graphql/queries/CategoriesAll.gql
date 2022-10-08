@@ -1,5 +1,5 @@
-query CategoriesAll {
-  categoriesAll {
+query CategoriesAll($query: CategoriesQueryArgs) {
+  categoriesAll(query: $query) {
     id
     name
     description
