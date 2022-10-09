@@ -44,6 +44,13 @@ export class IngredientResolver {
     return createEntityConnection({ nodes, count, offset, limit })
   }
 
+  @Query(() => [Ingredient])
+  async ingredientsAll() {
+    return this.prisma.ingredient.findMany({
+      include: { unitType: { select: { id: true, name: true } } },
+    })
+  }
+
   @Query(() => Ingredient)
   async ingredient(@Args('id', { type: () => ID }) id: string) {
     return this.prisma.ingredient
@@ -69,7 +76,6 @@ export class IngredientResolver {
       where: { id },
       include: {
         suppliers: { select: { id: true } },
-        unitType: { select: { id: true } },
       },
     })
 
@@ -83,13 +89,15 @@ export class IngredientResolver {
       )
     }
 
-    const { unitTypeId: newUnitType, ...rest } = input
-    const unitType = newUnitType ? { id: newUnitType } : ingredient.unitType
+    const { unitTypeId: newUnitType, ...updatedData } = input
+    const unitType = newUnitType
+      ? { id: newUnitType }
+      : { id: ingredient.unitTypeId }
 
     return this.prisma.ingredient.update({
       where: { id },
       data: {
-        ...rest,
+        ...updatedData,
         unitType: { connect: unitType },
       },
     })

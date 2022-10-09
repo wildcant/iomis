@@ -5,7 +5,7 @@ import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 import { processImage, resizeImageFromBlob } from './utils'
 
-interface IDropzoneFieldProps<TValues extends FieldValues>
+interface DropzoneFieldProps<TValues extends FieldValues>
   extends Omit<HTMLProps<HTMLInputElement>, 'name' | 'defaultValue'>,
     UseControllerProps<TValues> {
   onImageSelected?: () => void
@@ -20,7 +20,7 @@ export function DropzoneField<TValues extends FieldValues>({
   onImageSelected,
   fileName,
   ...props
-}: IDropzoneFieldProps<TValues>) {
+}: DropzoneFieldProps<TValues>) {
   const [loading, setLoading] = useBoolean(false)
   const { field } = useController({
     name,

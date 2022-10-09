@@ -282,26 +282,24 @@ export type PageInfo = {
 
 export type Product = {
   __typename?: 'Product';
+  allowRefund: Scalars['Boolean'];
   archived: Scalars['Boolean'];
   barcode?: Maybe<Scalars['String']>;
-  categories: Scalars['String'];
+  category: Category;
+  categoryId: Scalars['ID'];
+  color?: Maybe<Scalars['String']>;
   cost: Scalars['Float'];
   deleted: Scalars['Boolean'];
-  description: Scalars['String'];
-  factoryCode: Scalars['String'];
-  forPurchase: Scalars['Boolean'];
-  forSale: Scalars['Boolean'];
-  hasStock: Scalars['Boolean'];
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  image: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
+  ingredients: Array<Ingredient>;
   name: Scalars['String'];
-  purchasePrice: Scalars['Float'];
-  sku: Scalars['String'];
-  subtotal: Scalars['Float'];
-  tags: Scalars['String'];
-  total: Scalars['Float'];
-  units: Scalars['Float'];
-  weight: Scalars['Float'];
+  plu: Scalars['String'];
+  price: Scalars['Float'];
+  priceWithoutVAT: Scalars['Float'];
+  stock: Scalars['Int'];
+  vat?: Maybe<Scalars['String']>;
 };
 
 export type ProductConnection = {
@@ -312,45 +310,39 @@ export type ProductConnection = {
 };
 
 export type ProductCreateInput = {
-  archived: Scalars['Boolean'];
+  allowRefund?: InputMaybe<Scalars['Boolean']>;
+  archived?: InputMaybe<Scalars['Boolean']>;
   barcode?: InputMaybe<Scalars['String']>;
-  categories: Scalars['String'];
+  categoryId: Scalars['ID'];
+  color?: InputMaybe<Scalars['String']>;
   cost: Scalars['Float'];
-  description: Scalars['String'];
-  factoryCode: Scalars['String'];
-  forPurchase: Scalars['Boolean'];
-  forSale: Scalars['Boolean'];
-  hasStock: Scalars['Boolean'];
-  image: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<Scalars['String']>;
+  ingredientsIds?: InputMaybe<Array<Scalars['ID']>>;
   name: Scalars['String'];
-  purchasePrice: Scalars['Float'];
-  sku: Scalars['String'];
-  subtotal: Scalars['Float'];
-  tags: Scalars['String'];
-  total: Scalars['Float'];
-  units: Scalars['Float'];
-  weight: Scalars['Float'];
+  plu: Scalars['String'];
+  price: Scalars['Float'];
+  priceWithoutVAT: Scalars['Float'];
+  stock?: InputMaybe<Scalars['Int']>;
+  vat?: InputMaybe<Scalars['String']>;
 };
 
 export type ProductUpdateInput = {
+  allowRefund?: InputMaybe<Scalars['Boolean']>;
   archived?: InputMaybe<Scalars['Boolean']>;
   barcode?: InputMaybe<Scalars['String']>;
-  categories?: InputMaybe<Scalars['String']>;
+  categoryId?: InputMaybe<Scalars['ID']>;
+  color?: InputMaybe<Scalars['String']>;
   cost?: InputMaybe<Scalars['Float']>;
   description?: InputMaybe<Scalars['String']>;
-  factoryCode?: InputMaybe<Scalars['String']>;
-  forPurchase?: InputMaybe<Scalars['Boolean']>;
-  forSale?: InputMaybe<Scalars['Boolean']>;
-  hasStock?: InputMaybe<Scalars['Boolean']>;
   image?: InputMaybe<Scalars['String']>;
+  ingredientsIds?: InputMaybe<Array<Scalars['ID']>>;
   name?: InputMaybe<Scalars['String']>;
-  purchasePrice?: InputMaybe<Scalars['Float']>;
-  sku?: InputMaybe<Scalars['String']>;
-  subtotal?: InputMaybe<Scalars['Float']>;
-  tags?: InputMaybe<Scalars['String']>;
-  total?: InputMaybe<Scalars['Float']>;
-  units?: InputMaybe<Scalars['Float']>;
-  weight?: InputMaybe<Scalars['Float']>;
+  plu?: InputMaybe<Scalars['String']>;
+  price?: InputMaybe<Scalars['Float']>;
+  priceWithoutVAT?: InputMaybe<Scalars['Float']>;
+  stock?: InputMaybe<Scalars['Int']>;
+  vat?: InputMaybe<Scalars['String']>;
 };
 
 export type ProductsQueryArgs = {
@@ -364,6 +356,7 @@ export type Query = {
   category: Category;
   ingredient: Ingredient;
   ingredients: IngredientConnection;
+  ingredientsAll: Array<Ingredient>;
   menu: Menu;
   menus: MenuConnection;
   menusAll: Array<Menu>;
@@ -624,6 +617,11 @@ export type IngredientsQueryVariables = Exact<{
 
 export type IngredientsQuery = { __typename?: 'Query', ingredients: { __typename?: 'IngredientConnection', totalCount: number, nodes: Array<{ __typename?: 'Ingredient', id: string, deleted: boolean, name: string, sku: string, unitTypeId: string, unitCost?: number | null, visible: boolean, barcode?: string | null, unitType?: { __typename?: 'UnitType', name: string } | null } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
+export type IngredientsAllQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type IngredientsAllQuery = { __typename?: 'Query', ingredientsAll: Array<{ __typename?: 'Ingredient', id: string, name: string, unitCost?: number | null, unitType?: { __typename?: 'UnitType', name: string } | null }> };
+
 export type MenusQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -642,7 +640,7 @@ export type ProductQueryVariables = Exact<{
 }>;
 
 
-export type ProductQuery = { __typename?: 'Query', product: { __typename?: 'Product', id: string, deleted: boolean, archived: boolean, barcode?: string | null, cost: number, description: string, factoryCode: string, forPurchase: boolean, forSale: boolean, hasStock: boolean, image: string, name: string, purchasePrice: number, sku: string, subtotal: number, tags: string, total: number, units: number, weight: number, categories: string } };
+export type ProductQuery = { __typename?: 'Query', product: { __typename?: 'Product', id: string, deleted: boolean, archived: boolean, categoryId: string, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, vat?: string | null, price: number, priceWithoutVAT: number, category: { __typename?: 'Category', id: string }, ingredients: Array<{ __typename?: 'Ingredient', id: string }> } };
 
 export type ProductsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -651,7 +649,7 @@ export type ProductsQueryVariables = Exact<{
 }>;
 
 
-export type ProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnection', totalCount: number, nodes: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, barcode?: string | null, cost: number, description: string, factoryCode: string, forPurchase: boolean, forSale: boolean, hasStock: boolean, image: string, name: string, purchasePrice: number, sku: string, subtotal: number, tags: string, total: number, units: number, weight: number, categories: string } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnection', totalCount: number, nodes: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, vat?: string | null, price: number, priceWithoutVAT: number, category: { __typename?: 'Category', id: string }, ingredients: Array<{ __typename?: 'Ingredient', id: string }> } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type UnitTypesQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -1473,6 +1471,45 @@ export function useIngredientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type IngredientsQueryHookResult = ReturnType<typeof useIngredientsQuery>;
 export type IngredientsLazyQueryHookResult = ReturnType<typeof useIngredientsLazyQuery>;
 export type IngredientsQueryResult = Apollo.QueryResult<IngredientsQuery, IngredientsQueryVariables>;
+export const IngredientsAllDocument = gql`
+    query IngredientsAll {
+  ingredientsAll {
+    id
+    name
+    unitCost
+    unitType {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useIngredientsAllQuery__
+ *
+ * To run a query within a React component, call `useIngredientsAllQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIngredientsAllQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIngredientsAllQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useIngredientsAllQuery(baseOptions?: Apollo.QueryHookOptions<IngredientsAllQuery, IngredientsAllQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<IngredientsAllQuery, IngredientsAllQueryVariables>(IngredientsAllDocument, options);
+      }
+export function useIngredientsAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IngredientsAllQuery, IngredientsAllQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<IngredientsAllQuery, IngredientsAllQueryVariables>(IngredientsAllDocument, options);
+        }
+export type IngredientsAllQueryHookResult = ReturnType<typeof useIngredientsAllQuery>;
+export type IngredientsAllLazyQueryHookResult = ReturnType<typeof useIngredientsAllLazyQuery>;
+export type IngredientsAllQueryResult = Apollo.QueryResult<IngredientsAllQuery, IngredientsAllQueryVariables>;
 export const MenusDocument = gql`
     query Menus($offset: Int, $limit: Int) {
   menus(offset: $offset, limit: $limit) {
@@ -1568,23 +1605,25 @@ export const ProductDocument = gql`
     id
     deleted
     archived
-    barcode
-    cost
-    description
-    factoryCode
-    forPurchase
-    forSale
-    hasStock
-    image
+    categoryId
+    category {
+      id
+    }
     name
-    purchasePrice
-    sku
-    subtotal
-    tags
-    total
-    units
-    weight
-    categories
+    description
+    plu
+    image
+    color
+    barcode
+    ingredients {
+      id
+    }
+    cost
+    stock
+    allowRefund
+    vat
+    price
+    priceWithoutVAT
   }
 }
     `;
@@ -1623,23 +1662,24 @@ export const ProductsDocument = gql`
       id
       deleted
       archived
-      barcode
-      cost
-      description
-      factoryCode
-      forPurchase
-      forSale
-      hasStock
-      image
+      category {
+        id
+      }
       name
-      purchasePrice
-      sku
-      subtotal
-      tags
-      total
-      units
-      weight
-      categories
+      description
+      plu
+      image
+      color
+      barcode
+      ingredients {
+        id
+      }
+      cost
+      stock
+      allowRefund
+      vat
+      price
+      priceWithoutVAT
     }
     totalCount
     pageInfo {

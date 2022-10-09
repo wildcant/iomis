@@ -1,6 +1,7 @@
 import { Button, Flex, Heading } from '@chakra-ui/react'
-import { Menu, useCategoriesAllQuery, useMenuCreateMutation } from '@iomis/api'
-import { InputField, Option, Panel, SelectField } from 'components/atoms'
+import { Menu, useMenuCreateMutation } from '@iomis/api'
+import { InputField, Option, Panel } from 'components/atoms'
+import { CategorySelectField } from 'components/atoms/CategorySelectField/CategorySelectField'
 import { Layout } from 'components/templates'
 import { useHandleError } from 'hooks/useHandleError'
 import { useHandleSuccess } from 'hooks/useHandleSuccess'
@@ -17,14 +18,6 @@ export default function NewMenu() {
   useHandleError(error)
   const isSuccess = called && !error
   useHandleSuccess(isSuccess)
-
-  const {
-    data,
-    loading: loadingCategories,
-    error: categoriesError,
-  } = useCategoriesAllQuery()
-  useHandleError(categoriesError)
-  const { categoriesAll: categories } = data ?? {}
 
   const { goToMenus } = usePageNavigation()
   useEffect(() => {
@@ -45,12 +38,6 @@ export default function NewMenu() {
       },
     })
   }
-
-  const options =
-    categories?.map((c) => ({
-      value: c.id,
-      label: `${c.name} (${c._count.products} productos)`,
-    })) ?? []
 
   return (
     <form onSubmit={handleSubmit(saveMenu)} noValidate>
@@ -87,14 +74,10 @@ export default function NewMenu() {
         title='Añadir una categoría'
         description='Agregue categorías que aparecerán en este menú cuando esté activo.'
       >
-        <SelectField
+        <CategorySelectField
           isMulti
           control={control}
           name='categories'
-          label='Categorías'
-          placeholder='Selecciona una categoría'
-          options={options}
-          isDisabled={loadingCategories}
           rules={{
             required: {
               value: true,

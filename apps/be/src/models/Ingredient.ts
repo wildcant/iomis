@@ -13,6 +13,7 @@ export class Ingredient {
   @Field(() => String)
   name: string
 
+  // TODO: Validate it's unique.
   @Field(() => String)
   sku: string
 

@@ -39,7 +39,7 @@ const images = [
   { src: '/assets/categories/general.png', alt: 'general' },
 ]
 
-const defaultImage = `${process.env.NEXT_PUBLIC_ADMIN_URL}${images[0]}`
+const defaultImage = `${process.env.NEXT_PUBLIC_ADMIN_URL}${images[0]!.src}`
 
 interface IUseCategoriesImagesModalArgs<TValues extends FieldValues>
   extends UseControllerProps<TValues> {}

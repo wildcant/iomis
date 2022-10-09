@@ -14,7 +14,7 @@ export type Option = {
   label: string
 }
 
-interface SelectFieldProps<TValues extends FieldValues>
+export interface SelectFieldProps<TValues extends FieldValues>
   extends Omit<Props, 'name' | 'defaultValue'>,
     FormFieldProps,
     UseControllerProps<TValues> {}

@@ -56,8 +56,8 @@ interface IUniTypeListItemProps extends EditableUnitType {
 }
 
 // eslint-disable-next-line react/display-name
-const UnitTypeListItem = memo(
-  ({
+const UnitTypeListItem = memo((props: IUniTypeListItemProps) => {
+  const {
     id,
     isNew,
     value,
@@ -66,57 +66,56 @@ const UnitTypeListItem = memo(
     createUnitType,
     deleteUnitType,
     dispatch,
-  }: IUniTypeListItemProps) => {
-    return (
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          isNew ? createUnitType(id, value) : updateUnitType(id, value)
-          dispatch({ type: 'toggle-edit-mode', id })
-        }}
-      >
-        <Flex alignItems={'center'} justifyContent={'space-between'}>
-          <Input
-            variant={editMode ? 'flushed' : 'unstyled'}
-            value={value}
-            disabled={!editMode}
-            _disabled={{ color: 'chakra-body-text' }}
-            onChange={(e) =>
-              dispatch({ type: 'set-value', id, newValue: e.target.value })
-            }
-          />
-          <Flex>
-            {editMode && (
-              <IconButton
-                aria-label='submit-unit-type'
-                variant={'unstyled'}
-                type='submit'
-                icon={<CheckIcon />}
-                disabled={!value}
-              />
-            )}
-            {!editMode && (
-              <IconButton
-                aria-label='edit-unit-type'
-                variant={'unstyled'}
-                type='button'
-                icon={<EditIcon />}
-                onClick={() => dispatch({ type: 'toggle-edit-mode', id })}
-              />
-            )}
+  } = props
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        isNew ? createUnitType(id, value) : updateUnitType(id, value)
+        dispatch({ type: 'toggle-edit-mode', id })
+      }}
+    >
+      <Flex alignItems={'center'} justifyContent={'space-between'}>
+        <Input
+          variant={editMode ? 'flushed' : 'unstyled'}
+          value={value}
+          disabled={!editMode}
+          _disabled={{ color: 'chakra-body-text' }}
+          onChange={(e) =>
+            dispatch({ type: 'set-value', id, newValue: e.target.value })
+          }
+        />
+        <Flex>
+          {editMode && (
             <IconButton
-              aria-label='delete-unit-type'
+              aria-label='submit-unit-type'
               variant={'unstyled'}
-              icon={<DeleteIcon />}
-              disabled={isNew}
-              onClick={() => deleteUnitType(id)}
+              type='submit'
+              icon={<CheckIcon />}
+              disabled={!value}
             />
-          </Flex>
+          )}
+          {!editMode && (
+            <IconButton
+              aria-label='edit-unit-type'
+              variant={'unstyled'}
+              type='button'
+              icon={<EditIcon />}
+              onClick={() => dispatch({ type: 'toggle-edit-mode', id })}
+            />
+          )}
+          <IconButton
+            aria-label='delete-unit-type'
+            variant={'unstyled'}
+            icon={<DeleteIcon />}
+            disabled={isNew}
+            onClick={() => deleteUnitType(id)}
+          />
         </Flex>
-      </form>
-    )
-  }
-)
+      </Flex>
+    </form>
+  )
+})
 
 type EditableUnitTypeAction = {
   type: 'create' | 'created' | 'toggle-edit-mode' | 'set-value' | 'delete'
@@ -396,6 +395,7 @@ export default function NewIngredient() {
             name='sku'
             label='SKU'
             type='text'
+            info='Stock Keeping Unit: identificador único de producto'
             rules={{
               required: { value: true, message: 'El sku es requerido.' },
             }}

@@ -3,22 +3,24 @@ query Product($id: ID!) {
     id
     deleted
     archived
-    barcode
-    cost
-    description
-    factoryCode
-    forPurchase
-    forSale
-    hasStock
-    image
+    categoryId
+    category {
+      id
+    }
     name
-    purchasePrice
-    sku
-    subtotal
-    tags
-    total
-    units
-    weight
-    categories
+    description
+    plu
+    image
+    color
+    barcode
+    ingredients {
+      id
+    }
+    cost
+    stock
+    allowRefund
+    vat
+    price
+    priceWithoutVAT
   }
 }

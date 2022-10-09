@@ -1,0 +1,10 @@
+query IngredientsAll {
+  ingredientsAll {
+    id
+    name
+    unitCost
+    unitType {
+      name
+    }
+  }
+}

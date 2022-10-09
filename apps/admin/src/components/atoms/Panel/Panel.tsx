@@ -15,7 +15,6 @@ const FormPanel = styled(Box)`
   border-radius: 8px;
   background-color: white;
   box-shadow: ${(props) => props.theme.shadows.xs};
-  padding: 20px;
   margin-bottom: 1rem;
 `
 
@@ -23,7 +22,6 @@ const FormAccordion = styled(Accordion)`
   border-radius: 8px;
   background-color: white;
   box-shadow: ${(props) => props.theme.shadows.xs};
-  padding: 20px;
   margin-bottom: 1rem;
 `
 
@@ -37,7 +35,7 @@ export function Panel(props: PanelProps) {
   const { children, title, description, allowToggle } = props
 
   return allowToggle ? (
-    <FormAccordion allowToggle>
+    <FormAccordion allowToggle p={{ base: 2, md: 4 }}>
       <AccordionItem border={'none'}>
         {({ isExpanded }) => (
           <>
@@ -74,7 +72,7 @@ export function Panel(props: PanelProps) {
       </AccordionItem>
     </FormAccordion>
   ) : (
-    <FormPanel>
+    <FormPanel p={{ base: 2, md: 4 }}>
       <Heading as='h5' fontSize={'md'} mb={2}>
         {title}
       </Heading>

@@ -2,42 +2,26 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Product {
+type Menu {
   id: ID!
   deleted: Boolean!
-  archived: Boolean!
-  barcode: String
-  cost: Float!
-  description: String!
-  factoryCode: String!
-  forPurchase: Boolean!
-  forSale: Boolean!
-  hasStock: Boolean!
-  image: String!
   name: String!
-  purchasePrice: Float!
-  sku: String!
-  subtotal: Float!
-  tags: String!
-  total: Float!
-  units: Float!
-  weight: Float!
-  categories: String!
+  categories: [Category!]
 }
 
-type PageInfo {
-  hasPreviousPage: Boolean!
-  hasNextPage: Boolean!
-}
-
-type ProductConnection {
-  totalCount: Float!
-  pageInfo: PageInfo!
-  nodes: [Product]!
-}
-
-type BatchResponse {
-  count: Int!
+type Category {
+  id: ID!
+  deleted: Boolean!
+  name: String
+  description: String
+  vat: String
+  deliveryVat: String
+  takeawayVat: String
+  course: Int
+  image: String
+  visible: Boolean
+  products: [Product!]
+  menus: [Menu!]
 }
 
 type UnitType {
@@ -59,32 +43,46 @@ type Ingredient {
   unitType: UnitType
 }
 
+type Product {
+  id: ID!
+  deleted: Boolean!
+  archived: Boolean!
+  categoryId: ID!
+  category: Category!
+  name: String!
+  description: String
+  plu: String!
+  image: String
+  color: String
+  barcode: String
+  ingredients: [Ingredient!]!
+  cost: Float!
+  stock: Int!
+  allowRefund: Boolean!
+  vat: String
+  price: Float!
+  priceWithoutVAT: Float!
+}
+
+type PageInfo {
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type ProductConnection {
+  totalCount: Float!
+  pageInfo: PageInfo!
+  nodes: [Product]!
+}
+
+type BatchResponse {
+  count: Int!
+}
+
 type IngredientConnection {
   totalCount: Float!
   pageInfo: PageInfo!
   nodes: [Ingredient]!
-}
-
-type Menu {
-  id: ID!
-  deleted: Boolean!
-  name: String!
-  categories: [Category!]
-}
-
-type Category {
-  id: ID!
-  deleted: Boolean!
-  name: String
-  description: String
-  vat: String
-  deliveryVat: String
-  takeawayVat: String
-  course: Int
-  image: String
-  visible: Boolean
-  products: [Product!]
-  menus: [Menu!]
 }
 
 type CategoryNodeCount {
@@ -127,6 +125,7 @@ type UnitTypeConnection {
 
 type Query {
   ingredients(offset: Int, limit: Int): IngredientConnection!
+  ingredientsAll: [Ingredient!]!
   ingredient(id: ID!): Ingredient!
   products(offset: Int, limit: Int, query: ProductsQueryArgs): ProductConnection!
   product(id: ID!): Product!
@@ -193,45 +192,39 @@ input IngredientUpdateInput {
 }
 
 input ProductCreateInput {
-  archived: Boolean!
+  archived: Boolean = false
+  categoryId: ID!
+  name: String!
+  description: String
+  plu: String!
+  image: String
+  color: String
   barcode: String
   cost: Float!
-  description: String!
-  factoryCode: String!
-  forPurchase: Boolean!
-  forSale: Boolean!
-  hasStock: Boolean!
-  image: String!
-  name: String!
-  purchasePrice: Float!
-  sku: String!
-  subtotal: Float!
-  tags: String!
-  total: Float!
-  units: Float!
-  weight: Float!
-  categories: String!
+  stock: Int = 0
+  allowRefund: Boolean = false
+  vat: String
+  price: Float!
+  priceWithoutVAT: Float!
+  ingredientsIds: [ID!] = []
 }
 
 input ProductUpdateInput {
-  archived: Boolean
+  archived: Boolean = false
+  categoryId: ID
+  name: String
+  description: String
+  plu: String
+  image: String
+  color: String
   barcode: String
   cost: Float
-  description: String
-  factoryCode: String
-  forPurchase: Boolean
-  forSale: Boolean
-  hasStock: Boolean
-  image: String
-  name: String
-  purchasePrice: Float
-  sku: String
-  subtotal: Float
-  tags: String
-  total: Float
-  units: Float
-  weight: Float
-  categories: String
+  stock: Int = 0
+  allowRefund: Boolean = false
+  vat: String
+  price: Float
+  priceWithoutVAT: Float
+  ingredientsIds: [ID!] = []
 }
 
 input ArchiveBulk {
