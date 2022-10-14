@@ -1,48 +1,70 @@
 import { FontAwesome } from '@expo/vector-icons'
-import { Image, SafeAreaView, Text, View } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import { Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+import { ScreenButton } from 'src/components/Button'
 import { Button } from 'src/components/Button/Button'
 import { Container } from 'src/components/Container/Container'
-
-const orders = [
-  {
-    id: '1',
-    name: 'Noodle Soup',
-    price: 45.0,
-  },
-  {
-    id: '2',
-    name: 'Salad with chicken',
-    price: 34.0,
-  },
-  {
-    id: '3',
-    name: 'Salad with chicken',
-    price: 34.0,
-    image: 'https://www.dropbox.com/s/c5dce66ex0k4rww/bottle-service.png?raw=1',
-  },
-]
+import { Divider } from 'src/components/Divider'
+import { useCheckoutCommands, useCheckoutState } from 'src/store/state'
 
 function OrderList() {
+  const [{ orderLineItems }] = useCheckoutState()
+  const { addProductToOrder, deleteProductFromOrder } = useCheckoutCommands()
   return (
-    <View className='rounded-xl shadow-sm p-2'>
-      <View className='flex flex-col'>
-        {orders.map(({ id, name, price, image }) => (
-          <View key={id} className='bg-white w-full rounded-2xl shadow-sm'>
-            <View className='h-20 w-full overflow-hidden flex flex-row justify-center'>
-              <Image
-                className='w-20 h-20 -top-6'
-                source={
-                  image ? { uri: image } : require('../../assets/product.png')
-                }
-              />
-            </View>
-            <View className='p-4 pt-0'>
-              <Text className='mt-2'>{name}</Text>
-              <Text className='mt-2 font-bold'>${price}</Text>
-              <Button className='py-1 px-2 w-12 mt-2 flex flex-row justify-between'>
-                <FontAwesome size={16} name='plus-circle' color={'white'} />
-                <Text className='text-white font-bold'>0</Text>
-              </Button>
+    <View className='rounded-xl shadow-sm flex-1'>
+      <View className='flex flex-col w-full'>
+        {orderLineItems?.map(({ product, quantity }) => (
+          <View
+            key={`${product.id}-order`}
+            className='bg-white w-full rounded-2xl shadow-xs p-4'
+          >
+            <View className='flex flex-row'>
+              <View className='h-20 w-20 overflow-hidden flex flex-row justify-center mr-4'>
+                <Image
+                  className='w-20 h-20'
+                  source={
+                    product.image
+                      ? { uri: product.image }
+                      : require('../../assets/product.png')
+                  }
+                />
+              </View>
+              <View className='pt-0 flex-1'>
+                <Text className='mt-2'>{product.name}</Text>
+                <Text className='mt-2 font-bold'>${product.price}</Text>
+                <View className='flex flex-row items-center justify-between'>
+                  <TouchableOpacity>
+                    <Text>Add note</Text>
+                  </TouchableOpacity>
+                  <View
+                    className={`bg-primary rounded-full flex flex-row justify-between items-center p-1`}
+                  >
+                    <Button
+                      className='w-4'
+                      onPress={() => deleteProductFromOrder(product)}
+                    >
+                      <FontAwesome
+                        size={16}
+                        name='minus-circle'
+                        color={'white'}
+                      />
+                    </Button>
+                    <Text className='text-white font-bold px-2'>
+                      {quantity}
+                    </Text>
+                    <Button
+                      className='w-4'
+                      onPress={() => addProductToOrder(product)}
+                    >
+                      <FontAwesome
+                        size={16}
+                        name='plus-circle'
+                        color={'white'}
+                      />
+                    </Button>
+                  </View>
+                </View>
+              </View>
             </View>
           </View>
         ))}
@@ -52,10 +74,22 @@ function OrderList() {
 }
 
 export function Order() {
+  const navigation = useNavigation()
+  const [{ totalPrice }] = useCheckoutState()
+
   return (
-    <SafeAreaView className='flex-1 bg-[#FCFCFC]'>
+    <SafeAreaView className='flex-1 bg-secondary'>
       <Container>
         <OrderList />
+        <Divider className='my-4' />
+        <View className='flex flex-row justify-between mb-4'>
+          <Text className='text-center font-bold'>Total</Text>
+          <Text className='text-center font-bold'>${totalPrice}</Text>
+        </View>
+
+        <ScreenButton onPress={() => navigation.navigate('Order')}>
+          Ordenar
+        </ScreenButton>
       </Container>
     </SafeAreaView>
   )

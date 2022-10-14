@@ -8,7 +8,7 @@ import { Providers } from './providers'
 function App() {
   return (
     <Providers>
-      <SafeAreaProvider className='bg-[#FCFCFC]'>
+      <SafeAreaProvider className='bg-secondary'>
         <Navigation />
         <StatusBar />
       </SafeAreaProvider>

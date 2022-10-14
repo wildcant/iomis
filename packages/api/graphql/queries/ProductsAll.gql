@@ -1,0 +1,23 @@
+query ProductsAll($query: ProductsQueryArgs) {
+  productsAll(query: $query) {
+    id
+    deleted
+    archived
+    name
+    description
+    plu
+    image
+    color
+    barcode
+    cost
+    stock
+    allowRefund
+    vat
+    price
+    priceWithoutVAT
+    category {
+      id
+      name
+    }
+  }
+}

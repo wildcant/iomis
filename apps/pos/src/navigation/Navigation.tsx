@@ -9,6 +9,9 @@ import { MainTabs } from './MainTabs'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
+const primaryColor = '#282828'
+const secondaryColor = '#fcfcfc'
+
 export function Navigation() {
   return (
     <NavigationContainer>
@@ -16,7 +19,7 @@ export function Navigation() {
         initialRouteName='Home'
         screenOptions={({ navigation }) => ({
           headerStyle: {
-            backgroundColor: '#FCFCFC',
+            backgroundColor: secondaryColor,
           },
           headerLeft: (props) =>
             props.canGoBack ? (
@@ -24,7 +27,7 @@ export function Navigation() {
                 name='arrow-back-ios'
                 onPress={() => navigation.goBack()}
                 backgroundColor={'transparent'}
-                color={'#282828'}
+                color={primaryColor}
                 underlayColor={'transparent'}
               />
             ) : (
@@ -42,9 +45,9 @@ export function Navigation() {
                 size={16}
                 name='menu'
                 backgroundColor={'transparent'}
-                color={'#282828'}
+                color={primaryColor}
                 onPress={() => {}}
-                underlayColor={'#fcfcfc'}
+                underlayColor={secondaryColor}
               />
             ),
             headerRight: () => (
@@ -53,9 +56,9 @@ export function Navigation() {
                   size={16}
                   name='shopping-cart'
                   backgroundColor={'transparent'}
-                  color={'#282828'}
+                  color={primaryColor}
                   onPress={() => {}}
-                  underlayColor={'#fcfcfc'}
+                  underlayColor={secondaryColor}
                 />
               </View>
             ),

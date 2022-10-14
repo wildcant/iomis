@@ -4,7 +4,7 @@
   "main": "src/_app.tsx",
   "private": true,
   "scripts": {
-    "dev": "pnpm start",
+    "dev": "pnpm run ios",
     "lint": "eslint --ext js,ts,tsx .",
     "start": "expo start",
     "start:prod": "expo start --no-dev --minify",
@@ -39,6 +39,7 @@
   "devDependencies": {
     "@babel/core": "^7.19.1",
     "@iomis/eslint-config": "*",
+    "@iomis/utils": "*",
     "@testing-library/react-native": "11.0.0",
     "@types/jest": "29.1.1",
     "@types/react": "^18.0.21",

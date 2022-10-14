@@ -362,6 +362,7 @@ export type ProductUpdateInput = {
 
 export type ProductsQueryArgs = {
   archived?: InputMaybe<Scalars['Boolean']>;
+  categoryId?: InputMaybe<Scalars['ID']>;
 };
 
 export type Query = {
@@ -377,6 +378,7 @@ export type Query = {
   menusAll: Array<Menu>;
   product: Product;
   products: ProductConnection;
+  productsAll: Array<Product>;
   unitType: UnitType;
   unitTypes: UnitTypeConnection;
   unitTypesAll: Array<UnitType>;
@@ -429,6 +431,11 @@ export type QueryProductArgs = {
 export type QueryProductsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+  query?: InputMaybe<ProductsQueryArgs>;
+};
+
+
+export type QueryProductsAllArgs = {
   query?: InputMaybe<ProductsQueryArgs>;
 };
 
@@ -665,6 +672,13 @@ export type ProductsQueryVariables = Exact<{
 
 
 export type ProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnection', totalCount: number, nodes: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, vat?: number | null, price: number, priceWithoutVAT: number, category: { __typename?: 'Category', id: string, name?: string | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type ProductsAllQueryVariables = Exact<{
+  query?: InputMaybe<ProductsQueryArgs>;
+}>;
+
+
+export type ProductsAllQuery = { __typename?: 'Query', productsAll: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, vat?: number | null, price: number, priceWithoutVAT: number, category: { __typename?: 'Category', id: string, name?: string | null } }> };
 
 export type UnitTypesQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -1738,6 +1752,59 @@ export function useProductsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<P
 export type ProductsQueryHookResult = ReturnType<typeof useProductsQuery>;
 export type ProductsLazyQueryHookResult = ReturnType<typeof useProductsLazyQuery>;
 export type ProductsQueryResult = Apollo.QueryResult<ProductsQuery, ProductsQueryVariables>;
+export const ProductsAllDocument = gql`
+    query ProductsAll($query: ProductsQueryArgs) {
+  productsAll(query: $query) {
+    id
+    deleted
+    archived
+    name
+    description
+    plu
+    image
+    color
+    barcode
+    cost
+    stock
+    allowRefund
+    vat
+    price
+    priceWithoutVAT
+    category {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useProductsAllQuery__
+ *
+ * To run a query within a React component, call `useProductsAllQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductsAllQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProductsAllQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *   },
+ * });
+ */
+export function useProductsAllQuery(baseOptions?: Apollo.QueryHookOptions<ProductsAllQuery, ProductsAllQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProductsAllQuery, ProductsAllQueryVariables>(ProductsAllDocument, options);
+      }
+export function useProductsAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductsAllQuery, ProductsAllQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProductsAllQuery, ProductsAllQueryVariables>(ProductsAllDocument, options);
+        }
+export type ProductsAllQueryHookResult = ReturnType<typeof useProductsAllQuery>;
+export type ProductsAllLazyQueryHookResult = ReturnType<typeof useProductsAllLazyQuery>;
+export type ProductsAllQueryResult = Apollo.QueryResult<ProductsAllQuery, ProductsAllQueryVariables>;
 export const UnitTypesDocument = gql`
     query UnitTypes($offset: Int, $limit: Int) {
   unitTypes(offset: $offset, limit: $limit) {

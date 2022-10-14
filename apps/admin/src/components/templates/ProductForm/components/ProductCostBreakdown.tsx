@@ -17,7 +17,7 @@ import {
   useIngredientsAllQuery,
 } from '@iomis/api'
 import { Option } from 'components/atoms'
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect'
+import { useDeepCompareEffect } from '@iomis/utils/hooks'
 import { Reducer, useEffect, useReducer } from 'react'
 import { IngredientLineItem } from './IngredientLineItem'
 import {

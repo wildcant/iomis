@@ -1,11 +1,23 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { makeVar, ReactiveVar, useReactiveVar } from '@apollo/client'
 import { FontAwesome } from '@expo/vector-icons'
-import { Menu, useCategoriesAllQuery, useMenusAllQuery } from '@iomis/api'
+import {
+  Menu,
+  Product,
+  useCategoriesAllQuery,
+  useMenusAllQuery,
+  useProductsAllQuery,
+} from '@iomis/api'
 import { useNavigation } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar'
-import { useState } from 'react'
-import { Image, SafeAreaView, Text, TextInput, View } from 'react-native'
+import { useCallback, useState } from 'react'
+import {
+  Image,
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {
   Menu as MenuComponent,
   MenuOption,
@@ -15,36 +27,23 @@ import {
 } from 'react-native-popup-menu'
 import { Button } from 'src/components/Button/Button'
 import { Container } from 'src/components/Container/Container'
+import { useDeepCompareEffect } from '@iomis/utils/hooks'
+import { useCheckoutCommands, useCheckoutState } from 'src/store/state'
+import { ScreenButton } from 'src/components/Button'
 
 const DEFAULT_PRODUCT_IMAGE = require('../../assets/product.png')
 const DEFAULT_CATEGORY_IMAGE = require('../../assets/product.png')
 
-interface ICheckout {
-  menus: string[]
-}
-const checkout = makeVar<ICheckout>({
-  menus: [],
-})
-function useCheckoutState(): [ICheckout, ReactiveVar<ICheckout>] {
-  return [useReactiveVar(checkout), checkout]
-}
-function useCheckoutCommands() {
-  return {
-    handleMenuChanged(menus: string[]) {
-      checkout({ ...checkout(), menus })
-    },
-  }
-}
-
 function SearchInput() {
-  const [text, onChangeText] = useState('')
+  const [{ search }] = useCheckoutState()
+  const { handleSearchChange } = useCheckoutCommands()
   return (
     <View className='fex flex-row justify-center align-center w-full rounded-full bg-white shadow-sm py-4 px-4 text-black'>
       <FontAwesome size={16} name='search' color={'#C3C3C3'} />
       <TextInput
         className='flex-1 pl-1'
-        onChangeText={onChangeText}
-        value={text}
+        onChangeText={handleSearchChange}
+        value={search}
         placeholder='Buscar'
         placeholderTextColor={'#C3C3C3'}
       />
@@ -53,83 +52,102 @@ function SearchInput() {
 }
 
 function Categories() {
-  const [{ menus }] = useCheckoutState()
+  const [{ menus, selectedCategory }] = useCheckoutState()
+  const { handleSelectCategoryChange } = useCheckoutCommands()
   const { loading, data } = useCategoriesAllQuery({
-    variables: { query: { menus: { in: menus } } },
-    skip: !menus?.length,
+    variables: menus?.length ? { query: { menus: { in: menus } } } : {},
   })
 
-  const categories = data?.categoriesAll
-  const activeCategory = categories?.[0].id
+  const categories = data?.categoriesAll ?? []
+
+  useDeepCompareEffect(() => {
+    if (categories.length) {
+      handleSelectCategoryChange(categories[0].id)
+    }
+  }, [categories])
 
   return loading ? (
     <></>
   ) : (
     <View className='mt-4'>
       <View className='flex flex-row w-full justify-start gap-2'>
-        {data?.categoriesAll.map((category) => (
-          <View
+        {categories.map((category) => (
+          <TouchableOpacity
             key={category.id}
-            className={`${
-              activeCategory === category.id
-                ? 'border-[1px]'
-                : 'border-transparent'
-            } px-3 py-1 w-13 bg-white rounded-full`}
+            onPress={() => handleSelectCategoryChange(category.id)}
           >
-            <View className='h-10 w-10 rounded-full overflow-hidden'>
-              <Image
-                className='w-10 h-10'
-                source={
-                  category.image
-                    ? { uri: category.image }
-                    : DEFAULT_CATEGORY_IMAGE
-                }
-              />
+            <View
+              className={`${
+                selectedCategory === category.id
+                  ? 'border-[1px]'
+                  : 'border-transparent'
+              } px-3 py-1 w-13 bg-white rounded-full`}
+            >
+              <View className='h-10 w-10 rounded-full overflow-hidden'>
+                <Image
+                  className='w-10 h-10'
+                  source={
+                    category.image
+                      ? { uri: category.image }
+                      : DEFAULT_CATEGORY_IMAGE
+                  }
+                />
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
     </View>
   )
 }
 
-const products = [
-  {
-    id: '1',
-    name: 'Noodle Soup',
-    price: 45.0,
-  },
-  {
-    id: '2',
-    name: 'Salad with chicken',
-    price: 34.0,
-  },
-  {
-    id: '3',
-    name: 'Salad with chicken',
-    price: 34.0,
-    image: '',
-  },
-]
-
 function Products() {
+  const [{ selectedCategory, search, orderLineItems }] = useCheckoutState()
+  const { data } = useProductsAllQuery({
+    variables: { query: { categoryId: selectedCategory } },
+  })
+  const { addProductToOrder } = useCheckoutCommands()
+
+  const { productsAll = [] } = data ?? {}
+
+  const products = productsAll.filter(({ name }) =>
+    name.toLowerCase().includes(search.toLocaleLowerCase())
+  )
+
+  const getQuantity = useCallback(
+    (productId: string) =>
+      orderLineItems.find(({ product }) => product.id === productId)
+        ?.quantity ?? 0,
+    [products]
+  )
+
   return (
     <View className='mt-4 w-full'>
       <View className='flex flex-row w-full flex-wrap gap-y-4 justify-between'>
-        {products.map(({ id, name, price, image }) => (
-          <View key={id} className='bg-white w-[48%] rounded-2xl shadow-sm'>
+        {products?.map((product) => (
+          <View
+            key={product.id}
+            className='bg-white w-[48%] rounded-2xl shadow-sm'
+          >
             <View className='h-20 w-full overflow-hidden flex flex-row justify-center'>
               <Image
                 className='w-20 h-20 -top-6'
-                source={image ? { uri: image } : DEFAULT_PRODUCT_IMAGE}
+                source={
+                  product.image ? { uri: product.image } : DEFAULT_PRODUCT_IMAGE
+                }
               />
             </View>
             <View className='p-4 pt-0'>
-              <Text className='mt-2'>{name}</Text>
-              <Text className='mt-2 font-bold'>${price}</Text>
-              <Button className='py-1 px-2 w-12 mt-2 flex flex-row justify-between'>
+              <Text className='mt-2'>{product.name}</Text>
+              <Text className='mt-2 font-bold'>${product.price}</Text>
+              <Button
+                className='py-1 px-2 w-12 mt-2 flex flex-row justify-between'
+                onPress={() => addProductToOrder(product as Product)}
+              >
                 <FontAwesome size={16} name='plus-circle' color={'white'} />
-                <Text className='text-white font-bold'>0</Text>
+                <Text className='text-white font-bold'>
+                  {getQuantity(product.id)}
+                </Text>
               </Button>
             </View>
           </View>
@@ -138,6 +156,7 @@ function Products() {
     </View>
   )
 }
+
 const { ContextMenu } = renderers
 
 export const Menus = () => {
@@ -228,23 +247,27 @@ export const Menus = () => {
 
 export function CheckoutScreen() {
   const navigation = useNavigation()
+  const [{ totalPrice }] = useCheckoutState()
+
   return (
-    <SafeAreaView className='flex flex-col bg-[#FCFCFC]'>
-      <Container>
+    <SafeAreaView className='flex flex-col bg-secondary'>
+      <Container withTabs>
         <View className='flex-1'>
           <SearchInput />
           <Menus />
           <Categories />
           <Products />
         </View>
-        <View className='flex flex-row justify-center'>
-          <Button
-            className='w-[80%]'
-            onPress={() => navigation.navigate('Order')}
-          >
-            Agregar orden
-          </Button>
-        </View>
+        <ScreenButton onPress={() => navigation.navigate('Order')}>
+          <View className='flex flex-row justify-between'>
+            <Text className='text-secondary text-center font-bold'>
+              Ver Orden
+            </Text>
+            <Text className='text-secondary text-center font-bold'>
+              ${totalPrice}
+            </Text>
+          </View>
+        </ScreenButton>
       </Container>
       <StatusBar style='light' />
     </SafeAreaView>

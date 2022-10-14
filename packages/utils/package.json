@@ -1,0 +1,27 @@
+{
+  "name": "@iomis/utils",
+  "version": "1.0.0",
+  "scripts": {
+    "lint": "eslint --ext js,ts,tsx ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "18.0.0"
+  },
+  "devDependencies": {
+    "@iomis/eslint-config": "*",
+    "eslint": "^8.25.0",
+    "typescript": "^4.8.4"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@iomis/eslint-config"
+    ],
+    "ignorePatterns": [
+      "node_modules",
+      ".turbo"
+    ]
+  }
+}

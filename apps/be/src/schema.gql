@@ -136,6 +136,7 @@ type Query {
   ingredients(offset: Int, limit: Int): IngredientConnection!
   ingredientsAll: [Ingredient!]!
   ingredient(id: ID!): Ingredient!
+  productsAll(query: ProductsQueryArgs): [Product!]!
   products(offset: Int, limit: Int, query: ProductsQueryArgs): ProductConnection!
   product(id: ID!): Product!
   categories(offset: Int, limit: Int): CategoryConnection!
@@ -151,6 +152,7 @@ type Query {
 
 input ProductsQueryArgs {
   archived: Boolean
+  categoryId: ID
 }
 
 input CategoriesQueryArgs {

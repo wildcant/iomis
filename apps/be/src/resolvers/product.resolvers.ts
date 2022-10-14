@@ -28,6 +28,9 @@ import { createEntityConnection, DEFAULT_PAGE_SIZE } from 'utils'
 class ProductsQueryArgs {
   @Field({ nullable: true })
   archived?: boolean
+
+  @Field(() => ID, { nullable: true })
+  categoryId?: string
 }
 
 @InputType()
@@ -77,6 +80,36 @@ class BatchResponse {
 @Resolver(Product)
 export class ProductResolver {
   constructor(@Inject(PrismaService) private prisma: PrismaService) {}
+
+  @Query(() => [Product])
+  async productsAll(
+    @Args('query', { nullable: true }) query?: ProductsQueryArgs
+  ) {
+    const where: Prisma.ProductWhereInput = {}
+
+    if (query.categoryId) {
+      where.categoryId = query.categoryId
+    }
+
+    return this.prisma.product.findMany({
+      where,
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        productIngredients: {
+          select: {
+            id: true,
+            quantity: true,
+            ingredient: { select: { id: true, name: true } },
+          },
+        },
+      },
+    })
+  }
 
   @Query(() => ProductConnection)
   async products(
