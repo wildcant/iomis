@@ -38,7 +38,11 @@ export class IngredientResolver {
 
     const [count, nodes] = await this.prisma.$transaction([
       this.prisma.ingredient.count(),
-      this.prisma.ingredient.findMany({ take: limit, skip: offset }),
+      this.prisma.ingredient.findMany({
+        take: limit,
+        skip: offset,
+        include: { unitType: { select: { id: true, name: true } } },
+      }),
     ])
 
     return createEntityConnection({ nodes, count, offset, limit })

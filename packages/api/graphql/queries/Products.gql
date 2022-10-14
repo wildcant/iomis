@@ -4,24 +4,22 @@ query Products($offset: Int, $limit: Int, $query: ProductsQueryArgs) {
       id
       deleted
       archived
-      category {
-        id
-      }
       name
       description
       plu
       image
       color
       barcode
-      ingredients {
-        id
-      }
       cost
       stock
       allowRefund
       vat
       price
       priceWithoutVAT
+      category {
+        id
+        name
+      }
     }
     totalCount
     pageInfo {

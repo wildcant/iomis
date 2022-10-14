@@ -389,6 +389,7 @@ export default function NewIngredient() {
             rules={{
               required: { value: true, message: 'El nombre es requerido.' },
             }}
+            uppercase
           />
           <InputField
             control={control}

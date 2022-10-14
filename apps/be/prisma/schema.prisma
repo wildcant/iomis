@@ -60,15 +60,15 @@ model Product {
     // productTypeId
 
     // *** Inventory ***
-    barcode     String?      @db.VarChar(255)
-    ingredients Ingredient[]
-    cost        Float?
-    stock       Int
-    allowRefund Boolean      @default(false)
+    barcode            String?             @db.VarChar(255)
+    productIngredients ProductIngredient[]
+    cost               Float?
+    stock              Int
+    allowRefund        Boolean             @default(false)
     // trackStock
 
     // *** Taxes ***
-    vat String?
+    vat Int?
     // deliveryVat String?
     // takeawayVat String?
 
@@ -81,6 +81,15 @@ model Product {
 
     // *** Others ***
     // tags   String[]
+}
+
+model ProductIngredient {
+    id           String     @id @default(uuid()) @db.Uuid
+    quantity     Int
+    ingredientId String     @db.Uuid
+    productId    String     @db.Uuid
+    ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+    product      Product    @relation(fields: [productId], references: [id])
 }
 
 model Category {
@@ -122,18 +131,17 @@ model Menu {
 }
 
 model Ingredient {
-    id         String     @id @default(uuid()) @db.Uuid
-    deleted    Boolean    @default(false)
-    name       String     @db.VarChar(255)
-    sku        String     @db.VarChar(255)
-    unitTypeId String     @db.Uuid
-    unitCost   Float?
-    visible    Boolean    @default(false)
-    barcode    String?
-    unitType   UnitType   @relation(fields: [unitTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ingredientunittype_unitypeid_foreign")
-    suppliers  Supplier[]
-    Product    Product?   @relation(fields: [productId], references: [id])
-    productId  String?    @db.Uuid
+    id                String              @id @default(uuid()) @db.Uuid
+    deleted           Boolean             @default(false)
+    name              String              @db.VarChar(255)
+    sku               String              @db.VarChar(255)
+    unitTypeId        String              @db.Uuid
+    unitCost          Float?
+    visible           Boolean             @default(false)
+    barcode           String?
+    unitType          UnitType            @relation(fields: [unitTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ingredientunittype_unitypeid_foreign")
+    suppliers         Supplier[]
+    ProductIngredient ProductIngredient[]
 }
 
 model UnitType {

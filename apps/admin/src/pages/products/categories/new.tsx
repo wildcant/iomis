@@ -181,22 +181,24 @@ export default function NewCategory() {
           control={control}
           name='vat'
           label='Tasa de impuesto'
-          type='text'
+          type='number'
+          step={1}
+          min={1}
         />
 
-        <InputField
+        {/* <InputField
           control={control}
           name='deliveryVat'
           label='Tasa de impuesto de entrega'
           type='text'
-        />
+        /> */}
 
-        <InputField
+        {/* <InputField
           control={control}
           name='takeawayVat'
           label='Tasa de impuesto para ofertas'
           type='text'
-        />
+        /> */}
       </Panel>
 
       <Panel title='Visibilidad en POS'>

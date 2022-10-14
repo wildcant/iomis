@@ -55,10 +55,7 @@ registerEnumType(SortOrder, {
 })
 
 export const throwUnexpectedError = (e: any) => {
-  if (process.env.NODE_ENV === 'development') {
-    // eslint-disable-next-line no-console
-    console.error(e)
-  }
+  console.error(e)
   throw new HttpException(
     {
       status: HttpStatus.INTERNAL_SERVER_ERROR,

@@ -9,11 +9,12 @@ import {
   ObjectType,
   OmitType,
   PartialType,
+  PickType,
   Query,
   Resolver,
 } from '@nestjs/graphql'
 import { Prisma } from '@prisma/client'
-import { Product } from 'models/Product'
+import { Product, ProductIngredient } from 'models'
 import { PrismaService } from 'prisma.service'
 import {
   EntityConnection,
@@ -30,13 +31,20 @@ class ProductsQueryArgs {
 }
 
 @InputType()
+class ProductIngredientCreateInput extends PickType(
+  ProductIngredient,
+  ['quantity', 'ingredientId'],
+  InputType
+) {}
+
+@InputType()
 class ProductCreateInput extends OmitType(
   Product,
-  ['id', 'deleted', 'ingredients', 'category'],
+  ['id', 'deleted', 'productIngredients', 'category'],
   InputType
 ) {
-  @Field(() => [ID], { defaultValue: [] })
-  ingredientsIds?: string[]
+  @Field(() => [ProductIngredientCreateInput], { defaultValue: [] })
+  productIngredients?: ProductIngredientCreateInput[]
 }
 
 @InputType()
@@ -88,6 +96,21 @@ export class ProductResolver {
         take: limit,
         skip: offset,
         where,
+        include: {
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          productIngredients: {
+            select: {
+              id: true,
+              quantity: true,
+              ingredient: { select: { id: true, name: true } },
+            },
+          },
+        },
       }),
     ])
 
@@ -97,19 +120,31 @@ export class ProductResolver {
   @Query(() => Product)
   async product(@Args('id', { type: () => ID }) id: string) {
     return this.prisma.product
-      .findUnique({ where: { id } })
+      .findUnique({
+        where: { id },
+        include: {
+          category: { select: { id: true, name: true } },
+          productIngredients: {
+            select: {
+              id: true,
+              quantity: true,
+              ingredient: { select: { id: true, name: true } },
+            },
+          },
+        },
+      })
       .then((r) => r)
       .catch(throwUnexpectedError)
   }
 
   @Mutation(() => Product)
   async productCreate(@Args('input') input: ProductCreateInput) {
-    const { ingredientsIds, categoryId, ...data } = input
+    const { productIngredients, categoryId, ...data } = input
     return this.prisma.product.create({
       data: {
         ...data,
         category: { connect: { id: categoryId } },
-        ingredients: { connect: ingredientsIds.map((id) => ({ id })) },
+        productIngredients: { createMany: { data: productIngredients } },
       },
     })
   }
@@ -131,20 +166,29 @@ export class ProductResolver {
       )
     }
 
-    const { categoryId: newCategory, ingredientsIds, ...updatedData } = input
+    const {
+      categoryId: newCategory,
+      productIngredients,
+      ...updatedData
+    } = input
     const category = newCategory
       ? { id: newCategory }
       : { id: product.categoryId }
 
-    return this.prisma.product.update({
+    this.prisma.product.update({
       where: { id },
       data: {
         ...updatedData,
         category: { connect: category },
         //  TODO: Make validations for ingredients
-        ingredients: { connect: ingredientsIds.map((id) => ({ id })) },
       },
     })
+    // Update ingredients
+    // productIngredients.map((productIngredient) => this.prisma.product.update({
+
+    // }))
+
+    return
   }
 
   @Mutation(() => Product)

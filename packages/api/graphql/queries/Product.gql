@@ -6,6 +6,7 @@ query Product($id: ID!) {
     categoryId
     category {
       id
+      name
     }
     name
     description
@@ -13,8 +14,13 @@ query Product($id: ID!) {
     image
     color
     barcode
-    ingredients {
+    productIngredients {
       id
+      quantity
+      ingredient {
+        id
+        name
+      }
     }
     cost
     stock

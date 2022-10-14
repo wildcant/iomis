@@ -33,6 +33,8 @@ export default async function uploadImage(
       .replaceAll(':', '')
 
     // Create new dropbox instance.
+    // TODO: Add refresh token functionality.
+    // See https://www.dropboxforum.com/t5/Dropbox-API-Support-Feedback/Issue-in-generating-access-token/td-p/592667
     const dbx = new Dropbox({ accessToken: process.env.DROPBOX_ACCESS_TOKEN })
 
     // Extract base 64 data from image dataUrl.

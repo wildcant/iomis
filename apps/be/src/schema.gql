@@ -9,21 +9,6 @@ type Menu {
   categories: [Category!]
 }
 
-type Category {
-  id: ID!
-  deleted: Boolean!
-  name: String
-  description: String
-  vat: String
-  deliveryVat: String
-  takeawayVat: String
-  course: Int
-  image: String
-  visible: Boolean
-  products: [Product!]
-  menus: [Menu!]
-}
-
 type UnitType {
   id: ID!
   name: String!
@@ -37,10 +22,19 @@ type Ingredient {
   name: String!
   sku: String!
   unitTypeId: ID!
-  unitCost: Float
+  unitCost: Float!
   visible: Boolean!
   barcode: String
-  unitType: UnitType
+  unitType: UnitType!
+}
+
+type ProductIngredient {
+  id: ID!
+  quantity: Int!
+  productId: ID!
+  product: Product!
+  ingredientId: ID!
+  ingredient: Ingredient!
 }
 
 type Product {
@@ -55,13 +49,28 @@ type Product {
   image: String
   color: String
   barcode: String
-  ingredients: [Ingredient!]!
+  productIngredients: [ProductIngredient!]!
   cost: Float!
   stock: Int!
   allowRefund: Boolean!
-  vat: String
+  vat: Int
   price: Float!
   priceWithoutVAT: Float!
+}
+
+type Category {
+  id: ID!
+  deleted: Boolean!
+  name: String
+  description: String
+  vat: String
+  deliveryVat: String
+  takeawayVat: String
+  course: Int
+  image: String
+  visible: Boolean
+  products: [Product!]
+  menus: [Menu!]
 }
 
 type PageInfo {
@@ -177,7 +186,7 @@ input IngredientCreateInput {
   name: String!
   sku: String!
   unitTypeId: ID!
-  unitCost: Float
+  unitCost: Float!
   visible: Boolean!
   barcode: String
 }
@@ -203,10 +212,15 @@ input ProductCreateInput {
   cost: Float!
   stock: Int = 0
   allowRefund: Boolean = false
-  vat: String
+  vat: Int
   price: Float!
   priceWithoutVAT: Float!
-  ingredientsIds: [ID!] = []
+  productIngredients: [ProductIngredientCreateInput!] = []
+}
+
+input ProductIngredientCreateInput {
+  quantity: Int!
+  ingredientId: ID!
 }
 
 input ProductUpdateInput {
@@ -221,10 +235,10 @@ input ProductUpdateInput {
   cost: Float
   stock: Int = 0
   allowRefund: Boolean = false
-  vat: String
+  vat: Int
   price: Float
   priceWithoutVAT: Float
-  ingredientsIds: [ID!] = []
+  productIngredients: [ProductIngredientCreateInput!] = []
 }
 
 input ArchiveBulk {

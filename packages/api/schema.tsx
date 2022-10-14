@@ -107,8 +107,8 @@ export type Ingredient = {
   id: Scalars['ID'];
   name: Scalars['String'];
   sku: Scalars['String'];
-  unitCost?: Maybe<Scalars['Float']>;
-  unitType?: Maybe<UnitType>;
+  unitCost: Scalars['Float'];
+  unitType: UnitType;
   unitTypeId: Scalars['ID'];
   visible: Scalars['Boolean'];
 };
@@ -124,7 +124,7 @@ export type IngredientCreateInput = {
   barcode?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   sku: Scalars['String'];
-  unitCost?: InputMaybe<Scalars['Float']>;
+  unitCost: Scalars['Float'];
   unitTypeId: Scalars['ID'];
   visible: Scalars['Boolean'];
 };
@@ -293,13 +293,13 @@ export type Product = {
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   image?: Maybe<Scalars['String']>;
-  ingredients: Array<Ingredient>;
   name: Scalars['String'];
   plu: Scalars['String'];
   price: Scalars['Float'];
   priceWithoutVAT: Scalars['Float'];
+  productIngredients: Array<ProductIngredient>;
   stock: Scalars['Int'];
-  vat?: Maybe<Scalars['String']>;
+  vat?: Maybe<Scalars['Int']>;
 };
 
 export type ProductConnection = {
@@ -318,13 +318,28 @@ export type ProductCreateInput = {
   cost: Scalars['Float'];
   description?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
-  ingredientsIds?: InputMaybe<Array<Scalars['ID']>>;
   name: Scalars['String'];
   plu: Scalars['String'];
   price: Scalars['Float'];
   priceWithoutVAT: Scalars['Float'];
+  productIngredients?: InputMaybe<Array<ProductIngredientCreateInput>>;
   stock?: InputMaybe<Scalars['Int']>;
-  vat?: InputMaybe<Scalars['String']>;
+  vat?: InputMaybe<Scalars['Int']>;
+};
+
+export type ProductIngredient = {
+  __typename?: 'ProductIngredient';
+  id: Scalars['ID'];
+  ingredient: Ingredient;
+  ingredientId: Scalars['ID'];
+  product: Product;
+  productId: Scalars['ID'];
+  quantity: Scalars['Int'];
+};
+
+export type ProductIngredientCreateInput = {
+  ingredientId: Scalars['ID'];
+  quantity: Scalars['Int'];
 };
 
 export type ProductUpdateInput = {
@@ -336,13 +351,13 @@ export type ProductUpdateInput = {
   cost?: InputMaybe<Scalars['Float']>;
   description?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
-  ingredientsIds?: InputMaybe<Array<Scalars['ID']>>;
   name?: InputMaybe<Scalars['String']>;
   plu?: InputMaybe<Scalars['String']>;
   price?: InputMaybe<Scalars['Float']>;
   priceWithoutVAT?: InputMaybe<Scalars['Float']>;
+  productIngredients?: InputMaybe<Array<ProductIngredientCreateInput>>;
   stock?: InputMaybe<Scalars['Int']>;
-  vat?: InputMaybe<Scalars['String']>;
+  vat?: InputMaybe<Scalars['Int']>;
 };
 
 export type ProductsQueryArgs = {
@@ -607,7 +622,7 @@ export type IngredientQueryVariables = Exact<{
 }>;
 
 
-export type IngredientQuery = { __typename?: 'Query', ingredient: { __typename?: 'Ingredient', id: string, deleted: boolean, name: string, sku: string, unitTypeId: string, unitCost?: number | null, visible: boolean, barcode?: string | null } };
+export type IngredientQuery = { __typename?: 'Query', ingredient: { __typename?: 'Ingredient', id: string, deleted: boolean, name: string, sku: string, unitTypeId: string, unitCost: number, visible: boolean, barcode?: string | null } };
 
 export type IngredientsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -615,12 +630,12 @@ export type IngredientsQueryVariables = Exact<{
 }>;
 
 
-export type IngredientsQuery = { __typename?: 'Query', ingredients: { __typename?: 'IngredientConnection', totalCount: number, nodes: Array<{ __typename?: 'Ingredient', id: string, deleted: boolean, name: string, sku: string, unitTypeId: string, unitCost?: number | null, visible: boolean, barcode?: string | null, unitType?: { __typename?: 'UnitType', name: string } | null } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type IngredientsQuery = { __typename?: 'Query', ingredients: { __typename?: 'IngredientConnection', totalCount: number, nodes: Array<{ __typename?: 'Ingredient', id: string, deleted: boolean, name: string, sku: string, unitTypeId: string, unitCost: number, visible: boolean, barcode?: string | null, unitType: { __typename?: 'UnitType', name: string } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type IngredientsAllQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type IngredientsAllQuery = { __typename?: 'Query', ingredientsAll: Array<{ __typename?: 'Ingredient', id: string, name: string, unitCost?: number | null, unitType?: { __typename?: 'UnitType', name: string } | null }> };
+export type IngredientsAllQuery = { __typename?: 'Query', ingredientsAll: Array<{ __typename?: 'Ingredient', id: string, name: string, unitCost: number, unitType: { __typename?: 'UnitType', name: string } }> };
 
 export type MenusQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -640,7 +655,7 @@ export type ProductQueryVariables = Exact<{
 }>;
 
 
-export type ProductQuery = { __typename?: 'Query', product: { __typename?: 'Product', id: string, deleted: boolean, archived: boolean, categoryId: string, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, vat?: string | null, price: number, priceWithoutVAT: number, category: { __typename?: 'Category', id: string }, ingredients: Array<{ __typename?: 'Ingredient', id: string }> } };
+export type ProductQuery = { __typename?: 'Query', product: { __typename?: 'Product', id: string, deleted: boolean, archived: boolean, categoryId: string, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, vat?: number | null, price: number, priceWithoutVAT: number, category: { __typename?: 'Category', id: string, name?: string | null }, productIngredients: Array<{ __typename?: 'ProductIngredient', id: string, quantity: number, ingredient: { __typename?: 'Ingredient', id: string, name: string } }> } };
 
 export type ProductsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -649,7 +664,7 @@ export type ProductsQueryVariables = Exact<{
 }>;
 
 
-export type ProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnection', totalCount: number, nodes: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, vat?: string | null, price: number, priceWithoutVAT: number, category: { __typename?: 'Category', id: string }, ingredients: Array<{ __typename?: 'Ingredient', id: string }> } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnection', totalCount: number, nodes: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, vat?: number | null, price: number, priceWithoutVAT: number, category: { __typename?: 'Category', id: string, name?: string | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type UnitTypesQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -1608,6 +1623,7 @@ export const ProductDocument = gql`
     categoryId
     category {
       id
+      name
     }
     name
     description
@@ -1615,8 +1631,13 @@ export const ProductDocument = gql`
     image
     color
     barcode
-    ingredients {
+    productIngredients {
       id
+      quantity
+      ingredient {
+        id
+        name
+      }
     }
     cost
     stock
@@ -1662,24 +1683,22 @@ export const ProductsDocument = gql`
       id
       deleted
       archived
-      category {
-        id
-      }
       name
       description
       plu
       image
       color
       barcode
-      ingredients {
-        id
-      }
       cost
       stock
       allowRefund
       vat
       price
       priceWithoutVAT
+      category {
+        id
+        name
+      }
     }
     totalCount
     pageInfo {

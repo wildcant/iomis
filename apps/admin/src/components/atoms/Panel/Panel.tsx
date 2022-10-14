@@ -30,12 +30,17 @@ interface PanelProps {
   title?: string
   description?: string
   allowToggle?: boolean
+  expanded?: boolean
 }
 export function Panel(props: PanelProps) {
-  const { children, title, description, allowToggle } = props
+  const { children, title, description, allowToggle, expanded = true } = props
 
   return allowToggle ? (
-    <FormAccordion allowToggle p={{ base: 2, md: 4 }}>
+    <FormAccordion
+      allowToggle
+      p={{ base: 2, md: 4 }}
+      defaultIndex={expanded ? [0] : []}
+    >
       <AccordionItem border={'none'}>
         {({ isExpanded }) => (
           <>
