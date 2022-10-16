@@ -11,7 +11,7 @@ import {
   ModalCloseButton,
   ModalProps,
 } from '@chakra-ui/react'
-import { createContext } from 'hooks/context'
+import { createContext } from '@iomis/utils/hooks'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 
 interface IModalProviderProps {
@@ -133,22 +133,20 @@ export function ModalProvider({ children }: PropsWithChildren) {
     !!modals.find((modal) => modal.id === id)?.isLoading
 
   return (
-    <>
-      <Provider
-        value={{
-          modals,
-          openModal,
-          closeModal,
-          setModalIsLoading,
-          isModalLoading,
-        }}
-      >
-        {children}
-        {modals.map((props) => (
-          <Modal key={props.id} {...props} />
-        ))}
-      </Provider>
-    </>
+    <Provider
+      value={{
+        modals,
+        openModal,
+        closeModal,
+        setModalIsLoading,
+        isModalLoading,
+      }}
+    >
+      {children}
+      {modals.map((props) => (
+        <Modal key={props.id} {...props} />
+      ))}
+    </Provider>
   )
 }
 

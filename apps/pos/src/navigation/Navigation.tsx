@@ -3,14 +3,13 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import { Text, View } from 'react-native'
-import { Order } from 'src/screens/order'
+import { OrderScreen } from 'src/screens/order'
+import { PaymentScreen } from 'src/screens/payment'
 import { RootStackParamList } from 'src/types/react-navigation'
+import { colors } from 'src/theme'
 import { MainTabs } from './MainTabs'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
-
-const primaryColor = '#282828'
-const secondaryColor = '#fcfcfc'
 
 export function Navigation() {
   return (
@@ -19,15 +18,17 @@ export function Navigation() {
         initialRouteName='Home'
         screenOptions={({ navigation }) => ({
           headerStyle: {
-            backgroundColor: secondaryColor,
+            backgroundColor: colors.secondary,
+            border: 'none',
           },
+          headerShadowVisible: false,
           headerLeft: (props) =>
             props.canGoBack ? (
               <MaterialIcons.Button
                 name='arrow-back-ios'
                 onPress={() => navigation.goBack()}
                 backgroundColor={'transparent'}
-                color={primaryColor}
+                color={colors.primary}
                 underlayColor={'transparent'}
               />
             ) : (
@@ -45,9 +46,9 @@ export function Navigation() {
                 size={16}
                 name='menu'
                 backgroundColor={'transparent'}
-                color={primaryColor}
+                color={colors.primary}
                 onPress={() => {}}
-                underlayColor={secondaryColor}
+                underlayColor={colors.secondary}
               />
             ),
             headerRight: () => (
@@ -56,9 +57,9 @@ export function Navigation() {
                   size={16}
                   name='shopping-cart'
                   backgroundColor={'transparent'}
-                  color={primaryColor}
+                  color={colors.primary}
                   onPress={() => {}}
-                  underlayColor={secondaryColor}
+                  underlayColor={colors.secondary}
                 />
               </View>
             ),
@@ -66,10 +67,17 @@ export function Navigation() {
         />
         <Stack.Screen
           name='Order'
-          component={Order}
+          component={OrderScreen}
           options={{
-            title: 'Orden',
+            title: 'Pedido',
             headerRight: () => <Text className='text-[#ACACAC]'>#412</Text>,
+          }}
+        />
+        <Stack.Screen
+          name='Payment'
+          component={PaymentScreen}
+          options={{
+            title: 'Pago',
           }}
         />
       </Stack.Navigator>

@@ -7,12 +7,12 @@ import { Providers } from './providers'
 
 function App() {
   return (
-    <Providers>
-      <SafeAreaProvider className='bg-secondary'>
+    <SafeAreaProvider className='bg-secondary'>
+      <Providers>
         <Navigation />
         <StatusBar />
-      </SafeAreaProvider>
-    </Providers>
+      </Providers>
+    </SafeAreaProvider>
   )
 }
 

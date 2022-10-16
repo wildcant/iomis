@@ -81,6 +81,7 @@ model Product {
 
     // *** Others ***
     // tags   String[]
+    OrderLine OrderLine[]
 }
 
 model ProductIngredient {
@@ -149,4 +150,53 @@ model UnitType {
     deleted    Boolean      @default(false)
     name       String       @db.VarChar(255)
     Ingredient Ingredient[]
+}
+
+enum EOrderState {
+    DRAFT
+    CANCELLED
+    PAID
+    DONE
+    INVOICED
+}
+
+model Order {
+    id           String      @id @default(uuid()) @db.Uuid
+    createdAt    DateTime
+    amountTax    Float
+    amountTotal  Float
+    amountPaid   Float
+    amountReturn Float
+    lines        OrderLine[]
+    state        EOrderState
+}
+
+model OrderLine {
+    id            String  @id @default(uuid()) @db.Uuid
+    quantity      Int
+    priceSubtotal Float
+    product       Product @relation(fields: [productId], references: [id])
+    productId     String  @db.Uuid
+    Order         Order?  @relation(fields: [orderId], references: [id])
+    orderId       String? @db.Uuid
+}
+
+enum EInvoiceType {
+    CUSTOMER_INVOICE
+    SUPPLIER_INVOICE
+    CUSTOMER_REFUND
+    SUPPLIER_REFUND
+}
+
+enum EState {
+    DRAFT
+    OPEN
+    PAID
+    CANCELLED
+}
+
+model Invoice {
+    id          String       @id @default(uuid()) @db.Uuid
+    description String
+    type        EInvoiceType
 }

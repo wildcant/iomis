@@ -4,10 +4,13 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import React from 'react'
+import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { CheckoutScreen } from 'src/screens/checkout'
 import { PlaceholderScreen } from './shared'
 
-const tabBarStyle: BottomTabNavigationOptions['tabBarStyle'] = {
+const getTabBarStyle = (
+  insets: EdgeInsets
+): BottomTabNavigationOptions['tabBarStyle'] => ({
   shadowOffset: {
     width: 0,
     height: 12,
@@ -24,26 +27,28 @@ const tabBarStyle: BottomTabNavigationOptions['tabBarStyle'] = {
   bottom: 0,
   padding: 10,
   width: '100%',
-  height: 84,
+  height: 60 + insets.bottom,
   zIndex: 0,
-}
+})
 
 const Tab = createBottomTabNavigator()
 export function MainTabs() {
+  const insets = useSafeAreaInsets()
+
   return (
     <Tab.Navigator
-      initialRouteName='Checkout'
+      initialRouteName='Products'
       screenOptions={{
         tabBarActiveTintColor: '#282828',
         tabBarInactiveTintColor: '#E8E8E8',
-        tabBarStyle,
+        tabBarStyle: getTabBarStyle(insets),
       }}
     >
       <Tab.Screen
-        name='Checkout'
+        name='Products'
         component={CheckoutScreen}
         options={{
-          tabBarLabel: 'Checkout',
+          tabBarLabel: 'Productos',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name='plus-circle' color={color} size={size} />
@@ -51,28 +56,24 @@ export function MainTabs() {
         }}
       />
       <Tab.Screen
-        name='Tables'
+        name='Orders'
         component={PlaceholderScreen}
         options={{
-          tabBarLabel: 'Mesas',
+          tabBarLabel: 'Pedidos',
           headerShown: false,
           tabBarIcon: (props) => (
-            <MaterialCommunityIcons name='table' {...props} />
+            <MaterialCommunityIcons name='order-bool-descending' {...props} />
           ),
         }}
       />
       <Tab.Screen
-        name='Waiting'
+        name='Customers'
         component={PlaceholderScreen}
         options={{
-          tabBarLabel: 'En Espera',
+          tabBarLabel: 'Clientes',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name='clock-time-five'
-              color={color}
-              size={size}
-            />
+            <FontAwesome name='users' color={color} size={size} />
           ),
         }}
       />

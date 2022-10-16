@@ -13,7 +13,7 @@ function defineNextConfig(config) {
   return config
 }
 
-export default withTM(['@iomis/api'])(
+export default withTM(['@iomis/api', '@iomis/utils'])(
   defineNextConfig({
     reactStrictMode: true,
     swcMinify: true,

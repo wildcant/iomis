@@ -6,15 +6,16 @@ import type { StackScreenProps } from '@react-navigation/stack'
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 
 export type HomeTabParamList = {
-  Checkout: undefined
-  Tables: undefined
-  Waiting: undefined
+  Products: undefined
+  Orders: undefined
+  Customers: undefined
   Settings: undefined
 }
 
 export type RootStackParamList = {
   Home: NavigatorScreenParams<HomeTabParamList>
   Order: undefined
+  Payment: undefined
 }
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

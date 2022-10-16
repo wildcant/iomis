@@ -156,6 +156,7 @@ importers:
       eslint: ^8.24.0
       eslint-config-universe: ^11.1.0
       expo: ^46.0.0
+      expo-blur: ^11.2.0
       expo-constants: ^13.2.4
       expo-dev-client: ~1.2.1
       expo-status-bar: ~1.4.0
@@ -163,6 +164,7 @@ importers:
       jest: 29.1.2
       jest-environment-jsdom: ^29.1.2
       jest-expo: ^46.0.1
+      lodash: ^4.17.21
       nativewind: ^2.0.5
       react: 18.0.0
       react-dom: 18.0.0
@@ -181,10 +183,12 @@ importers:
       '@react-navigation/native': 6.0.13_gtltrjvtlgj7ga36qzsxajwqwe
       '@react-navigation/native-stack': 6.9.0_hg7duugoxzqbcxx766hj52kwii
       expo: 46.0.13_@babel+core@7.19.3
+      expo-blur: 11.2.0_expo@46.0.13
       expo-constants: 13.2.4_expo@46.0.13
       expo-dev-client: 1.2.1_expo@46.0.13
       expo-status-bar: 1.4.0
       expo-updates: 0.14.6_expo@46.0.13
+      lodash: 4.17.21
       nativewind: 2.0.11_6kr4mtdt3bvcjmnwlephhdmsee
       react: 18.0.0
       react-dom: 18.0.0_react@18.0.0
@@ -9146,6 +9150,14 @@ packages:
     transitivePeerDependencies:
       - expo
       - supports-color
+    dev: false
+
+  /expo-blur/11.2.0_expo@46.0.13:
+    resolution: {integrity: sha512-bj16aFGqsp7amJZiLvZt2nuwpKVJNCRcf/1c6NaCNrXCnXt/J8MloachNV0VoiiNKfKDV6EJTn+Jwo1sctchCA==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 46.0.13_@babel+core@7.19.3
     dev: false
 
   /expo-constants/13.2.4_expo@46.0.13:

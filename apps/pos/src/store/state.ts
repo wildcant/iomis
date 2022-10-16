@@ -79,6 +79,16 @@ export function useCheckoutCommands() {
       const idx = orderLineItems.findIndex((o) => o.product.id === product.id)
 
       if (idx !== -1) {
+        orderLineItems.splice(idx, 1)
+      }
+
+      checkout({ ...checkout(), orderLineItems })
+    },
+    deleteProductItemFromOrder(product: Product) {
+      const orderLineItems = [...checkout().orderLineItems]
+      const idx = orderLineItems.findIndex((o) => o.product.id === product.id)
+
+      if (idx !== -1) {
         const existingProduct = orderLineItems[idx]
         // If quantity is 1 after reducing by it's removed from order
         if (existingProduct.quantity === 1) {

@@ -38,8 +38,10 @@ function SearchInput() {
   const [{ search }] = useCheckoutState()
   const { handleSearchChange } = useCheckoutCommands()
   return (
-    <View className='fex flex-row justify-center align-center w-full rounded-full bg-white shadow-sm py-4 px-4 text-black'>
-      <FontAwesome size={16} name='search' color={'#C3C3C3'} />
+    <View className='h-12 fex flex-row justify-center align-center w-full rounded-full bg-white border border-gray-300 shadow-sm py-4 px-4 text-black'>
+      <View className='self-center'>
+        <FontAwesome size={16} name='search' color={'#C3C3C3'} />
+      </View>
       <TextInput
         className='flex-1 pl-1'
         onChangeText={handleSearchChange}
@@ -144,10 +146,10 @@ function Products() {
                 className='py-1 px-2 w-12 mt-2 flex flex-row justify-between'
                 onPress={() => addProductToOrder(product as Product)}
               >
-                <FontAwesome size={16} name='plus-circle' color={'white'} />
                 <Text className='text-white font-bold'>
                   {getQuantity(product.id)}
                 </Text>
+                <FontAwesome size={16} name='plus-circle' color={'white'} />
               </Button>
             </View>
           </View>

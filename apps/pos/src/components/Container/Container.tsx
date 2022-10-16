@@ -6,7 +6,7 @@ interface IContainerProps extends ViewProps {
 }
 export function Container({ children, withTabs, ...props }: IContainerProps) {
   return (
-    <View className={`p-6 h-[100%] ${withTabs ? 'pb-16' : 'pb-4'}`} {...props}>
+    <View className={`p-6 h-[100%] ${withTabs ? 'pb-20' : 'pb-4'}`} {...props}>
       {children}
     </View>
   )
