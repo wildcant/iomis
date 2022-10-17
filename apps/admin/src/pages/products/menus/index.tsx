@@ -7,6 +7,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useToast,
 } from '@chakra-ui/react'
 import {
   Category,
@@ -25,7 +26,6 @@ import {
 import { Layout } from 'components/templates'
 import { createContext } from '@iomis/utils/hooks'
 import { useHandleError } from 'hooks/useHandleError'
-import { useHandleSuccess } from 'hooks/useHandleSuccess'
 import { ERoutes } from 'hooks/useNavigation'
 import { useCallback, useState } from 'react'
 
@@ -35,15 +35,21 @@ interface IMenuActionsCell {
 function MenuActionsCell({ info }: IMenuActionsCell) {
   const { refetchMenus } = useMenusTableContext()
   const menuId = info.row.original.id
-  const [menuDelete, { loading, error, called }] = useMenuDeleteMutation()
+  const [menuDelete, { loading, error }] = useMenuDeleteMutation()
   useHandleError(error)
-  const isSuccess = called && !error
-  useHandleSuccess(isSuccess, 'El menú ha sido eliminado.')
 
+  const toast = useToast()
   const deleteMenu = useCallback(async () => {
-    await menuDelete({ variables: { id: menuId } })
+    await menuDelete({
+      variables: { id: menuId },
+      onCompleted: () =>
+        toast({
+          status: 'success',
+          description: 'El menú ha sido eliminado.',
+        }),
+    })
     await refetchMenus()
-  }, [menuDelete, menuId, refetchMenus])
+  }, [menuDelete, menuId, refetchMenus, toast])
 
   const { open: openDeleteModal, close: closeDeleteModal } =
     useConfirmationModal({

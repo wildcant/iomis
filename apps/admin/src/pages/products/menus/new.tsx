@@ -1,4 +1,4 @@
-import { Button, Flex, Heading } from '@chakra-ui/react'
+import { Button, Flex, Heading, useToast } from '@chakra-ui/react'
 import { Menu, useMenuCreateMutation } from '@iomis/api'
 import {
   InputField,
@@ -8,9 +8,7 @@ import {
 } from 'components/atoms'
 import { Layout } from 'components/templates'
 import { useHandleError } from 'hooks/useHandleError'
-import { useHandleSuccess } from 'hooks/useHandleSuccess'
 import { usePageNavigation } from 'hooks/useNavigation'
-import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 type MenuForm = Pick<Menu, 'name'> & {
@@ -18,20 +16,13 @@ type MenuForm = Pick<Menu, 'name'> & {
 }
 
 export default function NewMenu() {
-  const [addMenu, { loading, error, called }] = useMenuCreateMutation()
+  const [addMenu, { loading, error }] = useMenuCreateMutation()
   useHandleError(error)
-  const isSuccess = called && !error
-  useHandleSuccess(isSuccess)
-
-  const { goToMenus } = usePageNavigation()
-  useEffect(() => {
-    if (isSuccess) {
-      goToMenus()
-    }
-  }, [isSuccess, goToMenus])
 
   const { handleSubmit, control } = useForm<MenuForm>()
 
+  const toast = useToast()
+  const { goToMenus } = usePageNavigation()
   const saveMenu = async (formData: MenuForm) => {
     addMenu({
       variables: {
@@ -39,6 +30,13 @@ export default function NewMenu() {
           name: formData.name,
           categories: formData.categories.map((c) => c.value),
         },
+      },
+      onCompleted: () => {
+        toast({
+          status: 'success',
+          description: 'Menu creado..',
+        })
+        goToMenus()
       },
     })
   }

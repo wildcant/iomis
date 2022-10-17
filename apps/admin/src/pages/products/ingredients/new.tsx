@@ -8,6 +8,7 @@ import {
   List,
   ListItem,
   Stack,
+  useToast,
 } from '@chakra-ui/react'
 import {
   IngredientCreateInput,
@@ -28,17 +29,9 @@ import {
 import { useCustomModal } from 'components/organisms'
 import { Layout } from 'components/templates'
 import { useHandleError } from 'hooks/useHandleError'
-import { useHandleSuccess } from 'hooks/useHandleSuccess'
 import { usePageNavigation } from 'hooks/useNavigation'
 import { uniqueId } from 'lodash'
-import {
-  Dispatch,
-  memo,
-  Reducer,
-  useCallback,
-  useEffect,
-  useReducer,
-} from 'react'
+import { Dispatch, memo, Reducer, useCallback, useReducer } from 'react'
 import { useForm } from 'react-hook-form'
 
 type EditableUnitType = {
@@ -309,11 +302,8 @@ type IngredientForm = Pick<
 }
 
 export default function NewIngredient() {
-  const [addIngredient, { loading, error, called }] =
-    useIngredientCreateMutation()
+  const [addIngredient, { loading, error }] = useIngredientCreateMutation()
   useHandleError(error)
-  const isSuccess = called && !error
-  useHandleSuccess(isSuccess, 'El ingrediente fue agregado.')
 
   const {
     data,
@@ -341,15 +331,10 @@ export default function NewIngredient() {
     },
   })
 
-  const { goToIngredients } = usePageNavigation()
-  useEffect(() => {
-    if (isSuccess) {
-      goToIngredients()
-    }
-  }, [isSuccess, goToIngredients])
-
   const { handleSubmit, control } = useForm<IngredientForm>()
 
+  const toast = useToast()
+  const { goToIngredients } = usePageNavigation()
   const saveIngredient = async (formData: IngredientForm) => {
     const { uniType, unitCost, ...rest } = formData
 
@@ -360,6 +345,13 @@ export default function NewIngredient() {
           unitCost: Number(unitCost),
           unitTypeId: uniType.value,
         },
+      },
+      onCompleted: () => {
+        toast({
+          status: 'success',
+          description: 'El ingrediente fue agregado.',
+        })
+        goToIngredients()
       },
     })
   }
