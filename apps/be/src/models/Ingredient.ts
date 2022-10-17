@@ -13,14 +13,15 @@ export class Ingredient {
   @Field(() => String)
   name: string
 
+  // TODO: Validate it's unique.
   @Field(() => String)
   sku: string
 
   @Field(() => ID)
   unitTypeId: string
 
-  @Field(() => Float, { nullable: true })
-  unitCost?: number
+  @Field(() => Float)
+  unitCost: number
 
   @Field(() => Boolean)
   visible: boolean
@@ -28,8 +29,8 @@ export class Ingredient {
   @Field(() => String, { nullable: true })
   barcode?: string
 
-  @Field(() => UnitType, { nullable: true })
-  unitType?: UnitType
+  @Field(() => UnitType)
+  unitType: UnitType
 
   // @Field(() => String)
   // suppliers: string

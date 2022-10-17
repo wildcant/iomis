@@ -1,0 +1,33 @@
+fragment CategoryFragment on Category {
+  id
+  deleted
+  name
+  description
+  course
+  image
+  visible
+  taxes {
+    id
+    name
+    amount
+    type
+  }
+}
+
+fragment CategoryNodeFragment on CategoryNode {
+  id
+  name
+  description
+  course
+  image
+  visible
+  taxes {
+    id
+    name
+    amount
+    type
+  }
+  _count {
+    products
+  }
+}

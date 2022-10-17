@@ -9,12 +9,17 @@ import { Props, Select } from 'chakra-react-select'
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 import { FormFieldProps } from '../shared-types'
 
-export type Option = {
-  value: string
+export type OptionValue = string | number
+export type Option<
+  T extends OptionValue = string,
+  TMeta extends Record<string, string | number | boolean> = {}
+> = {
+  value: T
   label: string
+  meta?: TMeta
 }
 
-interface SelectFieldProps<TValues extends FieldValues>
+export interface SelectFieldProps<TValues extends FieldValues>
   extends Omit<Props, 'name' | 'defaultValue'>,
     FormFieldProps,
     UseControllerProps<TValues> {}

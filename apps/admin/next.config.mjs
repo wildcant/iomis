@@ -13,10 +13,12 @@ function defineNextConfig(config) {
   return config
 }
 
-export default withTM(['@iomis/api'])(
+export default withTM(['@iomis/api', '@iomis/utils'])(
   defineNextConfig({
     reactStrictMode: true,
     swcMinify: true,
-    images: { domains: ['loremflickr.com'] },
+    images: {
+      domains: ['loremflickr.com', 'www.dropbox.com', 'localhost'],
+    },
   })
 )

@@ -1,65 +1,85 @@
 import 'reflect-metadata'
-import { ObjectType, Field, ID, Float } from '@nestjs/graphql'
+import { ObjectType, Field, ID, Float, Int } from '@nestjs/graphql'
+import { Category } from './Category'
+import { ProductIngredient } from './ProductIngredient'
+import { Tax } from './Tax'
 
 @ObjectType()
 export class Product {
   @Field(() => ID)
   id: string
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { defaultValue: false })
   deleted: boolean
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { defaultValue: false })
   archived: boolean
 
-  @Field(() => String, { nullable: true })
-  barcode?: string
+  /******************
+   * Basic
+   ******************/
+  @Field(() => ID)
+  categoryId: string
 
-  @Field(() => Float)
-  cost: number
-
-  @Field(() => String)
-  description: string
-
-  @Field(() => String)
-  factoryCode: string
-
-  @Field(() => Boolean)
-  forPurchase: boolean
-
-  @Field(() => Boolean)
-  forSale: boolean
-
-  @Field(() => Boolean)
-  hasStock: boolean
-
-  @Field(() => String)
-  image: string
+  @Field(() => Category)
+  category: Category
 
   @Field(() => String)
   name: string
 
-  @Field(() => Float)
-  purchasePrice: number
+  @Field(() => String, { nullable: true })
+  description?: string
 
+  /**
+   * Product identifier for users
+   */
+  // TODO: Validate it's unique.
   @Field(() => String)
-  sku: string
+  plu: string
 
+  @Field(() => String, { nullable: true })
+  image?: string
+
+  @Field(() => String, { nullable: true })
+  color?: string
+
+  /******************
+   * Inventory
+   ******************/
+  @Field(() => String, { nullable: true })
+  barcode?: string
+
+  @Field(() => [ProductIngredient], { defaultValue: [] })
+  productIngredients: ProductIngredient[]
+
+  /**
+   * Amount of money we spent to generate a product, should probably be auto
+   * calculated with ingredients
+   */
   @Field(() => Float)
-  subtotal: number
+  cost: number
 
-  @Field(() => String)
-  tags: string
+  @Field(() => Int, { defaultValue: 0 })
+  stock: number
 
+  @Field(() => Boolean, { defaultValue: false })
+  allowRefund: boolean
+
+  /******************
+   * Taxes
+   ******************/
+  @Field(() => [Tax], { nullable: 'items' })
+  taxes?: Tax[]
+
+  /******************
+   * Pricing
+   ******************/
   @Field(() => Float)
-  total: number
+  price: number
 
+  /**
+   * How much we ask for a product
+   */
   @Field(() => Float)
-  units: number
-
-  @Field(() => Float)
-  weight: number
-
-  @Field(() => String)
-  categories: unknown[]
+  priceWithoutTaxes: number
 }

@@ -1,0 +1,9 @@
+fragment TaxFragment on Tax {
+  id
+  name
+  key
+  scope
+  type
+  amount
+  status
+}

@@ -1,14 +1,5 @@
 query Category($id: ID!) {
   category(id: $id) {
-    id
-    deleted
-    name
-    description
-    vat
-    deliveryVat
-    takeawayVat
-    course
-    image
-    visible
+    ...CategoryFragment
   }
 }

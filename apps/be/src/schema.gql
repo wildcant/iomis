@@ -2,27 +2,96 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Menu {
+  id: ID!
+  deleted: Boolean!
+  name: String!
+  categories: [Category!]
+}
+
+type UnitType {
+  id: ID!
+  name: String!
+  deleted: Boolean!
+  ingredients: [Ingredient!]
+}
+
+type Ingredient {
+  id: ID!
+  deleted: Boolean!
+  name: String!
+  sku: String!
+  unitTypeId: ID!
+  unitCost: Float!
+  visible: Boolean!
+  barcode: String
+  unitType: UnitType!
+}
+
+type ProductIngredient {
+  id: ID!
+  quantity: Int!
+  productId: ID!
+  product: Product!
+  ingredientId: ID!
+  ingredient: Ingredient!
+}
+
+type Tax {
+  id: ID!
+  deleted: Boolean!
+  name: String!
+  key: String!
+  scope: ETaxScope!
+  type: ETaxType!
+  amount: Float!
+  status: Boolean!
+}
+
+enum ETaxScope {
+  SALES
+  EMPLOYEES
+  PURCHASES
+  NONE
+}
+
+enum ETaxType {
+  PERCENTAGE
+  FIXED
+}
+
 type Product {
   id: ID!
   deleted: Boolean!
   archived: Boolean!
-  barcode: String
-  cost: Float!
-  description: String!
-  factoryCode: String!
-  forPurchase: Boolean!
-  forSale: Boolean!
-  hasStock: Boolean!
-  image: String!
+  categoryId: ID!
+  category: Category!
   name: String!
-  purchasePrice: Float!
-  sku: String!
-  subtotal: Float!
-  tags: String!
-  total: Float!
-  units: Float!
-  weight: Float!
-  categories: String!
+  description: String
+  plu: String!
+  image: String
+  color: String
+  barcode: String
+  productIngredients: [ProductIngredient!]!
+  cost: Float!
+  stock: Int!
+  allowRefund: Boolean!
+  taxes: [Tax]!
+  price: Float!
+  priceWithoutTaxes: Float!
+}
+
+type Category {
+  id: ID!
+  deleted: Boolean!
+  name: String
+  description: String
+  taxes: [Tax]!
+  course: Int
+  image: String
+  visible: Boolean
+  products: [Product!]
+  menus: [Menu!]
 }
 
 type PageInfo {
@@ -40,51 +109,10 @@ type BatchResponse {
   count: Int!
 }
 
-type UnitType {
-  id: ID!
-  name: String!
-  deleted: Boolean!
-  ingredients: [Ingredient!]
-}
-
-type Ingredient {
-  id: ID!
-  deleted: Boolean!
-  name: String!
-  sku: String!
-  unitTypeId: ID!
-  unitCost: Float
-  visible: Boolean!
-  barcode: String
-  unitType: UnitType
-}
-
 type IngredientConnection {
   totalCount: Float!
   pageInfo: PageInfo!
   nodes: [Ingredient]!
-}
-
-type Menu {
-  id: ID!
-  deleted: Boolean!
-  name: String!
-  categories: [Category!]
-}
-
-type Category {
-  id: ID!
-  deleted: Boolean!
-  name: String!
-  description: String!
-  vat: String!
-  deliveryVat: String!
-  takeawayVat: String!
-  course: Int!
-  image: String!
-  visible: Boolean!
-  products: [Product!]!
-  menus: [Menu!]
 }
 
 type CategoryNodeCount {
@@ -94,15 +122,13 @@ type CategoryNodeCount {
 type CategoryNode {
   id: ID!
   deleted: Boolean!
-  name: String!
-  description: String!
-  vat: String!
-  deliveryVat: String!
-  takeawayVat: String!
-  course: Int!
-  image: String!
-  visible: Boolean!
-  products: [Product!]!
+  name: String
+  description: String
+  taxes: [Tax]!
+  course: Int
+  image: String
+  visible: Boolean
+  products: [Product!]
   menus: [Menu!]
   _count: CategoryNodeCount!
 }
@@ -125,23 +151,45 @@ type UnitTypeConnection {
   nodes: [UnitType]!
 }
 
+type TaxConnection {
+  totalCount: Float!
+  pageInfo: PageInfo!
+  nodes: [Tax]!
+}
+
 type Query {
   ingredients(offset: Int, limit: Int): IngredientConnection!
+  ingredientsAll: [Ingredient!]!
   ingredient(id: ID!): Ingredient!
-  products(offset: Int, limit: Int, query: ProductQueryArgs): ProductConnection!
+  productsAll(query: ProductsQueryArgs): [Product!]!
+  products(offset: Int, limit: Int, query: ProductsQueryArgs): ProductConnection!
   product(id: ID!): Product!
   categories(offset: Int, limit: Int): CategoryConnection!
-  categoriesAll: [CategoryNode!]!
+  categoriesAll(query: CategoriesQueryArgs): [CategoryNode!]!
   category(id: ID!): Category!
   menus(offset: Int, limit: Int): MenuConnection!
+  menusAll: [Menu!]!
   menu(id: ID!): Menu!
   unitTypes(offset: Int, limit: Int): UnitTypeConnection!
   unitTypesAll: [UnitType!]!
   unitType(id: ID!): UnitType!
+  taxes(offset: Int, limit: Int): TaxConnection!
+  taxesAll: [Tax!]!
+  tax(id: ID!): Tax!
 }
 
-input ProductQueryArgs {
+input ProductsQueryArgs {
   archived: Boolean
+  categoryId: ID
+}
+
+input CategoriesQueryArgs {
+  menus: StringFilter
+}
+
+input StringFilter {
+  equals: String
+  in: [String]
 }
 
 type Mutation {
@@ -162,13 +210,16 @@ type Mutation {
   unitTypeCreate(input: UnitTypeCreateInput!): UnitType!
   unitTypeUpdate(id: ID!, input: UnitTypeUpdateInput!): UnitType!
   unitTypeDelete(id: ID!): UnitType!
+  taxCreate(input: TaxCreateInput!): Tax!
+  taxUpdate(id: ID!, input: TaxUpdateInput!): Tax!
+  taxDelete(id: ID!): Tax!
 }
 
 input IngredientCreateInput {
   name: String!
   sku: String!
   unitTypeId: ID!
-  unitCost: Float
+  unitCost: Float!
   visible: Boolean!
   barcode: String
 }
@@ -183,45 +234,42 @@ input IngredientUpdateInput {
 }
 
 input ProductCreateInput {
-  archived: Boolean!
+  archived: Boolean = false
+  categoryId: ID!
+  name: String!
+  description: String
+  plu: String!
+  image: String
+  color: String
   barcode: String
   cost: Float!
-  description: String!
-  factoryCode: String!
-  forPurchase: Boolean!
-  forSale: Boolean!
-  hasStock: Boolean!
-  image: String!
-  name: String!
-  purchasePrice: Float!
-  sku: String!
-  subtotal: Float!
-  tags: String!
-  total: Float!
-  units: Float!
-  weight: Float!
-  categories: String!
+  stock: Int = 0
+  allowRefund: Boolean = false
+  price: Float!
+  priceWithoutTaxes: Float!
+  productIngredients: [ProductIngredientCreateInput!] = []
+}
+
+input ProductIngredientCreateInput {
+  quantity: Int!
+  ingredientId: ID!
 }
 
 input ProductUpdateInput {
-  archived: Boolean
+  archived: Boolean = false
+  categoryId: ID
+  name: String
+  description: String
+  plu: String
+  image: String
+  color: String
   barcode: String
   cost: Float
-  description: String
-  factoryCode: String
-  forPurchase: Boolean
-  forSale: Boolean
-  hasStock: Boolean
-  image: String
-  name: String
-  purchasePrice: Float
-  sku: String
-  subtotal: Float
-  tags: String
-  total: Float
-  units: Float
-  weight: Float
-  categories: String
+  stock: Int = 0
+  allowRefund: Boolean = false
+  price: Float
+  priceWithoutTaxes: Float
+  productIngredients: [ProductIngredientCreateInput!] = []
 }
 
 input ArchiveBulk {
@@ -229,35 +277,26 @@ input ArchiveBulk {
   archived: Boolean = true
 }
 
-input StringFilter {
-  equals: String
-  in: [String]
-}
-
 input DeleteBulk {
   id: StringFilter
 }
 
 input CategoryCreateInput {
-  name: String!
-  description: String!
-  vat: String!
-  deliveryVat: String!
-  takeawayVat: String!
-  course: Int!
-  image: String!
-  visible: Boolean!
+  name: String
+  description: String
+  course: Int
+  image: String
+  visible: Boolean = false
+  taxes: [ID]
 }
 
 input CategoryUpdateInput {
   name: String
   description: String
-  vat: String
-  deliveryVat: String
-  takeawayVat: String
   course: Int
   image: String
-  visible: Boolean
+  visible: Boolean = false
+  taxes: [ID!]
 }
 
 input MenuCreateInput {
@@ -276,4 +315,22 @@ input UnitTypeCreateInput {
 
 input UnitTypeUpdateInput {
   name: String
+}
+
+input TaxCreateInput {
+  name: String!
+  key: String!
+  scope: ETaxScope!
+  type: ETaxType!
+  amount: Float!
+  status: Boolean!
+}
+
+input TaxUpdateInput {
+  name: String
+  key: String
+  scope: ETaxScope
+  type: ETaxType
+  amount: Float
+  status: Boolean
 }

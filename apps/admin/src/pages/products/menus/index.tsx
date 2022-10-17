@@ -7,6 +7,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useToast,
 } from '@chakra-ui/react'
 import {
   Category,
@@ -23,37 +24,38 @@ import {
   useConfirmationModal,
 } from 'components/organisms'
 import { Layout } from 'components/templates'
-import { createContext } from 'hooks/context'
+import { createContext } from '@iomis/utils/hooks'
 import { useHandleError } from 'hooks/useHandleError'
-import { useHandleSuccess } from 'hooks/useHandleSuccess'
 import { ERoutes } from 'hooks/useNavigation'
 import { useCallback, useState } from 'react'
 
-interface IActionCell {
+interface IMenuActionsCell {
   info: CellContext<Menu, unknown>
 }
-function ActionCell({ info }: IActionCell) {
+function MenuActionsCell({ info }: IMenuActionsCell) {
   const { refetchMenus } = useMenusTableContext()
   const menuId = info.row.original.id
-  const [menuDelete, { loading, error, called }] = useMenuDeleteMutation()
+  const [menuDelete, { loading, error }] = useMenuDeleteMutation()
   useHandleError(error)
-  const isSuccess = called && !error
-  useHandleSuccess(isSuccess, 'El menú ha sido eliminado.')
 
+  const toast = useToast()
   const deleteMenu = useCallback(async () => {
-    await menuDelete({ variables: { id: menuId } })
+    await menuDelete({
+      variables: { id: menuId },
+      onCompleted: () =>
+        toast({
+          status: 'success',
+          description: 'El menú ha sido eliminado.',
+        }),
+    })
     await refetchMenus()
-  }, [menuDelete, menuId, refetchMenus])
+  }, [menuDelete, menuId, refetchMenus, toast])
 
   const { open: openDeleteModal, close: closeDeleteModal } =
     useConfirmationModal({
       id: 'delete-product-modal',
       containerProps: { closeOnOverlayClick: false },
-      titleProps: { children: 'Aviso' },
-      children: '¿Estás seguro?',
       primaryProps: {
-        children: 'Confirmar',
-        disabled: loading,
         isLoading: loading,
         onClick: async () => {
           await deleteMenu()
@@ -99,7 +101,7 @@ const columns: ColumnDef<Menu>[] = [
   },
   {
     id: 'actions',
-    cell: (info) => <ActionCell info={info} />,
+    cell: (info) => <MenuActionsCell info={info} />,
     size: 50,
     maxSize: 50,
     minSize: 50,

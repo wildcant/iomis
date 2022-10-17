@@ -1,0 +1,5 @@
+query ProductsAll($query: ProductsQueryArgs) {
+  productsAll(query: $query) {
+    ...ProductFragment
+  }
+}

@@ -45,47 +45,65 @@ model Contact {
 }
 
 model Product {
-    id            String              @id @default(uuid()) @db.Uuid
-    deleted       Boolean             @default(false)
-    archived      Boolean             @default(false)
-    barcode       String?             @db.VarChar(255)
-    cost          Float?
-    description   String?             @db.VarChar(255)
-    factoryCode   String?             @db.VarChar(255)
-    forPurchase   Boolean?
-    forSale       Boolean?
-    hasStock      Boolean?
-    image         String?             @db.VarChar(255)
-    name          String              @db.VarChar(255)
-    purchasePrice Float?
-    sku           String?             @db.VarChar(255)
-    subtotal      Float?
-    tags          String[]
-    total         Float?
-    units         Float?
-    weight        Float?
-    categories    ProductCategories[]
+    id       String  @id @default(uuid()) @db.Uuid
+    deleted  Boolean @default(false)
+    archived Boolean @default(false)
+
+    // *** Basic ***
+    categoryId  String   @db.Uuid
+    category    Category @relation(fields: [categoryId], references: [id])
+    name        String   @db.VarChar(255)
+    description String?  @db.VarChar(255)
+    plu         String   @db.VarChar(255)
+    image       String?  @db.VarChar(255)
+    color       String?
+    // productTypeId
+
+    // *** Inventory ***
+    barcode            String?             @db.VarChar(255)
+    productIngredients ProductIngredient[]
+    cost               Float?
+    stock              Int
+    allowRefund        Boolean             @default(false)
+    // trackStock
+
+    // *** Taxes ***
+    taxes Tax[]
+    // deliveryVat String?
+    // takeawayVat String?
+
+    // *** Pricing ***
+    price             Float
+    priceWithoutTaxes Float
+    // deliveryPrice
+    // deliveryPriceWithoutVAT
+    // takeawayPriceWithoutVAT
+
+    // *** Others ***
+    // tags   String[]
+    OrderLine OrderLine[]
 }
 
-model ProductCategories {
-    id         String   @id @default(uuid()) @db.Uuid
-    categoryId String   @db.Uuid
-    productId  String   @db.Uuid
-    category   Category @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "productcategories_categoryid_foreign")
-    product    Product  @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "productcategories_productid_foreign")
+model ProductIngredient {
+    id           String     @id @default(uuid()) @db.Uuid
+    quantity     Int
+    ingredientId String     @db.Uuid
+    productId    String     @db.Uuid
+    ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+    product      Product    @relation(fields: [productId], references: [id])
 }
 
 model Category {
-    id          String              @id @default(uuid()) @db.Uuid
-    deleted     Boolean             @default(false)
-    name        String              @db.VarChar(255)
+    id          String    @id @default(uuid()) @db.Uuid
+    deleted     Boolean   @default(false)
+    name        String    @db.VarChar(255)
     description String?
-    vat         String?
-    deliveryVat String?
-    takeawayVat String?
+    taxes       Tax[]
+    // deliveryVat String?
+    // takeawayVat String?
     course      Int?
-    image       String?             @db.VarChar(255)
-    visible     Boolean             @default(false)
+    image       String?   @db.VarChar(255)
+    visible     Boolean   @default(false)
     // printer
     // printTemplateId String              @db.Uuid
     // printTemplateIds PrintTemplate[]
@@ -94,7 +112,7 @@ model Category {
     // moddifiers      Modiffier[]
     // companyId    Company?
     // type         String?
-    products    ProductCategories[]
+    products    Product[]
     menus       Menu[]
 }
 
@@ -114,16 +132,17 @@ model Menu {
 }
 
 model Ingredient {
-    id         String     @id @default(uuid()) @db.Uuid
-    deleted    Boolean    @default(false)
-    name       String     @db.VarChar(255)
-    sku        String     @db.VarChar(255)
-    unitTypeId String     @db.Uuid
-    unitCost   Float?
-    visible    Boolean    @default(false)
-    barcode    String?
-    unitType   UnitType   @relation(fields: [unitTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ingredientunittype_unitypeid_foreign")
-    suppliers  Supplier[]
+    id                String              @id @default(uuid()) @db.Uuid
+    deleted           Boolean             @default(false)
+    name              String              @db.VarChar(255)
+    sku               String              @db.VarChar(255)
+    unitTypeId        String              @db.Uuid
+    unitCost          Float?
+    visible           Boolean             @default(false)
+    barcode           String?
+    unitType          UnitType            @relation(fields: [unitTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ingredientunittype_unitypeid_foreign")
+    suppliers         Supplier[]
+    ProductIngredient ProductIngredient[]
 }
 
 model UnitType {
@@ -131,4 +150,78 @@ model UnitType {
     deleted    Boolean      @default(false)
     name       String       @db.VarChar(255)
     Ingredient Ingredient[]
+}
+
+enum ETaxScope {
+    SALES
+    EMPLOYEES
+    PURCHASES
+    NONE
+}
+
+enum ETaxType {
+    PERCENTAGE
+    FIXED
+}
+
+model Tax {
+    id         String     @id @default(uuid()) @db.Uuid
+    deleted    Boolean    @default(false)
+    name       String     @db.VarChar(255)
+    key        String     @db.VarChar(255)
+    scope      ETaxScope  @default(SALES)
+    type       ETaxType   @default(PERCENTAGE)
+    amount     Float      @default(0)
+    status     Boolean    @default(true)
+    products   Product[]
+    categories Category[]
+}
+
+enum EOrderState {
+    DRAFT
+    CANCELLED
+    PAID
+    DONE
+    INVOICED
+}
+
+model Order {
+    id           String      @id @default(uuid()) @db.Uuid
+    createdAt    DateTime
+    amountTax    Float
+    amountTotal  Float
+    amountPaid   Float
+    amountReturn Float
+    lines        OrderLine[]
+    state        EOrderState
+}
+
+model OrderLine {
+    id            String  @id @default(uuid()) @db.Uuid
+    quantity      Int
+    priceSubtotal Float
+    product       Product @relation(fields: [productId], references: [id])
+    productId     String  @db.Uuid
+    Order         Order?  @relation(fields: [orderId], references: [id])
+    orderId       String? @db.Uuid
+}
+
+enum EInvoiceType {
+    CUSTOMER_INVOICE
+    SUPPLIER_INVOICE
+    CUSTOMER_REFUND
+    SUPPLIER_REFUND
+}
+
+enum EState {
+    DRAFT
+    OPEN
+    PAID
+    CANCELLED
+}
+
+model Invoice {
+    id          String       @id @default(uuid()) @db.Uuid
+    description String
+    type        EInvoiceType
 }

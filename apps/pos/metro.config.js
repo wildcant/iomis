@@ -29,4 +29,8 @@ config.cacheStores = [
   }),
 ]
 
+config.resolver.extraNodeModules = {
+  src: path.resolve(__dirname, 'src'),
+}
+
 module.exports = config

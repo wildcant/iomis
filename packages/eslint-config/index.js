@@ -38,5 +38,6 @@ module.exports = {
     'no-return-await': 'off',
     '@typescript-eslint/return-await': 'off',
     '@typescript-eslint/restrict-template-expressions': 'off',
+    '@typescript-eslint/prefer-nullish-coalescing': 'off',
   },
 }

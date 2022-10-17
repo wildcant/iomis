@@ -25,20 +25,22 @@ export type BatchResponse = {
   count: Scalars['Int'];
 };
 
+export type CategoriesQueryArgs = {
+  menus?: InputMaybe<StringFilter>;
+};
+
 export type Category = {
   __typename?: 'Category';
-  course: Scalars['Int'];
+  course?: Maybe<Scalars['Int']>;
   deleted: Scalars['Boolean'];
-  deliveryVat: Scalars['String'];
-  description: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  image: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
   menus?: Maybe<Array<Menu>>;
-  name: Scalars['String'];
-  products: Array<Product>;
-  takeawayVat: Scalars['String'];
-  vat: Scalars['String'];
-  visible: Scalars['Boolean'];
+  name?: Maybe<Scalars['String']>;
+  products?: Maybe<Array<Product>>;
+  taxes: Array<Maybe<Tax>>;
+  visible?: Maybe<Scalars['Boolean']>;
 };
 
 export type CategoryConnection = {
@@ -49,31 +51,27 @@ export type CategoryConnection = {
 };
 
 export type CategoryCreateInput = {
-  course: Scalars['Int'];
-  deliveryVat: Scalars['String'];
-  description: Scalars['String'];
-  image: Scalars['String'];
-  name: Scalars['String'];
-  takeawayVat: Scalars['String'];
-  vat: Scalars['String'];
-  visible: Scalars['Boolean'];
+  course?: InputMaybe<Scalars['Int']>;
+  description?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  taxes?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  visible?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CategoryNode = {
   __typename?: 'CategoryNode';
   _count: CategoryNodeCount;
-  course: Scalars['Int'];
+  course?: Maybe<Scalars['Int']>;
   deleted: Scalars['Boolean'];
-  deliveryVat: Scalars['String'];
-  description: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  image: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
   menus?: Maybe<Array<Menu>>;
-  name: Scalars['String'];
-  products: Array<Product>;
-  takeawayVat: Scalars['String'];
-  vat: Scalars['String'];
-  visible: Scalars['Boolean'];
+  name?: Maybe<Scalars['String']>;
+  products?: Maybe<Array<Product>>;
+  taxes: Array<Maybe<Tax>>;
+  visible?: Maybe<Scalars['Boolean']>;
 };
 
 export type CategoryNodeCount = {
@@ -83,18 +81,28 @@ export type CategoryNodeCount = {
 
 export type CategoryUpdateInput = {
   course?: InputMaybe<Scalars['Int']>;
-  deliveryVat?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  takeawayVat?: InputMaybe<Scalars['String']>;
-  vat?: InputMaybe<Scalars['String']>;
+  taxes?: InputMaybe<Array<Scalars['ID']>>;
   visible?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type DeleteBulk = {
   id?: InputMaybe<StringFilter>;
 };
+
+export enum ETaxScope {
+  Employees = 'EMPLOYEES',
+  None = 'NONE',
+  Purchases = 'PURCHASES',
+  Sales = 'SALES'
+}
+
+export enum ETaxType {
+  Fixed = 'FIXED',
+  Percentage = 'PERCENTAGE'
+}
 
 export type Ingredient = {
   __typename?: 'Ingredient';
@@ -103,8 +111,8 @@ export type Ingredient = {
   id: Scalars['ID'];
   name: Scalars['String'];
   sku: Scalars['String'];
-  unitCost?: Maybe<Scalars['Float']>;
-  unitType?: Maybe<UnitType>;
+  unitCost: Scalars['Float'];
+  unitType: UnitType;
   unitTypeId: Scalars['ID'];
   visible: Scalars['Boolean'];
 };
@@ -120,7 +128,7 @@ export type IngredientCreateInput = {
   barcode?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   sku: Scalars['String'];
-  unitCost?: InputMaybe<Scalars['Float']>;
+  unitCost: Scalars['Float'];
   unitTypeId: Scalars['ID'];
   visible: Scalars['Boolean'];
 };
@@ -175,6 +183,9 @@ export type Mutation = {
   productUpdate: Product;
   productsArchiveBulk: BatchResponse;
   productsDeleteBulk: BatchResponse;
+  taxCreate: Tax;
+  taxDelete: Tax;
+  taxUpdate: Tax;
   unitTypeCreate: UnitType;
   unitTypeDelete: UnitType;
   unitTypeUpdate: UnitType;
@@ -255,6 +266,22 @@ export type MutationProductsDeleteBulkArgs = {
 };
 
 
+export type MutationTaxCreateArgs = {
+  input: TaxCreateInput;
+};
+
+
+export type MutationTaxDeleteArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationTaxUpdateArgs = {
+  id: Scalars['ID'];
+  input: TaxUpdateInput;
+};
+
+
 export type MutationUnitTypeCreateArgs = {
   input: UnitTypeCreateInput;
 };
@@ -278,26 +305,24 @@ export type PageInfo = {
 
 export type Product = {
   __typename?: 'Product';
+  allowRefund: Scalars['Boolean'];
   archived: Scalars['Boolean'];
   barcode?: Maybe<Scalars['String']>;
-  categories: Scalars['String'];
+  category: Category;
+  categoryId: Scalars['ID'];
+  color?: Maybe<Scalars['String']>;
   cost: Scalars['Float'];
   deleted: Scalars['Boolean'];
-  description: Scalars['String'];
-  factoryCode: Scalars['String'];
-  forPurchase: Scalars['Boolean'];
-  forSale: Scalars['Boolean'];
-  hasStock: Scalars['Boolean'];
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  image: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
   name: Scalars['String'];
-  purchasePrice: Scalars['Float'];
-  sku: Scalars['String'];
-  subtotal: Scalars['Float'];
-  tags: Scalars['String'];
-  total: Scalars['Float'];
-  units: Scalars['Float'];
-  weight: Scalars['Float'];
+  plu: Scalars['String'];
+  price: Scalars['Float'];
+  priceWithoutTaxes: Scalars['Float'];
+  productIngredients: Array<ProductIngredient>;
+  stock: Scalars['Int'];
+  taxes: Array<Maybe<Tax>>;
 };
 
 export type ProductConnection = {
@@ -308,49 +333,57 @@ export type ProductConnection = {
 };
 
 export type ProductCreateInput = {
-  archived: Scalars['Boolean'];
+  allowRefund?: InputMaybe<Scalars['Boolean']>;
+  archived?: InputMaybe<Scalars['Boolean']>;
   barcode?: InputMaybe<Scalars['String']>;
-  categories: Scalars['String'];
+  categoryId: Scalars['ID'];
+  color?: InputMaybe<Scalars['String']>;
   cost: Scalars['Float'];
-  description: Scalars['String'];
-  factoryCode: Scalars['String'];
-  forPurchase: Scalars['Boolean'];
-  forSale: Scalars['Boolean'];
-  hasStock: Scalars['Boolean'];
-  image: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
-  purchasePrice: Scalars['Float'];
-  sku: Scalars['String'];
-  subtotal: Scalars['Float'];
-  tags: Scalars['String'];
-  total: Scalars['Float'];
-  units: Scalars['Float'];
-  weight: Scalars['Float'];
+  plu: Scalars['String'];
+  price: Scalars['Float'];
+  priceWithoutTaxes: Scalars['Float'];
+  productIngredients?: InputMaybe<Array<ProductIngredientCreateInput>>;
+  stock?: InputMaybe<Scalars['Int']>;
 };
 
-export type ProductQueryArgs = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+export type ProductIngredient = {
+  __typename?: 'ProductIngredient';
+  id: Scalars['ID'];
+  ingredient: Ingredient;
+  ingredientId: Scalars['ID'];
+  product: Product;
+  productId: Scalars['ID'];
+  quantity: Scalars['Int'];
+};
+
+export type ProductIngredientCreateInput = {
+  ingredientId: Scalars['ID'];
+  quantity: Scalars['Int'];
 };
 
 export type ProductUpdateInput = {
+  allowRefund?: InputMaybe<Scalars['Boolean']>;
   archived?: InputMaybe<Scalars['Boolean']>;
   barcode?: InputMaybe<Scalars['String']>;
-  categories?: InputMaybe<Scalars['String']>;
+  categoryId?: InputMaybe<Scalars['ID']>;
+  color?: InputMaybe<Scalars['String']>;
   cost?: InputMaybe<Scalars['Float']>;
   description?: InputMaybe<Scalars['String']>;
-  factoryCode?: InputMaybe<Scalars['String']>;
-  forPurchase?: InputMaybe<Scalars['Boolean']>;
-  forSale?: InputMaybe<Scalars['Boolean']>;
-  hasStock?: InputMaybe<Scalars['Boolean']>;
   image?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  purchasePrice?: InputMaybe<Scalars['Float']>;
-  sku?: InputMaybe<Scalars['String']>;
-  subtotal?: InputMaybe<Scalars['Float']>;
-  tags?: InputMaybe<Scalars['String']>;
-  total?: InputMaybe<Scalars['Float']>;
-  units?: InputMaybe<Scalars['Float']>;
-  weight?: InputMaybe<Scalars['Float']>;
+  plu?: InputMaybe<Scalars['String']>;
+  price?: InputMaybe<Scalars['Float']>;
+  priceWithoutTaxes?: InputMaybe<Scalars['Float']>;
+  productIngredients?: InputMaybe<Array<ProductIngredientCreateInput>>;
+  stock?: InputMaybe<Scalars['Int']>;
+};
+
+export type ProductsQueryArgs = {
+  archived?: InputMaybe<Scalars['Boolean']>;
+  categoryId?: InputMaybe<Scalars['ID']>;
 };
 
 export type Query = {
@@ -360,10 +393,16 @@ export type Query = {
   category: Category;
   ingredient: Ingredient;
   ingredients: IngredientConnection;
+  ingredientsAll: Array<Ingredient>;
   menu: Menu;
   menus: MenuConnection;
+  menusAll: Array<Menu>;
   product: Product;
   products: ProductConnection;
+  productsAll: Array<Product>;
+  tax: Tax;
+  taxes: TaxConnection;
+  taxesAll: Array<Tax>;
   unitType: UnitType;
   unitTypes: UnitTypeConnection;
   unitTypesAll: Array<UnitType>;
@@ -373,6 +412,11 @@ export type Query = {
 export type QueryCategoriesArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryCategoriesAllArgs = {
+  query?: InputMaybe<CategoriesQueryArgs>;
 };
 
 
@@ -411,7 +455,23 @@ export type QueryProductArgs = {
 export type QueryProductsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  query?: InputMaybe<ProductQueryArgs>;
+  query?: InputMaybe<ProductsQueryArgs>;
+};
+
+
+export type QueryProductsAllArgs = {
+  query?: InputMaybe<ProductsQueryArgs>;
+};
+
+
+export type QueryTaxArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryTaxesArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -428,6 +488,43 @@ export type QueryUnitTypesArgs = {
 export type StringFilter = {
   equals?: InputMaybe<Scalars['String']>;
   in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type Tax = {
+  __typename?: 'Tax';
+  amount: Scalars['Float'];
+  deleted: Scalars['Boolean'];
+  id: Scalars['ID'];
+  key: Scalars['String'];
+  name: Scalars['String'];
+  scope: ETaxScope;
+  status: Scalars['Boolean'];
+  type: ETaxType;
+};
+
+export type TaxConnection = {
+  __typename?: 'TaxConnection';
+  nodes: Array<Maybe<Tax>>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float'];
+};
+
+export type TaxCreateInput = {
+  amount: Scalars['Float'];
+  key: Scalars['String'];
+  name: Scalars['String'];
+  scope: ETaxScope;
+  status: Scalars['Boolean'];
+  type: ETaxType;
+};
+
+export type TaxUpdateInput = {
+  amount?: InputMaybe<Scalars['Float']>;
+  key?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  scope?: InputMaybe<ETaxScope>;
+  status?: InputMaybe<Scalars['Boolean']>;
+  type?: InputMaybe<ETaxType>;
 };
 
 export type UnitType = {
@@ -452,6 +549,14 @@ export type UnitTypeCreateInput = {
 export type UnitTypeUpdateInput = {
   name?: InputMaybe<Scalars['String']>;
 };
+
+export type CategoryFragmentFragment = { __typename?: 'Category', id: string, deleted: boolean, name?: string | null, description?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, taxes: Array<{ __typename?: 'Tax', id: string, name: string, amount: number, type: ETaxType } | null> };
+
+export type CategoryNodeFragmentFragment = { __typename?: 'CategoryNode', id: string, name?: string | null, description?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, taxes: Array<{ __typename?: 'Tax', id: string, name: string, amount: number, type: ETaxType } | null>, _count: { __typename?: 'CategoryNodeCount', products: number } };
+
+export type ProductFragmentFragment = { __typename?: 'Product', id: string, deleted: boolean, archived: boolean, categoryId: string, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, price: number, priceWithoutTaxes: number, category: { __typename?: 'Category', id: string, name?: string | null }, productIngredients: Array<{ __typename?: 'ProductIngredient', id: string, quantity: number, ingredient: { __typename?: 'Ingredient', id: string, name: string } }> };
+
+export type TaxFragmentFragment = { __typename?: 'Tax', id: string, name: string, key: string, scope: ETaxScope, type: ETaxType, amount: number, status: boolean };
 
 export type CategoryCreateMutationVariables = Exact<{
   input: CategoryCreateInput;
@@ -555,6 +660,28 @@ export type ProductsDeleteBulkMutationVariables = Exact<{
 
 export type ProductsDeleteBulkMutation = { __typename?: 'Mutation', productsDeleteBulk: { __typename?: 'BatchResponse', count: number } };
 
+export type TaxCreateMutationVariables = Exact<{
+  input: TaxCreateInput;
+}>;
+
+
+export type TaxCreateMutation = { __typename?: 'Mutation', taxCreate: { __typename?: 'Tax', id: string } };
+
+export type TaxDeleteMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type TaxDeleteMutation = { __typename?: 'Mutation', taxDelete: { __typename?: 'Tax', id: string } };
+
+export type TaxUpdateMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: TaxUpdateInput;
+}>;
+
+
+export type TaxUpdateMutation = { __typename?: 'Mutation', taxUpdate: { __typename?: 'Tax', id: string } };
+
 export type UnitTypeCreateMutationVariables = Exact<{
   input: UnitTypeCreateInput;
 }>;
@@ -583,26 +710,28 @@ export type CategoriesQueryVariables = Exact<{
 }>;
 
 
-export type CategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'CategoryConnection', totalCount: number, nodes: Array<{ __typename?: 'CategoryNode', id: string, deleted: boolean, name: string, description: string, vat: string, deliveryVat: string, takeawayVat: string, course: number, image: string, visible: boolean, _count: { __typename?: 'CategoryNodeCount', products: number } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type CategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'CategoryConnection', totalCount: number, nodes: Array<{ __typename?: 'CategoryNode', id: string, name?: string | null, description?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, taxes: Array<{ __typename?: 'Tax', id: string, name: string, amount: number, type: ETaxType } | null>, _count: { __typename?: 'CategoryNodeCount', products: number } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
-export type CategoriesAllQueryVariables = Exact<{ [key: string]: never; }>;
+export type CategoriesAllQueryVariables = Exact<{
+  query?: InputMaybe<CategoriesQueryArgs>;
+}>;
 
 
-export type CategoriesAllQuery = { __typename?: 'Query', categoriesAll: Array<{ __typename?: 'CategoryNode', id: string, name: string, description: string, vat: string, deliveryVat: string, takeawayVat: string, course: number, image: string, visible: boolean, _count: { __typename?: 'CategoryNodeCount', products: number } }> };
+export type CategoriesAllQuery = { __typename?: 'Query', categoriesAll: Array<{ __typename?: 'CategoryNode', id: string, name?: string | null, description?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, taxes: Array<{ __typename?: 'Tax', id: string, name: string, amount: number, type: ETaxType } | null>, _count: { __typename?: 'CategoryNodeCount', products: number } }> };
 
 export type CategoryQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, deleted: boolean, name: string, description: string, vat: string, deliveryVat: string, takeawayVat: string, course: number, image: string, visible: boolean } };
+export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, deleted: boolean, name?: string | null, description?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, taxes: Array<{ __typename?: 'Tax', id: string, name: string, amount: number, type: ETaxType } | null> } };
 
 export type IngredientQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type IngredientQuery = { __typename?: 'Query', ingredient: { __typename?: 'Ingredient', id: string, deleted: boolean, name: string, sku: string, unitTypeId: string, unitCost?: number | null, visible: boolean, barcode?: string | null } };
+export type IngredientQuery = { __typename?: 'Query', ingredient: { __typename?: 'Ingredient', id: string, deleted: boolean, name: string, sku: string, unitTypeId: string, unitCost: number, visible: boolean, barcode?: string | null } };
 
 export type IngredientsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -610,7 +739,12 @@ export type IngredientsQueryVariables = Exact<{
 }>;
 
 
-export type IngredientsQuery = { __typename?: 'Query', ingredients: { __typename?: 'IngredientConnection', totalCount: number, nodes: Array<{ __typename?: 'Ingredient', id: string, deleted: boolean, name: string, sku: string, unitTypeId: string, unitCost?: number | null, visible: boolean, barcode?: string | null, unitType?: { __typename?: 'UnitType', name: string } | null } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type IngredientsQuery = { __typename?: 'Query', ingredients: { __typename?: 'IngredientConnection', totalCount: number, nodes: Array<{ __typename?: 'Ingredient', id: string, deleted: boolean, name: string, sku: string, unitTypeId: string, unitCost: number, visible: boolean, barcode?: string | null, unitType: { __typename?: 'UnitType', name: string } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type IngredientsAllQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type IngredientsAllQuery = { __typename?: 'Query', ingredientsAll: Array<{ __typename?: 'Ingredient', id: string, name: string, unitCost: number, unitType: { __typename?: 'UnitType', name: string } }> };
 
 export type MenusQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -618,23 +752,48 @@ export type MenusQueryVariables = Exact<{
 }>;
 
 
-export type MenusQuery = { __typename?: 'Query', menus: { __typename?: 'MenuConnection', totalCount: number, nodes: Array<{ __typename?: 'Menu', id: string, deleted: boolean, name: string } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type MenusQuery = { __typename?: 'Query', menus: { __typename?: 'MenuConnection', totalCount: number, nodes: Array<{ __typename?: 'Menu', id: string, deleted: boolean, name: string, categories?: Array<{ __typename?: 'Category', id: string, name?: string | null }> | null } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type MenusAllQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MenusAllQuery = { __typename?: 'Query', menusAll: Array<{ __typename?: 'Menu', id: string, deleted: boolean, name: string, categories?: Array<{ __typename?: 'Category', id: string, name?: string | null }> | null }> };
 
 export type ProductQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type ProductQuery = { __typename?: 'Query', product: { __typename?: 'Product', id: string, deleted: boolean, archived: boolean, barcode?: string | null, cost: number, description: string, factoryCode: string, forPurchase: boolean, forSale: boolean, hasStock: boolean, image: string, name: string, purchasePrice: number, sku: string, subtotal: number, tags: string, total: number, units: number, weight: number, categories: string } };
+export type ProductQuery = { __typename?: 'Query', product: { __typename?: 'Product', id: string, deleted: boolean, archived: boolean, categoryId: string, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, price: number, priceWithoutTaxes: number, category: { __typename?: 'Category', id: string, name?: string | null }, productIngredients: Array<{ __typename?: 'ProductIngredient', id: string, quantity: number, ingredient: { __typename?: 'Ingredient', id: string, name: string } }> } };
 
 export type ProductsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
-  query?: InputMaybe<ProductQueryArgs>;
+  query?: InputMaybe<ProductsQueryArgs>;
 }>;
 
 
-export type ProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnection', totalCount: number, nodes: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, barcode?: string | null, cost: number, description: string, factoryCode: string, forPurchase: boolean, forSale: boolean, hasStock: boolean, image: string, name: string, purchasePrice: number, sku: string, subtotal: number, tags: string, total: number, units: number, weight: number, categories: string } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnection', totalCount: number, nodes: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, categoryId: string, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, price: number, priceWithoutTaxes: number, category: { __typename?: 'Category', id: string, name?: string | null }, productIngredients: Array<{ __typename?: 'ProductIngredient', id: string, quantity: number, ingredient: { __typename?: 'Ingredient', id: string, name: string } }> } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type ProductsAllQueryVariables = Exact<{
+  query?: InputMaybe<ProductsQueryArgs>;
+}>;
+
+
+export type ProductsAllQuery = { __typename?: 'Query', productsAll: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, categoryId: string, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, price: number, priceWithoutTaxes: number, category: { __typename?: 'Category', id: string, name?: string | null }, productIngredients: Array<{ __typename?: 'ProductIngredient', id: string, quantity: number, ingredient: { __typename?: 'Ingredient', id: string, name: string } }> }> };
+
+export type TaxesQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type TaxesQuery = { __typename?: 'Query', taxes: { __typename?: 'TaxConnection', totalCount: number, nodes: Array<{ __typename?: 'Tax', id: string, name: string, key: string, scope: ETaxScope, type: ETaxType, amount: number, status: boolean } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type TaxesAllQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TaxesAllQuery = { __typename?: 'Query', taxesAll: Array<{ __typename?: 'Tax', id: string, name: string, key: string, scope: ETaxScope, type: ETaxType, amount: number, status: boolean }> };
 
 export type UnitTypesQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -649,7 +808,84 @@ export type UnitTypesAllQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type UnitTypesAllQuery = { __typename?: 'Query', unitTypesAll: Array<{ __typename?: 'UnitType', id: string, name: string, deleted: boolean, ingredients?: Array<{ __typename?: 'Ingredient', id: string }> | null }> };
 
-
+export const CategoryFragmentFragmentDoc = gql`
+    fragment CategoryFragment on Category {
+  id
+  deleted
+  name
+  description
+  course
+  image
+  visible
+  taxes {
+    id
+    name
+    amount
+    type
+  }
+}
+    `;
+export const CategoryNodeFragmentFragmentDoc = gql`
+    fragment CategoryNodeFragment on CategoryNode {
+  id
+  name
+  description
+  course
+  image
+  visible
+  taxes {
+    id
+    name
+    amount
+    type
+  }
+  _count {
+    products
+  }
+}
+    `;
+export const ProductFragmentFragmentDoc = gql`
+    fragment ProductFragment on Product {
+  id
+  deleted
+  archived
+  categoryId
+  name
+  description
+  plu
+  image
+  color
+  barcode
+  cost
+  stock
+  allowRefund
+  price
+  priceWithoutTaxes
+  category {
+    id
+    name
+  }
+  productIngredients {
+    id
+    quantity
+    ingredient {
+      id
+      name
+    }
+  }
+}
+    `;
+export const TaxFragmentFragmentDoc = gql`
+    fragment TaxFragment on Tax {
+  id
+  name
+  key
+  scope
+  type
+  amount
+  status
+}
+    `;
 export const CategoryCreateDocument = gql`
     mutation CategoryCreate($input: CategoryCreateInput!) {
   categoryCreate(input: $input) {
@@ -1116,6 +1352,106 @@ export function useProductsDeleteBulkMutation(baseOptions?: Apollo.MutationHookO
 export type ProductsDeleteBulkMutationHookResult = ReturnType<typeof useProductsDeleteBulkMutation>;
 export type ProductsDeleteBulkMutationResult = Apollo.MutationResult<ProductsDeleteBulkMutation>;
 export type ProductsDeleteBulkMutationOptions = Apollo.BaseMutationOptions<ProductsDeleteBulkMutation, ProductsDeleteBulkMutationVariables>;
+export const TaxCreateDocument = gql`
+    mutation TaxCreate($input: TaxCreateInput!) {
+  taxCreate(input: $input) {
+    id
+  }
+}
+    `;
+export type TaxCreateMutationFn = Apollo.MutationFunction<TaxCreateMutation, TaxCreateMutationVariables>;
+
+/**
+ * __useTaxCreateMutation__
+ *
+ * To run a mutation, you first call `useTaxCreateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTaxCreateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [taxCreateMutation, { data, loading, error }] = useTaxCreateMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useTaxCreateMutation(baseOptions?: Apollo.MutationHookOptions<TaxCreateMutation, TaxCreateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<TaxCreateMutation, TaxCreateMutationVariables>(TaxCreateDocument, options);
+      }
+export type TaxCreateMutationHookResult = ReturnType<typeof useTaxCreateMutation>;
+export type TaxCreateMutationResult = Apollo.MutationResult<TaxCreateMutation>;
+export type TaxCreateMutationOptions = Apollo.BaseMutationOptions<TaxCreateMutation, TaxCreateMutationVariables>;
+export const TaxDeleteDocument = gql`
+    mutation TaxDelete($id: ID!) {
+  taxDelete(id: $id) {
+    id
+  }
+}
+    `;
+export type TaxDeleteMutationFn = Apollo.MutationFunction<TaxDeleteMutation, TaxDeleteMutationVariables>;
+
+/**
+ * __useTaxDeleteMutation__
+ *
+ * To run a mutation, you first call `useTaxDeleteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTaxDeleteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [taxDeleteMutation, { data, loading, error }] = useTaxDeleteMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useTaxDeleteMutation(baseOptions?: Apollo.MutationHookOptions<TaxDeleteMutation, TaxDeleteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<TaxDeleteMutation, TaxDeleteMutationVariables>(TaxDeleteDocument, options);
+      }
+export type TaxDeleteMutationHookResult = ReturnType<typeof useTaxDeleteMutation>;
+export type TaxDeleteMutationResult = Apollo.MutationResult<TaxDeleteMutation>;
+export type TaxDeleteMutationOptions = Apollo.BaseMutationOptions<TaxDeleteMutation, TaxDeleteMutationVariables>;
+export const TaxUpdateDocument = gql`
+    mutation TaxUpdate($id: ID!, $input: TaxUpdateInput!) {
+  taxUpdate(id: $id, input: $input) {
+    id
+  }
+}
+    `;
+export type TaxUpdateMutationFn = Apollo.MutationFunction<TaxUpdateMutation, TaxUpdateMutationVariables>;
+
+/**
+ * __useTaxUpdateMutation__
+ *
+ * To run a mutation, you first call `useTaxUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTaxUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [taxUpdateMutation, { data, loading, error }] = useTaxUpdateMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useTaxUpdateMutation(baseOptions?: Apollo.MutationHookOptions<TaxUpdateMutation, TaxUpdateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<TaxUpdateMutation, TaxUpdateMutationVariables>(TaxUpdateDocument, options);
+      }
+export type TaxUpdateMutationHookResult = ReturnType<typeof useTaxUpdateMutation>;
+export type TaxUpdateMutationResult = Apollo.MutationResult<TaxUpdateMutation>;
+export type TaxUpdateMutationOptions = Apollo.BaseMutationOptions<TaxUpdateMutation, TaxUpdateMutationVariables>;
 export const UnitTypeCreateDocument = gql`
     mutation UnitTypeCreate($input: UnitTypeCreateInput!) {
   unitTypeCreate(input: $input) {
@@ -1220,19 +1556,7 @@ export const CategoriesDocument = gql`
     query Categories($offset: Int, $limit: Int) {
   categories(offset: $offset, limit: $limit) {
     nodes {
-      id
-      deleted
-      name
-      description
-      vat
-      deliveryVat
-      takeawayVat
-      course
-      image
-      visible
-      _count {
-        products
-      }
+      ...CategoryNodeFragment
     }
     totalCount
     pageInfo {
@@ -1241,7 +1565,7 @@ export const CategoriesDocument = gql`
     }
   }
 }
-    `;
+    ${CategoryNodeFragmentFragmentDoc}`;
 
 /**
  * __useCategoriesQuery__
@@ -1272,23 +1596,12 @@ export type CategoriesQueryHookResult = ReturnType<typeof useCategoriesQuery>;
 export type CategoriesLazyQueryHookResult = ReturnType<typeof useCategoriesLazyQuery>;
 export type CategoriesQueryResult = Apollo.QueryResult<CategoriesQuery, CategoriesQueryVariables>;
 export const CategoriesAllDocument = gql`
-    query CategoriesAll {
-  categoriesAll {
-    id
-    name
-    description
-    vat
-    deliveryVat
-    takeawayVat
-    course
-    image
-    visible
-    _count {
-      products
-    }
+    query CategoriesAll($query: CategoriesQueryArgs) {
+  categoriesAll(query: $query) {
+    ...CategoryNodeFragment
   }
 }
-    `;
+    ${CategoryNodeFragmentFragmentDoc}`;
 
 /**
  * __useCategoriesAllQuery__
@@ -1302,6 +1615,7 @@ export const CategoriesAllDocument = gql`
  * @example
  * const { data, loading, error } = useCategoriesAllQuery({
  *   variables: {
+ *      query: // value for 'query'
  *   },
  * });
  */
@@ -1319,19 +1633,10 @@ export type CategoriesAllQueryResult = Apollo.QueryResult<CategoriesAllQuery, Ca
 export const CategoryDocument = gql`
     query Category($id: ID!) {
   category(id: $id) {
-    id
-    deleted
-    name
-    description
-    vat
-    deliveryVat
-    takeawayVat
-    course
-    image
-    visible
+    ...CategoryFragment
   }
 }
-    `;
+    ${CategoryFragmentFragmentDoc}`;
 
 /**
  * __useCategoryQuery__
@@ -1455,6 +1760,45 @@ export function useIngredientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type IngredientsQueryHookResult = ReturnType<typeof useIngredientsQuery>;
 export type IngredientsLazyQueryHookResult = ReturnType<typeof useIngredientsLazyQuery>;
 export type IngredientsQueryResult = Apollo.QueryResult<IngredientsQuery, IngredientsQueryVariables>;
+export const IngredientsAllDocument = gql`
+    query IngredientsAll {
+  ingredientsAll {
+    id
+    name
+    unitCost
+    unitType {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useIngredientsAllQuery__
+ *
+ * To run a query within a React component, call `useIngredientsAllQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIngredientsAllQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIngredientsAllQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useIngredientsAllQuery(baseOptions?: Apollo.QueryHookOptions<IngredientsAllQuery, IngredientsAllQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<IngredientsAllQuery, IngredientsAllQueryVariables>(IngredientsAllDocument, options);
+      }
+export function useIngredientsAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IngredientsAllQuery, IngredientsAllQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<IngredientsAllQuery, IngredientsAllQueryVariables>(IngredientsAllDocument, options);
+        }
+export type IngredientsAllQueryHookResult = ReturnType<typeof useIngredientsAllQuery>;
+export type IngredientsAllLazyQueryHookResult = ReturnType<typeof useIngredientsAllLazyQuery>;
+export type IngredientsAllQueryResult = Apollo.QueryResult<IngredientsAllQuery, IngredientsAllQueryVariables>;
 export const MenusDocument = gql`
     query Menus($offset: Int, $limit: Int) {
   menus(offset: $offset, limit: $limit) {
@@ -1462,6 +1806,10 @@ export const MenusDocument = gql`
       id
       deleted
       name
+      categories {
+        id
+        name
+      }
     }
     totalCount
     pageInfo {
@@ -1500,32 +1848,53 @@ export function useMenusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Menu
 export type MenusQueryHookResult = ReturnType<typeof useMenusQuery>;
 export type MenusLazyQueryHookResult = ReturnType<typeof useMenusLazyQuery>;
 export type MenusQueryResult = Apollo.QueryResult<MenusQuery, MenusQueryVariables>;
-export const ProductDocument = gql`
-    query Product($id: ID!) {
-  product(id: $id) {
+export const MenusAllDocument = gql`
+    query MenusAll {
+  menusAll {
     id
     deleted
-    archived
-    barcode
-    cost
-    description
-    factoryCode
-    forPurchase
-    forSale
-    hasStock
-    image
     name
-    purchasePrice
-    sku
-    subtotal
-    tags
-    total
-    units
-    weight
-    categories
+    categories {
+      id
+      name
+    }
   }
 }
     `;
+
+/**
+ * __useMenusAllQuery__
+ *
+ * To run a query within a React component, call `useMenusAllQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMenusAllQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMenusAllQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMenusAllQuery(baseOptions?: Apollo.QueryHookOptions<MenusAllQuery, MenusAllQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MenusAllQuery, MenusAllQueryVariables>(MenusAllDocument, options);
+      }
+export function useMenusAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MenusAllQuery, MenusAllQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MenusAllQuery, MenusAllQueryVariables>(MenusAllDocument, options);
+        }
+export type MenusAllQueryHookResult = ReturnType<typeof useMenusAllQuery>;
+export type MenusAllLazyQueryHookResult = ReturnType<typeof useMenusAllLazyQuery>;
+export type MenusAllQueryResult = Apollo.QueryResult<MenusAllQuery, MenusAllQueryVariables>;
+export const ProductDocument = gql`
+    query Product($id: ID!) {
+  product(id: $id) {
+    ...ProductFragment
+  }
+}
+    ${ProductFragmentFragmentDoc}`;
 
 /**
  * __useProductQuery__
@@ -1555,29 +1924,10 @@ export type ProductQueryHookResult = ReturnType<typeof useProductQuery>;
 export type ProductLazyQueryHookResult = ReturnType<typeof useProductLazyQuery>;
 export type ProductQueryResult = Apollo.QueryResult<ProductQuery, ProductQueryVariables>;
 export const ProductsDocument = gql`
-    query Products($offset: Int, $limit: Int, $query: ProductQueryArgs) {
+    query Products($offset: Int, $limit: Int, $query: ProductsQueryArgs) {
   products(offset: $offset, limit: $limit, query: $query) {
     nodes {
-      id
-      deleted
-      archived
-      barcode
-      cost
-      description
-      factoryCode
-      forPurchase
-      forSale
-      hasStock
-      image
-      name
-      purchasePrice
-      sku
-      subtotal
-      tags
-      total
-      units
-      weight
-      categories
+      ...ProductFragment
     }
     totalCount
     pageInfo {
@@ -1586,7 +1936,7 @@ export const ProductsDocument = gql`
     }
   }
 }
-    `;
+    ${ProductFragmentFragmentDoc}`;
 
 /**
  * __useProductsQuery__
@@ -1617,6 +1967,118 @@ export function useProductsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<P
 export type ProductsQueryHookResult = ReturnType<typeof useProductsQuery>;
 export type ProductsLazyQueryHookResult = ReturnType<typeof useProductsLazyQuery>;
 export type ProductsQueryResult = Apollo.QueryResult<ProductsQuery, ProductsQueryVariables>;
+export const ProductsAllDocument = gql`
+    query ProductsAll($query: ProductsQueryArgs) {
+  productsAll(query: $query) {
+    ...ProductFragment
+  }
+}
+    ${ProductFragmentFragmentDoc}`;
+
+/**
+ * __useProductsAllQuery__
+ *
+ * To run a query within a React component, call `useProductsAllQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductsAllQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProductsAllQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *   },
+ * });
+ */
+export function useProductsAllQuery(baseOptions?: Apollo.QueryHookOptions<ProductsAllQuery, ProductsAllQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProductsAllQuery, ProductsAllQueryVariables>(ProductsAllDocument, options);
+      }
+export function useProductsAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductsAllQuery, ProductsAllQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProductsAllQuery, ProductsAllQueryVariables>(ProductsAllDocument, options);
+        }
+export type ProductsAllQueryHookResult = ReturnType<typeof useProductsAllQuery>;
+export type ProductsAllLazyQueryHookResult = ReturnType<typeof useProductsAllLazyQuery>;
+export type ProductsAllQueryResult = Apollo.QueryResult<ProductsAllQuery, ProductsAllQueryVariables>;
+export const TaxesDocument = gql`
+    query Taxes($offset: Int, $limit: Int) {
+  taxes(offset: $offset, limit: $limit) {
+    nodes {
+      ...TaxFragment
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+    ${TaxFragmentFragmentDoc}`;
+
+/**
+ * __useTaxesQuery__
+ *
+ * To run a query within a React component, call `useTaxesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTaxesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTaxesQuery({
+ *   variables: {
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useTaxesQuery(baseOptions?: Apollo.QueryHookOptions<TaxesQuery, TaxesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TaxesQuery, TaxesQueryVariables>(TaxesDocument, options);
+      }
+export function useTaxesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TaxesQuery, TaxesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TaxesQuery, TaxesQueryVariables>(TaxesDocument, options);
+        }
+export type TaxesQueryHookResult = ReturnType<typeof useTaxesQuery>;
+export type TaxesLazyQueryHookResult = ReturnType<typeof useTaxesLazyQuery>;
+export type TaxesQueryResult = Apollo.QueryResult<TaxesQuery, TaxesQueryVariables>;
+export const TaxesAllDocument = gql`
+    query TaxesAll {
+  taxesAll {
+    ...TaxFragment
+  }
+}
+    ${TaxFragmentFragmentDoc}`;
+
+/**
+ * __useTaxesAllQuery__
+ *
+ * To run a query within a React component, call `useTaxesAllQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTaxesAllQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTaxesAllQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTaxesAllQuery(baseOptions?: Apollo.QueryHookOptions<TaxesAllQuery, TaxesAllQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TaxesAllQuery, TaxesAllQueryVariables>(TaxesAllDocument, options);
+      }
+export function useTaxesAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TaxesAllQuery, TaxesAllQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TaxesAllQuery, TaxesAllQueryVariables>(TaxesAllDocument, options);
+        }
+export type TaxesAllQueryHookResult = ReturnType<typeof useTaxesAllQuery>;
+export type TaxesAllLazyQueryHookResult = ReturnType<typeof useTaxesAllLazyQuery>;
+export type TaxesAllQueryResult = Apollo.QueryResult<TaxesAllQuery, TaxesAllQueryVariables>;
 export const UnitTypesDocument = gql`
     query UnitTypes($offset: Int, $limit: Int) {
   unitTypes(offset: $offset, limit: $limit) {

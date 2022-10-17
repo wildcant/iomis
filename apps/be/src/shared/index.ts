@@ -1,7 +1,9 @@
 import { HttpException, HttpStatus, Type } from '@nestjs/common'
 import {
   ArgsType,
+  createUnionType,
   Field,
+  InputType,
   Int,
   ObjectType,
   registerEnumType,
@@ -53,10 +55,7 @@ registerEnumType(SortOrder, {
 })
 
 export const throwUnexpectedError = (e: any) => {
-  if (process.env.NODE_ENV === 'development') {
-    // eslint-disable-next-line no-console
-    console.error(e)
-  }
+  console.error(e)
   throw new HttpException(
     {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -64,4 +63,18 @@ export const throwUnexpectedError = (e: any) => {
     },
     HttpStatus.INTERNAL_SERVER_ERROR
   )
+}
+
+export const StringEnumerable = createUnionType({
+  name: 'StringEnumerable',
+  types: () => [String],
+})
+
+@InputType()
+export class StringFilter {
+  @Field({ nullable: true })
+  equals?: string;
+
+  @Field(() => [String], { nullable: 'itemsAndList' })
+  in?: string[]
 }

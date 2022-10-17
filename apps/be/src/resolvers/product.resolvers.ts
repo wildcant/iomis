@@ -1,7 +1,6 @@
-import { Inject } from '@nestjs/common'
+import { HttpException, HttpStatus, Inject } from '@nestjs/common'
 import {
   Args,
-  createUnionType,
   Field,
   ID,
   InputType,
@@ -10,47 +9,52 @@ import {
   ObjectType,
   OmitType,
   PartialType,
+  PickType,
   Query,
   Resolver,
 } from '@nestjs/graphql'
 import { Prisma } from '@prisma/client'
-import { Product } from 'models/Product'
+import { Product, ProductIngredient } from 'models'
 import { PrismaService } from 'prisma.service'
-import { EntityConnection, Pagination, throwUnexpectedError } from 'shared'
+import {
+  EntityConnection,
+  Pagination,
+  StringFilter,
+  throwUnexpectedError,
+} from 'shared'
 import { createEntityConnection, DEFAULT_PAGE_SIZE } from 'utils'
 
 @InputType()
-class ProductQueryArgs {
+class ProductsQueryArgs {
   @Field({ nullable: true })
   archived?: boolean
+
+  @Field(() => ID, { nullable: true })
+  categoryId?: string
 }
+
+@InputType()
+class ProductIngredientCreateInput extends PickType(
+  ProductIngredient,
+  ['quantity', 'ingredientId'],
+  InputType
+) {}
 
 @InputType()
 class ProductCreateInput extends OmitType(
   Product,
-  ['id', 'deleted'],
+  ['id', 'deleted', 'productIngredients', 'category', 'taxes'],
   InputType
-) {}
+) {
+  @Field(() => [ProductIngredientCreateInput], { defaultValue: [] })
+  productIngredients?: ProductIngredientCreateInput[]
+}
 
 @InputType()
 class ProductUpdateInput extends PartialType(ProductCreateInput) {}
 
 @ObjectType()
 class ProductConnection extends EntityConnection(Product) {}
-
-export const StringEnumerable = createUnionType({
-  name: 'StringEnumerable',
-  types: () => [String],
-})
-
-@InputType()
-class StringFilter {
-  @Field({ nullable: true })
-  equals?: string;
-
-  @Field(() => [String], { nullable: 'itemsAndList' })
-  in?: string[]
-}
 
 @InputType()
 class ArchiveBulk {
@@ -77,10 +81,40 @@ class BatchResponse {
 export class ProductResolver {
   constructor(@Inject(PrismaService) private prisma: PrismaService) {}
 
+  @Query(() => [Product])
+  async productsAll(
+    @Args('query', { nullable: true }) query?: ProductsQueryArgs
+  ) {
+    const where: Prisma.ProductWhereInput = {}
+
+    if (query.categoryId) {
+      where.categoryId = query.categoryId
+    }
+
+    return this.prisma.product.findMany({
+      where,
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        productIngredients: {
+          select: {
+            id: true,
+            quantity: true,
+            ingredient: { select: { id: true, name: true } },
+          },
+        },
+      },
+    })
+  }
+
   @Query(() => ProductConnection)
   async products(
     @Args({ nullable: true }) pagination?: Pagination,
-    @Args('query', { nullable: true }) query?: ProductQueryArgs
+    @Args('query', { nullable: true }) query?: ProductsQueryArgs
   ) {
     const { limit = DEFAULT_PAGE_SIZE, offset = 0 } = pagination ?? {}
     const { archived } = query ?? {}
@@ -95,6 +129,21 @@ export class ProductResolver {
         take: limit,
         skip: offset,
         where,
+        include: {
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          productIngredients: {
+            select: {
+              id: true,
+              quantity: true,
+              ingredient: { select: { id: true, name: true } },
+            },
+          },
+        },
       }),
     ])
 
@@ -104,15 +153,32 @@ export class ProductResolver {
   @Query(() => Product)
   async product(@Args('id', { type: () => ID }) id: string) {
     return this.prisma.product
-      .findUnique({ where: { id } })
+      .findUnique({
+        where: { id },
+        include: {
+          category: { select: { id: true, name: true } },
+          productIngredients: {
+            select: {
+              id: true,
+              quantity: true,
+              ingredient: { select: { id: true, name: true } },
+            },
+          },
+        },
+      })
       .then((r) => r)
       .catch(throwUnexpectedError)
   }
 
   @Mutation(() => Product)
   async productCreate(@Args('input') input: ProductCreateInput) {
+    const { productIngredients, categoryId, ...data } = input
     return this.prisma.product.create({
-      data: input,
+      data: {
+        ...data,
+        category: { connect: { id: categoryId } },
+        productIngredients: { createMany: { data: productIngredients } },
+      },
     })
   }
 
@@ -121,10 +187,42 @@ export class ProductResolver {
     @Args('id', { type: () => ID }) id: string,
     @Args('input') input: ProductUpdateInput
   ) {
-    return this.prisma.product.update({
+    const product = await this.prisma.product.findUnique({ where: { id } })
+
+    if (!product) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'El producto no existe.',
+        },
+        HttpStatus.NOT_FOUND
+      )
+    }
+
+    const {
+      categoryId: newCategory,
+      productIngredients,
+      // taxes,
+      ...updatedData
+    } = input
+    const category = newCategory
+      ? { id: newCategory }
+      : { id: product.categoryId }
+
+    this.prisma.product.update({
       where: { id },
-      data: input,
+      data: {
+        ...updatedData,
+        category: { connect: category },
+        //  TODO: Make validations for ingredients
+      },
     })
+    // Update ingredients
+    // productIngredients.map((productIngredient) => this.prisma.product.update({
+
+    // }))
+
+    return
   }
 
   @Mutation(() => Product)

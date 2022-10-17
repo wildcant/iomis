@@ -1,19 +1,18 @@
 import { registerRootComponent } from 'expo'
 import { StatusBar } from 'expo-status-bar'
+import { Navigation } from './navigation'
 import React from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Providers } from './providers'
 
-import { HomeScreen } from './screens/home'
-
-const App = () => {
+function App() {
   return (
-    <Providers>
-      <SafeAreaProvider>
-        <HomeScreen />
+    <SafeAreaProvider className='bg-secondary'>
+      <Providers>
+        <Navigation />
         <StatusBar />
-      </SafeAreaProvider>
-    </Providers>
+      </Providers>
+    </SafeAreaProvider>
   )
 }
 

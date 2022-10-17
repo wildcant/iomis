@@ -4,6 +4,10 @@ query Menus($offset: Int, $limit: Int) {
       id
       deleted
       name
+      categories {
+        id
+        name
+      }
     }
     totalCount
     pageInfo {

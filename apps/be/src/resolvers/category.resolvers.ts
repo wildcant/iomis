@@ -12,9 +12,15 @@ import {
   Query,
   Resolver,
 } from '@nestjs/graphql'
+import { Prisma } from '@prisma/client'
 import { Category } from 'models/Category'
 import { PrismaService } from 'prisma.service'
-import { EntityConnection, Pagination, throwUnexpectedError } from 'shared'
+import {
+  EntityConnection,
+  Pagination,
+  StringFilter,
+  throwUnexpectedError,
+} from 'shared'
 import { createEntityConnection, DEFAULT_PAGE_SIZE } from 'utils'
 
 @ObjectType()
@@ -35,9 +41,18 @@ class CategoryConnection extends EntityConnection(CategoryNode) {}
 @InputType()
 class CategoryCreateInput extends OmitType(
   Category,
-  ['id', 'deleted', 'menus', 'products'],
+  ['id', 'deleted', 'menus', 'products', 'taxes'],
   InputType
-) {}
+) {
+  @Field(() => [ID], { nullable: 'itemsAndList' })
+  taxes?: string[]
+}
+
+@InputType()
+class CategoriesQueryArgs {
+  @Field(() => StringFilter, { nullable: true })
+  menus: StringFilter
+}
 
 @InputType()
 class CategoryUpdateInput extends PartialType(CategoryCreateInput) {}
@@ -55,7 +70,10 @@ export class CategoryResolver {
       this.prisma.category.findMany({
         take: limit,
         skip: offset,
-        include: { _count: { select: { products: true } } },
+        include: {
+          taxes: { select: { id: true, name: true, amount: true, type: true } },
+          _count: { select: { products: true } },
+        },
       }),
     ])
 
@@ -63,24 +81,41 @@ export class CategoryResolver {
   }
 
   @Query(() => [CategoryNode])
-  async categoriesAll() {
+  async categoriesAll(
+    @Args('query', { type: () => CategoriesQueryArgs, nullable: true })
+    query?: CategoriesQueryArgs
+  ) {
+    const where: Prisma.CategoryWhereInput = {}
+    if (query?.menus) {
+      where.menus = {
+        some: { id: query.menus },
+      }
+    }
+
     return this.prisma.category.findMany({
-      include: { _count: { select: { products: true } } },
+      where,
+      include: { taxes: {}, _count: { select: { products: true } } },
     })
   }
 
   @Query(() => Category)
   async category(@Args('id', { type: () => ID }) id: string) {
     return this.prisma.category
-      .findUnique({ where: { id } })
+      .findUnique({
+        where: { id },
+        include: {
+          taxes: { select: { id: true, name: true, amount: true, type: true } },
+        },
+      })
       .then((r) => r)
       .catch(throwUnexpectedError)
   }
 
   @Mutation(() => Category)
   async categoryCreate(@Args('input') input: CategoryCreateInput) {
+    const { taxes, ...createInput } = input
     return this.prisma.category.create({
-      data: input,
+      data: { ...createInput, taxes: { connect: taxes.map((id) => ({ id })) } },
     })
   }
 

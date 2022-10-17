@@ -1,5 +1,5 @@
 const Config = {
-  apiUrl: 'http://192.168.1.65:8080',
+  apiUrl: 'http://localhost:8080',
   enableHiddenFeatures: true,
 }
 
@@ -25,7 +25,7 @@ export default {
     splash: {
       image: './assets/splash.png',
       resizeMode: 'contain',
-      backgroundColor: '#ffffff',
+      backgroundColor: '#FCFCFC',
     },
     updates: {
       fallbackToCacheTimeout: 0,
@@ -41,7 +41,7 @@ export default {
       package: 'com.testing.wc.iomisrestaurantpos',
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#FCFCFC',
       },
     },
     web: {

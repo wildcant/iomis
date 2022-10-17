@@ -1,6 +1,6 @@
 import { Refetch } from '@iomis/api'
 import { RowSelectionState } from '@tanstack/react-table'
-import { createContext } from 'hooks/context'
+import { createContext } from '@iomis/utils/hooks'
 import { Dispatch, SetStateAction } from 'react'
 import { Filters } from './types'
 

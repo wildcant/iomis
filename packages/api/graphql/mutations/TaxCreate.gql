@@ -1,0 +1,5 @@
+mutation TaxCreate($input: TaxCreateInput!) {
+  taxCreate(input: $input) {
+    id
+  }
+}

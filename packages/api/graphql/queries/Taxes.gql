@@ -1,0 +1,12 @@
+query Taxes($offset: Int, $limit: Int) {
+  taxes(offset: $offset, limit: $limit) {
+    nodes {
+      ...TaxFragment
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}

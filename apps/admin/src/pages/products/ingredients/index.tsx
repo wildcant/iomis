@@ -38,6 +38,7 @@ export default function Ingredients() {
   })
   const { data, loading, error } = useIngredientsQuery({
     variables: { limit: pageSize, offset: pageIndex * pageSize },
+    fetchPolicy: 'cache-and-network',
   })
   useHandleError(error)
 
