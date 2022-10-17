@@ -100,6 +100,18 @@ export type DeleteBulk = {
   id?: InputMaybe<StringFilter>;
 };
 
+export enum ETaxScope {
+  Employees = 'EMPLOYEES',
+  None = 'NONE',
+  Purchases = 'PURCHASES',
+  Sales = 'SALES'
+}
+
+export enum ETaxType {
+  Fixed = 'FIXED',
+  Percentage = 'PERCENTAGE'
+}
+
 export type Ingredient = {
   __typename?: 'Ingredient';
   barcode?: Maybe<Scalars['String']>;
@@ -179,6 +191,9 @@ export type Mutation = {
   productUpdate: Product;
   productsArchiveBulk: BatchResponse;
   productsDeleteBulk: BatchResponse;
+  taxCreate: Tax;
+  taxDelete: Tax;
+  taxUpdate: Tax;
   unitTypeCreate: UnitType;
   unitTypeDelete: UnitType;
   unitTypeUpdate: UnitType;
@@ -256,6 +271,22 @@ export type MutationProductsArchiveBulkArgs = {
 
 export type MutationProductsDeleteBulkArgs = {
   query: DeleteBulk;
+};
+
+
+export type MutationTaxCreateArgs = {
+  input: TaxCreateInput;
+};
+
+
+export type MutationTaxDeleteArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationTaxUpdateArgs = {
+  id: Scalars['ID'];
+  input: TaxUpdateInput;
 };
 
 
@@ -379,6 +410,9 @@ export type Query = {
   product: Product;
   products: ProductConnection;
   productsAll: Array<Product>;
+  tax: Tax;
+  taxes: TaxConnection;
+  taxesAll: Array<Tax>;
   unitType: UnitType;
   unitTypes: UnitTypeConnection;
   unitTypesAll: Array<UnitType>;
@@ -440,6 +474,17 @@ export type QueryProductsAllArgs = {
 };
 
 
+export type QueryTaxArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryTaxesArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryUnitTypeArgs = {
   id: Scalars['ID'];
 };
@@ -453,6 +498,43 @@ export type QueryUnitTypesArgs = {
 export type StringFilter = {
   equals?: InputMaybe<Scalars['String']>;
   in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type Tax = {
+  __typename?: 'Tax';
+  amount: Scalars['Float'];
+  deleted: Scalars['Boolean'];
+  id: Scalars['ID'];
+  key: Scalars['String'];
+  name: Scalars['String'];
+  scope: ETaxScope;
+  status: Scalars['Boolean'];
+  type: ETaxType;
+};
+
+export type TaxConnection = {
+  __typename?: 'TaxConnection';
+  nodes: Array<Maybe<Tax>>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float'];
+};
+
+export type TaxCreateInput = {
+  amount: Scalars['Float'];
+  key: Scalars['String'];
+  name: Scalars['String'];
+  scope: ETaxScope;
+  status: Scalars['Boolean'];
+  type: ETaxType;
+};
+
+export type TaxUpdateInput = {
+  amount?: InputMaybe<Scalars['Float']>;
+  key?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  scope?: InputMaybe<ETaxScope>;
+  status?: InputMaybe<Scalars['Boolean']>;
+  type?: InputMaybe<ETaxType>;
 };
 
 export type UnitType = {
@@ -580,6 +662,13 @@ export type ProductsDeleteBulkMutationVariables = Exact<{
 
 export type ProductsDeleteBulkMutation = { __typename?: 'Mutation', productsDeleteBulk: { __typename?: 'BatchResponse', count: number } };
 
+export type TaxCreateMutationVariables = Exact<{
+  input: TaxCreateInput;
+}>;
+
+
+export type TaxCreateMutation = { __typename?: 'Mutation', taxCreate: { __typename?: 'Tax', id: string } };
+
 export type UnitTypeCreateMutationVariables = Exact<{
   input: UnitTypeCreateInput;
 }>;
@@ -679,6 +768,19 @@ export type ProductsAllQueryVariables = Exact<{
 
 
 export type ProductsAllQuery = { __typename?: 'Query', productsAll: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, vat?: number | null, price: number, priceWithoutVAT: number, category: { __typename?: 'Category', id: string, name?: string | null } }> };
+
+export type TaxesQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type TaxesQuery = { __typename?: 'Query', taxes: { __typename?: 'TaxConnection', totalCount: number, nodes: Array<{ __typename?: 'Tax', id: string, name: string, key: string, scope: ETaxScope, type: ETaxType, amount: number, status: boolean } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type TaxesAllQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TaxesAllQuery = { __typename?: 'Query', taxesAll: Array<{ __typename?: 'Tax', id: string, name: string, key: string, scope: ETaxScope, type: ETaxType, amount: number, status: boolean }> };
 
 export type UnitTypesQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -1160,6 +1262,39 @@ export function useProductsDeleteBulkMutation(baseOptions?: Apollo.MutationHookO
 export type ProductsDeleteBulkMutationHookResult = ReturnType<typeof useProductsDeleteBulkMutation>;
 export type ProductsDeleteBulkMutationResult = Apollo.MutationResult<ProductsDeleteBulkMutation>;
 export type ProductsDeleteBulkMutationOptions = Apollo.BaseMutationOptions<ProductsDeleteBulkMutation, ProductsDeleteBulkMutationVariables>;
+export const TaxCreateDocument = gql`
+    mutation TaxCreate($input: TaxCreateInput!) {
+  taxCreate(input: $input) {
+    id
+  }
+}
+    `;
+export type TaxCreateMutationFn = Apollo.MutationFunction<TaxCreateMutation, TaxCreateMutationVariables>;
+
+/**
+ * __useTaxCreateMutation__
+ *
+ * To run a mutation, you first call `useTaxCreateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTaxCreateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [taxCreateMutation, { data, loading, error }] = useTaxCreateMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useTaxCreateMutation(baseOptions?: Apollo.MutationHookOptions<TaxCreateMutation, TaxCreateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<TaxCreateMutation, TaxCreateMutationVariables>(TaxCreateDocument, options);
+      }
+export type TaxCreateMutationHookResult = ReturnType<typeof useTaxCreateMutation>;
+export type TaxCreateMutationResult = Apollo.MutationResult<TaxCreateMutation>;
+export type TaxCreateMutationOptions = Apollo.BaseMutationOptions<TaxCreateMutation, TaxCreateMutationVariables>;
 export const UnitTypeCreateDocument = gql`
     mutation UnitTypeCreate($input: UnitTypeCreateInput!) {
   unitTypeCreate(input: $input) {
@@ -1805,6 +1940,95 @@ export function useProductsAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type ProductsAllQueryHookResult = ReturnType<typeof useProductsAllQuery>;
 export type ProductsAllLazyQueryHookResult = ReturnType<typeof useProductsAllLazyQuery>;
 export type ProductsAllQueryResult = Apollo.QueryResult<ProductsAllQuery, ProductsAllQueryVariables>;
+export const TaxesDocument = gql`
+    query Taxes($offset: Int, $limit: Int) {
+  taxes(offset: $offset, limit: $limit) {
+    nodes {
+      id
+      name
+      key
+      scope
+      type
+      amount
+      status
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+    `;
+
+/**
+ * __useTaxesQuery__
+ *
+ * To run a query within a React component, call `useTaxesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTaxesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTaxesQuery({
+ *   variables: {
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useTaxesQuery(baseOptions?: Apollo.QueryHookOptions<TaxesQuery, TaxesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TaxesQuery, TaxesQueryVariables>(TaxesDocument, options);
+      }
+export function useTaxesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TaxesQuery, TaxesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TaxesQuery, TaxesQueryVariables>(TaxesDocument, options);
+        }
+export type TaxesQueryHookResult = ReturnType<typeof useTaxesQuery>;
+export type TaxesLazyQueryHookResult = ReturnType<typeof useTaxesLazyQuery>;
+export type TaxesQueryResult = Apollo.QueryResult<TaxesQuery, TaxesQueryVariables>;
+export const TaxesAllDocument = gql`
+    query TaxesAll {
+  taxesAll {
+    id
+    name
+    key
+    scope
+    type
+    amount
+    status
+  }
+}
+    `;
+
+/**
+ * __useTaxesAllQuery__
+ *
+ * To run a query within a React component, call `useTaxesAllQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTaxesAllQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTaxesAllQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTaxesAllQuery(baseOptions?: Apollo.QueryHookOptions<TaxesAllQuery, TaxesAllQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TaxesAllQuery, TaxesAllQueryVariables>(TaxesAllDocument, options);
+      }
+export function useTaxesAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TaxesAllQuery, TaxesAllQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TaxesAllQuery, TaxesAllQueryVariables>(TaxesAllDocument, options);
+        }
+export type TaxesAllQueryHookResult = ReturnType<typeof useTaxesAllQuery>;
+export type TaxesAllLazyQueryHookResult = ReturnType<typeof useTaxesAllLazyQuery>;
+export type TaxesAllQueryResult = Apollo.QueryResult<TaxesAllQuery, TaxesAllQueryVariables>;
 export const UnitTypesDocument = gql`
     query UnitTypes($offset: Int, $limit: Int) {
   unitTypes(offset: $offset, limit: $limit) {

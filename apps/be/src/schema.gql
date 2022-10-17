@@ -73,6 +73,29 @@ type Category {
   menus: [Menu!]
 }
 
+type Tax {
+  id: ID!
+  deleted: Boolean!
+  name: String!
+  key: String!
+  scope: ETaxScope!
+  type: ETaxType!
+  amount: Float!
+  status: Boolean!
+}
+
+enum ETaxScope {
+  SALES
+  EMPLOYEES
+  PURCHASES
+  NONE
+}
+
+enum ETaxType {
+  PERCENTAGE
+  FIXED
+}
+
 type PageInfo {
   hasPreviousPage: Boolean!
   hasNextPage: Boolean!
@@ -132,6 +155,12 @@ type UnitTypeConnection {
   nodes: [UnitType]!
 }
 
+type TaxConnection {
+  totalCount: Float!
+  pageInfo: PageInfo!
+  nodes: [Tax]!
+}
+
 type Query {
   ingredients(offset: Int, limit: Int): IngredientConnection!
   ingredientsAll: [Ingredient!]!
@@ -148,6 +177,9 @@ type Query {
   unitTypes(offset: Int, limit: Int): UnitTypeConnection!
   unitTypesAll: [UnitType!]!
   unitType(id: ID!): UnitType!
+  taxes(offset: Int, limit: Int): TaxConnection!
+  taxesAll: [Tax!]!
+  tax(id: ID!): Tax!
 }
 
 input ProductsQueryArgs {
@@ -182,6 +214,9 @@ type Mutation {
   unitTypeCreate(input: UnitTypeCreateInput!): UnitType!
   unitTypeUpdate(id: ID!, input: UnitTypeUpdateInput!): UnitType!
   unitTypeDelete(id: ID!): UnitType!
+  taxCreate(input: TaxCreateInput!): Tax!
+  taxUpdate(id: ID!, input: TaxUpdateInput!): Tax!
+  taxDelete(id: ID!): Tax!
 }
 
 input IngredientCreateInput {
@@ -290,4 +325,22 @@ input UnitTypeCreateInput {
 
 input UnitTypeUpdateInput {
   name: String
+}
+
+input TaxCreateInput {
+  name: String!
+  key: String!
+  scope: ETaxScope!
+  type: ETaxType!
+  amount: Float!
+  status: Boolean!
+}
+
+input TaxUpdateInput {
+  name: String
+  key: String
+  scope: ETaxScope
+  type: ETaxType
+  amount: Float
+  status: Boolean
 }

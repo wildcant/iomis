@@ -152,6 +152,29 @@ model UnitType {
     Ingredient Ingredient[]
 }
 
+enum ETaxScope {
+    SALES
+    EMPLOYEES
+    PURCHASES
+    NONE
+}
+
+enum ETaxType {
+    PERCENTAGE
+    FIXED
+}
+
+model Tax {
+    id      String    @id @default(uuid()) @db.Uuid
+    deleted Boolean   @default(false)
+    name    String    @db.VarChar(255)
+    key     String    @db.VarChar(255)
+    scope   ETaxScope @default(SALES)
+    type    ETaxType  @default(PERCENTAGE)
+    amount  Float     @default(0)
+    status  Boolean   @default(true)
+}
+
 enum EOrderState {
     DRAFT
     CANCELLED

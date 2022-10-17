@@ -8,6 +8,7 @@ import { IngredientResolver } from 'resolvers/ingredient.resolvers'
 import { CategoryResolver } from 'resolvers/category.resolvers'
 import { MenuResolver } from 'resolvers/menu.resolvers'
 import { UnitTypeResolver } from 'resolvers/unit-type.resolvers'
+import { TaxResolver } from 'resolvers/tax.resolvers'
 // import { ParseInfoService } from 'utils/parse-info.service'
 
 @Module({
@@ -27,6 +28,7 @@ import { UnitTypeResolver } from 'resolvers/unit-type.resolvers'
     CategoryResolver,
     MenuResolver,
     UnitTypeResolver,
+    TaxResolver,
   ],
 })
 export class AppModule {}

@@ -1,0 +1,18 @@
+query Taxes($offset: Int, $limit: Int) {
+  taxes(offset: $offset, limit: $limit) {
+    nodes {
+      id
+      name
+      key
+      scope
+      type
+      amount
+      status
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}

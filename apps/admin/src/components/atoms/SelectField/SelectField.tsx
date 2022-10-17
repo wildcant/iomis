@@ -9,8 +9,9 @@ import { Props, Select } from 'chakra-react-select'
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 import { FormFieldProps } from '../shared-types'
 
-export type Option = {
-  value: string
+export type OptionValue = string | number
+export type Option<T extends OptionValue = string> = {
+  value: T
   label: string
 }
 

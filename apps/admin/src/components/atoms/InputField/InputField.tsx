@@ -42,10 +42,10 @@ export function InputField<TValues extends FieldValues>({
   const { onChange, ...rest } = field
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    let value: string | number = e.target.value
+    let value: string | number | undefined = e.target.value
     if (type === 'text' && uppercase) {
       value = e.target.value.toUpperCase()
-    } else if (type === 'number') {
+    } else if (type === 'number' && e.target.value) {
       value = Number(e.target.value)
     }
     onChange(value)

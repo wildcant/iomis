@@ -1,0 +1,11 @@
+query TaxesAll {
+  taxesAll {
+    id
+    name
+    key
+    scope
+    type
+    amount
+    status
+  }
+}
