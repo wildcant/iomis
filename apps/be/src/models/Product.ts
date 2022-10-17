@@ -2,6 +2,7 @@ import 'reflect-metadata'
 import { ObjectType, Field, ID, Float, Int } from '@nestjs/graphql'
 import { Category } from './Category'
 import { ProductIngredient } from './ProductIngredient'
+import { Tax } from './Tax'
 
 @ObjectType()
 export class Product {
@@ -67,8 +68,8 @@ export class Product {
   /******************
    * Taxes
    ******************/
-  @Field(() => Int, { nullable: true })
-  vat?: number
+  @Field(() => [Tax], { nullable: 'items' })
+  taxes?: Tax[]
 
   /******************
    * Pricing
@@ -80,5 +81,5 @@ export class Product {
    * How much we ask for a product
    */
   @Field(() => Float)
-  priceWithoutVAT: number
+  priceWithoutTaxes: number
 }

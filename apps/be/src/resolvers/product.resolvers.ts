@@ -43,7 +43,7 @@ class ProductIngredientCreateInput extends PickType(
 @InputType()
 class ProductCreateInput extends OmitType(
   Product,
-  ['id', 'deleted', 'productIngredients', 'category'],
+  ['id', 'deleted', 'productIngredients', 'category', 'taxes'],
   InputType
 ) {
   @Field(() => [ProductIngredientCreateInput], { defaultValue: [] })
@@ -202,6 +202,7 @@ export class ProductResolver {
     const {
       categoryId: newCategory,
       productIngredients,
+      // taxes,
       ...updatedData
     } = input
     const category = newCategory

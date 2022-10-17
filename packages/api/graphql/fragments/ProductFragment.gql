@@ -1,0 +1,29 @@
+fragment ProductFragment on Product {
+  id
+  deleted
+  archived
+  categoryId
+  name
+  description
+  plu
+  image
+  color
+  barcode
+  cost
+  stock
+  allowRefund
+  price
+  priceWithoutTaxes
+  category {
+    id
+    name
+  }
+  productIngredients {
+    id
+    quantity
+    ingredient {
+      id
+      name
+    }
+  }
+}

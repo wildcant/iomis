@@ -10,9 +10,13 @@ import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 import { FormFieldProps } from '../shared-types'
 
 export type OptionValue = string | number
-export type Option<T extends OptionValue = string> = {
+export type Option<
+  T extends OptionValue = string,
+  TMeta extends Record<string, string | number | boolean> = {}
+> = {
   value: T
   label: string
+  meta?: TMeta
 }
 
 export interface SelectFieldProps<TValues extends FieldValues>

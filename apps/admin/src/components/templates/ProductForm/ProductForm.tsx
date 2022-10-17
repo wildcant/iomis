@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Stack } from '@chakra-ui/react'
+import { Button, Flex, Heading, Stack, useToast } from '@chakra-ui/react'
 import {
   ProductCreateInput,
   useCategoriesAllQuery,
@@ -14,11 +14,12 @@ import {
   ColorPickerField,
   IngredientSelectField,
   NumberInputField,
+  TaxSelectField,
+  TaxOption,
 } from 'components/atoms'
 import { DropzoneField } from 'components/molecules'
 import { useDeepCompareEffect } from '@iomis/utils/hooks'
 import { useHandleError } from 'hooks/useHandleError'
-import { useHandleSuccess } from 'hooks/useHandleSuccess'
 import { usePageNavigation } from 'hooks/useNavigation'
 import _ from 'lodash'
 import { useEffect } from 'react'
@@ -26,54 +27,58 @@ import { useForm } from 'react-hook-form'
 import { ProductCostBreakdown } from './components'
 
 type IProductForm = ProductCreateInput & {
-  category: Option
-  ingredients: Option[]
+  categoryOption: Option
+  ingredientsOptions: Option[]
+  taxesOptions: TaxOption[]
 }
 
 export function ProductForm() {
-  const [addProduct, { loading, error, data, called }] =
-    useProductCreateMutation()
-  const success = called && !error
+  const [addProduct, { loading, error }] = useProductCreateMutation()
   useHandleError(error)
-  useHandleSuccess(success, 'Tu producto fue creado.')
+
   const { data: categoriesData } = useCategoriesAllQuery({
     fetchPolicy: 'cache-only',
   })
 
-  const { goToProductDetails } = usePageNavigation()
-  useEffect(() => {
-    if (success && data?.productCreate?.id) {
-      goToProductDetails(data.productCreate.id)
-    }
-  }, [success, goToProductDetails, data?.productCreate.id])
-
   const { handleSubmit, control, watch, setValue } = useForm<IProductForm>()
 
-  const saveProduct = async (data: IProductForm) => {
-    const { ingredients, category, ...rest } = _.omitBy(
-      data,
-      _.isNil
-    ) as IProductForm
+  const toast = useToast()
+  const { goToProductDetails } = usePageNavigation()
+  const saveProduct = async (formData: IProductForm) => {
+    const { ingredientsOptions, categoryOption, taxesOptions, ...createInput } =
+      _.omitBy(formData, _.isNil) as IProductForm
 
     addProduct({
       variables: {
         input: {
-          ...rest,
-          categoryId: category.value,
+          ...createInput,
+          categoryId: categoryOption.value,
         },
+      },
+      onCompleted: (data) => {
+        toast({
+          status: 'success',
+          description: 'El producto fue creado.',
+        })
+        goToProductDetails(data.productCreate.id)
       },
     })
   }
 
-  const { category, ingredients, priceWithoutVAT, vat } = watch()
+  const {
+    categoryOption,
+    ingredientsOptions,
+    priceWithoutTaxes,
+    taxesOptions,
+  } = watch()
 
   /**
    * Update plu when category changes.
    */
   useDeepCompareEffect(() => {
-    if (category) {
+    if (categoryOption) {
       const categoryProducts = categoriesData?.categoriesAll?.find(
-        ({ id }) => category.value === id
+        ({ id }) => categoryOption.value === id
       )
       if (!categoryProducts) {
         window.console.error('Category not found.')
@@ -81,27 +86,34 @@ export function ProductForm() {
       } else {
         setValue(
           'plu',
-          `${category.label[0]}${categoryProducts._count.products + 1}`
+          `${categoryOption.label[0]}${categoryProducts._count.products + 1}`
         )
       }
     } else {
       setValue('plu', '')
     }
-  }, [category])
+  }, [categoryOption])
 
   /**
-   * Update price with vat when price without vat or vat changes.
+   * Update price with taxes when price without taxes or taxes changes.
    */
   useEffect(() => {
-    if (vat) {
-      setValue(
-        'price',
-        Number(priceWithoutVAT) + Number(priceWithoutVAT) * Number(vat)
-      )
-    } else {
-      setValue('price', priceWithoutVAT)
+    if (priceWithoutTaxes) {
+      if (taxesOptions?.length) {
+        const taxesAmount =
+          taxesOptions
+            .map((tax) => (tax.meta!.amount * priceWithoutTaxes) / 100)
+            .reduce((t, sum) => t + sum, 0) ?? 0
+
+        setValue(
+          'price',
+          parseFloat(priceWithoutTaxes.toString()) + taxesAmount
+        )
+      } else {
+        setValue('price', parseFloat(priceWithoutTaxes.toString()))
+      }
     }
-  }, [vat, setValue, priceWithoutVAT])
+  }, [taxesOptions, setValue, priceWithoutTaxes])
 
   return (
     <form onSubmit={handleSubmit(saveProduct)} noValidate>
@@ -122,7 +134,7 @@ export function ProductForm() {
         <Stack>
           <CategorySelectField
             control={control}
-            name='category'
+            name='categoryOption'
             label='Categoría'
             rules={{
               required: { value: true, message: 'La categoría es requerida' },
@@ -163,18 +175,17 @@ export function ProductForm() {
         allowToggle
       >
         <Stack>
-          {/* TODO: Add logic to calculate priceWithoutVAT and price */}
-          <NumberInputField
+          {/* TODO: Add logic to calculate priceWithoutTaxes and price */}
+          <TaxSelectField
             control={control}
-            name='vat'
+            name='taxesOptions'
             label='Impuestos'
-            min={1}
             placeholder='Impuesto de venta de 20%'
-            step={1}
+            isMulti
           />
           <NumberInputField
             control={control}
-            name='priceWithoutVAT'
+            name='priceWithoutTaxes'
             label='Subtotal'
             info='Precio sin impuestos'
             min={1}
@@ -185,7 +196,6 @@ export function ProductForm() {
             name='price'
             label='Total'
             info='Precio con impuestos'
-            value={vat ? priceWithoutVAT * vat : priceWithoutVAT}
             isDisabled
           />
         </Stack>
@@ -198,10 +208,14 @@ export function ProductForm() {
           type='text'
           label='Código de barras'
         />
-        <IngredientSelectField control={control} name='ingredients' isMulti />
-        {ingredients && (
+        <IngredientSelectField
+          control={control}
+          name='ingredientsOptions'
+          isMulti
+        />
+        {ingredientsOptions && (
           <ProductCostBreakdown
-            selectedIngredients={ingredients}
+            selectedIngredients={ingredientsOptions}
             onTotalChange={(total) => setValue('cost', total)}
             onProductIngredientsChange={(productIngredients) =>
               setValue('productIngredients', productIngredients)

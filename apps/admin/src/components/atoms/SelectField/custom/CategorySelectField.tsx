@@ -1,18 +1,18 @@
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import { useCategoriesAllQuery } from '@iomis/api'
 import { SelectField, SelectFieldProps } from 'components/atoms'
 import { useHandleError } from 'hooks/useHandleError'
 import { FieldValues } from 'react-hook-form'
 
-interface CategorySelectFieldProps<TValues extends FieldValues>
+interface ICategorySelectFieldProps<TValues extends FieldValues>
   extends SelectFieldProps<TValues> {}
 
 export function CategorySelectField<TValues extends FieldValues>({
   isDisabled,
   ...props
-}: CategorySelectFieldProps<TValues>) {
+}: ICategorySelectFieldProps<TValues>) {
   const { data, loading, error } = useCategoriesAllQuery()
   useHandleError(error)
+
   const { categoriesAll: categories } = data ?? {}
 
   const options =

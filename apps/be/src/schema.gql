@@ -37,42 +37,6 @@ type ProductIngredient {
   ingredient: Ingredient!
 }
 
-type Product {
-  id: ID!
-  deleted: Boolean!
-  archived: Boolean!
-  categoryId: ID!
-  category: Category!
-  name: String!
-  description: String
-  plu: String!
-  image: String
-  color: String
-  barcode: String
-  productIngredients: [ProductIngredient!]!
-  cost: Float!
-  stock: Int!
-  allowRefund: Boolean!
-  vat: Int
-  price: Float!
-  priceWithoutVAT: Float!
-}
-
-type Category {
-  id: ID!
-  deleted: Boolean!
-  name: String
-  description: String
-  vat: String
-  deliveryVat: String
-  takeawayVat: String
-  course: Int
-  image: String
-  visible: Boolean
-  products: [Product!]
-  menus: [Menu!]
-}
-
 type Tax {
   id: ID!
   deleted: Boolean!
@@ -94,6 +58,40 @@ enum ETaxScope {
 enum ETaxType {
   PERCENTAGE
   FIXED
+}
+
+type Product {
+  id: ID!
+  deleted: Boolean!
+  archived: Boolean!
+  categoryId: ID!
+  category: Category!
+  name: String!
+  description: String
+  plu: String!
+  image: String
+  color: String
+  barcode: String
+  productIngredients: [ProductIngredient!]!
+  cost: Float!
+  stock: Int!
+  allowRefund: Boolean!
+  taxes: [Tax]!
+  price: Float!
+  priceWithoutTaxes: Float!
+}
+
+type Category {
+  id: ID!
+  deleted: Boolean!
+  name: String
+  description: String
+  taxes: [Tax]!
+  course: Int
+  image: String
+  visible: Boolean
+  products: [Product!]
+  menus: [Menu!]
 }
 
 type PageInfo {
@@ -126,9 +124,7 @@ type CategoryNode {
   deleted: Boolean!
   name: String
   description: String
-  vat: String
-  deliveryVat: String
-  takeawayVat: String
+  taxes: [Tax]!
   course: Int
   image: String
   visible: Boolean
@@ -249,9 +245,8 @@ input ProductCreateInput {
   cost: Float!
   stock: Int = 0
   allowRefund: Boolean = false
-  vat: Int
   price: Float!
-  priceWithoutVAT: Float!
+  priceWithoutTaxes: Float!
   productIngredients: [ProductIngredientCreateInput!] = []
 }
 
@@ -272,9 +267,8 @@ input ProductUpdateInput {
   cost: Float
   stock: Int = 0
   allowRefund: Boolean = false
-  vat: Int
   price: Float
-  priceWithoutVAT: Float
+  priceWithoutTaxes: Float
   productIngredients: [ProductIngredientCreateInput!] = []
 }
 
@@ -290,23 +284,19 @@ input DeleteBulk {
 input CategoryCreateInput {
   name: String
   description: String
-  vat: String
-  deliveryVat: String
-  takeawayVat: String
   course: Int
   image: String
   visible: Boolean = false
+  taxes: [ID]
 }
 
 input CategoryUpdateInput {
   name: String
   description: String
-  vat: String
-  deliveryVat: String
-  takeawayVat: String
   course: Int
   image: String
   visible: Boolean = false
+  taxes: [ID!]
 }
 
 input MenuCreateInput {

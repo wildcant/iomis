@@ -33,15 +33,13 @@ export type Category = {
   __typename?: 'Category';
   course?: Maybe<Scalars['Int']>;
   deleted: Scalars['Boolean'];
-  deliveryVat?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   image?: Maybe<Scalars['String']>;
   menus?: Maybe<Array<Menu>>;
   name?: Maybe<Scalars['String']>;
   products?: Maybe<Array<Product>>;
-  takeawayVat?: Maybe<Scalars['String']>;
-  vat?: Maybe<Scalars['String']>;
+  taxes: Array<Maybe<Tax>>;
   visible?: Maybe<Scalars['Boolean']>;
 };
 
@@ -54,12 +52,10 @@ export type CategoryConnection = {
 
 export type CategoryCreateInput = {
   course?: InputMaybe<Scalars['Int']>;
-  deliveryVat?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  takeawayVat?: InputMaybe<Scalars['String']>;
-  vat?: InputMaybe<Scalars['String']>;
+  taxes?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   visible?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -68,15 +64,13 @@ export type CategoryNode = {
   _count: CategoryNodeCount;
   course?: Maybe<Scalars['Int']>;
   deleted: Scalars['Boolean'];
-  deliveryVat?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   image?: Maybe<Scalars['String']>;
   menus?: Maybe<Array<Menu>>;
   name?: Maybe<Scalars['String']>;
   products?: Maybe<Array<Product>>;
-  takeawayVat?: Maybe<Scalars['String']>;
-  vat?: Maybe<Scalars['String']>;
+  taxes: Array<Maybe<Tax>>;
   visible?: Maybe<Scalars['Boolean']>;
 };
 
@@ -87,12 +81,10 @@ export type CategoryNodeCount = {
 
 export type CategoryUpdateInput = {
   course?: InputMaybe<Scalars['Int']>;
-  deliveryVat?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  takeawayVat?: InputMaybe<Scalars['String']>;
-  vat?: InputMaybe<Scalars['String']>;
+  taxes?: InputMaybe<Array<Scalars['ID']>>;
   visible?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -327,10 +319,10 @@ export type Product = {
   name: Scalars['String'];
   plu: Scalars['String'];
   price: Scalars['Float'];
-  priceWithoutVAT: Scalars['Float'];
+  priceWithoutTaxes: Scalars['Float'];
   productIngredients: Array<ProductIngredient>;
   stock: Scalars['Int'];
-  vat?: Maybe<Scalars['Int']>;
+  taxes: Array<Maybe<Tax>>;
 };
 
 export type ProductConnection = {
@@ -352,10 +344,9 @@ export type ProductCreateInput = {
   name: Scalars['String'];
   plu: Scalars['String'];
   price: Scalars['Float'];
-  priceWithoutVAT: Scalars['Float'];
+  priceWithoutTaxes: Scalars['Float'];
   productIngredients?: InputMaybe<Array<ProductIngredientCreateInput>>;
   stock?: InputMaybe<Scalars['Int']>;
-  vat?: InputMaybe<Scalars['Int']>;
 };
 
 export type ProductIngredient = {
@@ -385,10 +376,9 @@ export type ProductUpdateInput = {
   name?: InputMaybe<Scalars['String']>;
   plu?: InputMaybe<Scalars['String']>;
   price?: InputMaybe<Scalars['Float']>;
-  priceWithoutVAT?: InputMaybe<Scalars['Float']>;
+  priceWithoutTaxes?: InputMaybe<Scalars['Float']>;
   productIngredients?: InputMaybe<Array<ProductIngredientCreateInput>>;
   stock?: InputMaybe<Scalars['Int']>;
-  vat?: InputMaybe<Scalars['Int']>;
 };
 
 export type ProductsQueryArgs = {
@@ -560,6 +550,12 @@ export type UnitTypeUpdateInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type CategoryFragmentFragment = { __typename?: 'Category', id: string, deleted: boolean, name?: string | null, description?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, taxes: Array<{ __typename?: 'Tax', id: string, name: string, amount: number, type: ETaxType } | null> };
+
+export type CategoryNodeFragmentFragment = { __typename?: 'CategoryNode', id: string, name?: string | null, description?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, taxes: Array<{ __typename?: 'Tax', id: string, name: string, amount: number, type: ETaxType } | null>, _count: { __typename?: 'CategoryNodeCount', products: number } };
+
+export type ProductFragmentFragment = { __typename?: 'Product', id: string, deleted: boolean, archived: boolean, categoryId: string, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, price: number, priceWithoutTaxes: number, category: { __typename?: 'Category', id: string, name?: string | null }, productIngredients: Array<{ __typename?: 'ProductIngredient', id: string, quantity: number, ingredient: { __typename?: 'Ingredient', id: string, name: string } }> };
+
 export type TaxFragmentFragment = { __typename?: 'Tax', id: string, name: string, key: string, scope: ETaxScope, type: ETaxType, amount: number, status: boolean };
 
 export type CategoryCreateMutationVariables = Exact<{
@@ -714,21 +710,21 @@ export type CategoriesQueryVariables = Exact<{
 }>;
 
 
-export type CategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'CategoryConnection', totalCount: number, nodes: Array<{ __typename?: 'CategoryNode', id: string, deleted: boolean, name?: string | null, description?: string | null, vat?: string | null, deliveryVat?: string | null, takeawayVat?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, _count: { __typename?: 'CategoryNodeCount', products: number } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type CategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'CategoryConnection', totalCount: number, nodes: Array<{ __typename?: 'CategoryNode', id: string, name?: string | null, description?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, taxes: Array<{ __typename?: 'Tax', id: string, name: string, amount: number, type: ETaxType } | null>, _count: { __typename?: 'CategoryNodeCount', products: number } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type CategoriesAllQueryVariables = Exact<{
   query?: InputMaybe<CategoriesQueryArgs>;
 }>;
 
 
-export type CategoriesAllQuery = { __typename?: 'Query', categoriesAll: Array<{ __typename?: 'CategoryNode', id: string, name?: string | null, description?: string | null, vat?: string | null, deliveryVat?: string | null, takeawayVat?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, _count: { __typename?: 'CategoryNodeCount', products: number } }> };
+export type CategoriesAllQuery = { __typename?: 'Query', categoriesAll: Array<{ __typename?: 'CategoryNode', id: string, name?: string | null, description?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, taxes: Array<{ __typename?: 'Tax', id: string, name: string, amount: number, type: ETaxType } | null>, _count: { __typename?: 'CategoryNodeCount', products: number } }> };
 
 export type CategoryQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, deleted: boolean, name?: string | null, description?: string | null, vat?: string | null, deliveryVat?: string | null, takeawayVat?: string | null, course?: number | null, image?: string | null, visible?: boolean | null } };
+export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, deleted: boolean, name?: string | null, description?: string | null, course?: number | null, image?: string | null, visible?: boolean | null, taxes: Array<{ __typename?: 'Tax', id: string, name: string, amount: number, type: ETaxType } | null> } };
 
 export type IngredientQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -768,7 +764,7 @@ export type ProductQueryVariables = Exact<{
 }>;
 
 
-export type ProductQuery = { __typename?: 'Query', product: { __typename?: 'Product', id: string, deleted: boolean, archived: boolean, categoryId: string, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, vat?: number | null, price: number, priceWithoutVAT: number, category: { __typename?: 'Category', id: string, name?: string | null }, productIngredients: Array<{ __typename?: 'ProductIngredient', id: string, quantity: number, ingredient: { __typename?: 'Ingredient', id: string, name: string } }> } };
+export type ProductQuery = { __typename?: 'Query', product: { __typename?: 'Product', id: string, deleted: boolean, archived: boolean, categoryId: string, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, price: number, priceWithoutTaxes: number, category: { __typename?: 'Category', id: string, name?: string | null }, productIngredients: Array<{ __typename?: 'ProductIngredient', id: string, quantity: number, ingredient: { __typename?: 'Ingredient', id: string, name: string } }> } };
 
 export type ProductsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -777,14 +773,14 @@ export type ProductsQueryVariables = Exact<{
 }>;
 
 
-export type ProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnection', totalCount: number, nodes: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, vat?: number | null, price: number, priceWithoutVAT: number, category: { __typename?: 'Category', id: string, name?: string | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnection', totalCount: number, nodes: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, categoryId: string, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, price: number, priceWithoutTaxes: number, category: { __typename?: 'Category', id: string, name?: string | null }, productIngredients: Array<{ __typename?: 'ProductIngredient', id: string, quantity: number, ingredient: { __typename?: 'Ingredient', id: string, name: string } }> } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ProductsAllQueryVariables = Exact<{
   query?: InputMaybe<ProductsQueryArgs>;
 }>;
 
 
-export type ProductsAllQuery = { __typename?: 'Query', productsAll: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, vat?: number | null, price: number, priceWithoutVAT: number, category: { __typename?: 'Category', id: string, name?: string | null } }> };
+export type ProductsAllQuery = { __typename?: 'Query', productsAll: Array<{ __typename?: 'Product', id: string, deleted: boolean, archived: boolean, categoryId: string, name: string, description?: string | null, plu: string, image?: string | null, color?: string | null, barcode?: string | null, cost: number, stock: number, allowRefund: boolean, price: number, priceWithoutTaxes: number, category: { __typename?: 'Category', id: string, name?: string | null }, productIngredients: Array<{ __typename?: 'ProductIngredient', id: string, quantity: number, ingredient: { __typename?: 'Ingredient', id: string, name: string } }> }> };
 
 export type TaxesQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -812,6 +808,73 @@ export type UnitTypesAllQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type UnitTypesAllQuery = { __typename?: 'Query', unitTypesAll: Array<{ __typename?: 'UnitType', id: string, name: string, deleted: boolean, ingredients?: Array<{ __typename?: 'Ingredient', id: string }> | null }> };
 
+export const CategoryFragmentFragmentDoc = gql`
+    fragment CategoryFragment on Category {
+  id
+  deleted
+  name
+  description
+  course
+  image
+  visible
+  taxes {
+    id
+    name
+    amount
+    type
+  }
+}
+    `;
+export const CategoryNodeFragmentFragmentDoc = gql`
+    fragment CategoryNodeFragment on CategoryNode {
+  id
+  name
+  description
+  course
+  image
+  visible
+  taxes {
+    id
+    name
+    amount
+    type
+  }
+  _count {
+    products
+  }
+}
+    `;
+export const ProductFragmentFragmentDoc = gql`
+    fragment ProductFragment on Product {
+  id
+  deleted
+  archived
+  categoryId
+  name
+  description
+  plu
+  image
+  color
+  barcode
+  cost
+  stock
+  allowRefund
+  price
+  priceWithoutTaxes
+  category {
+    id
+    name
+  }
+  productIngredients {
+    id
+    quantity
+    ingredient {
+      id
+      name
+    }
+  }
+}
+    `;
 export const TaxFragmentFragmentDoc = gql`
     fragment TaxFragment on Tax {
   id
@@ -1493,19 +1556,7 @@ export const CategoriesDocument = gql`
     query Categories($offset: Int, $limit: Int) {
   categories(offset: $offset, limit: $limit) {
     nodes {
-      id
-      deleted
-      name
-      description
-      vat
-      deliveryVat
-      takeawayVat
-      course
-      image
-      visible
-      _count {
-        products
-      }
+      ...CategoryNodeFragment
     }
     totalCount
     pageInfo {
@@ -1514,7 +1565,7 @@ export const CategoriesDocument = gql`
     }
   }
 }
-    `;
+    ${CategoryNodeFragmentFragmentDoc}`;
 
 /**
  * __useCategoriesQuery__
@@ -1547,21 +1598,10 @@ export type CategoriesQueryResult = Apollo.QueryResult<CategoriesQuery, Categori
 export const CategoriesAllDocument = gql`
     query CategoriesAll($query: CategoriesQueryArgs) {
   categoriesAll(query: $query) {
-    id
-    name
-    description
-    vat
-    deliveryVat
-    takeawayVat
-    course
-    image
-    visible
-    _count {
-      products
-    }
+    ...CategoryNodeFragment
   }
 }
-    `;
+    ${CategoryNodeFragmentFragmentDoc}`;
 
 /**
  * __useCategoriesAllQuery__
@@ -1593,19 +1633,10 @@ export type CategoriesAllQueryResult = Apollo.QueryResult<CategoriesAllQuery, Ca
 export const CategoryDocument = gql`
     query Category($id: ID!) {
   category(id: $id) {
-    id
-    deleted
-    name
-    description
-    vat
-    deliveryVat
-    takeawayVat
-    course
-    image
-    visible
+    ...CategoryFragment
   }
 }
-    `;
+    ${CategoryFragmentFragmentDoc}`;
 
 /**
  * __useCategoryQuery__
@@ -1860,37 +1891,10 @@ export type MenusAllQueryResult = Apollo.QueryResult<MenusAllQuery, MenusAllQuer
 export const ProductDocument = gql`
     query Product($id: ID!) {
   product(id: $id) {
-    id
-    deleted
-    archived
-    categoryId
-    category {
-      id
-      name
-    }
-    name
-    description
-    plu
-    image
-    color
-    barcode
-    productIngredients {
-      id
-      quantity
-      ingredient {
-        id
-        name
-      }
-    }
-    cost
-    stock
-    allowRefund
-    vat
-    price
-    priceWithoutVAT
+    ...ProductFragment
   }
 }
-    `;
+    ${ProductFragmentFragmentDoc}`;
 
 /**
  * __useProductQuery__
@@ -1923,25 +1927,7 @@ export const ProductsDocument = gql`
     query Products($offset: Int, $limit: Int, $query: ProductsQueryArgs) {
   products(offset: $offset, limit: $limit, query: $query) {
     nodes {
-      id
-      deleted
-      archived
-      name
-      description
-      plu
-      image
-      color
-      barcode
-      cost
-      stock
-      allowRefund
-      vat
-      price
-      priceWithoutVAT
-      category {
-        id
-        name
-      }
+      ...ProductFragment
     }
     totalCount
     pageInfo {
@@ -1950,7 +1936,7 @@ export const ProductsDocument = gql`
     }
   }
 }
-    `;
+    ${ProductFragmentFragmentDoc}`;
 
 /**
  * __useProductsQuery__
@@ -1984,28 +1970,10 @@ export type ProductsQueryResult = Apollo.QueryResult<ProductsQuery, ProductsQuer
 export const ProductsAllDocument = gql`
     query ProductsAll($query: ProductsQueryArgs) {
   productsAll(query: $query) {
-    id
-    deleted
-    archived
-    name
-    description
-    plu
-    image
-    color
-    barcode
-    cost
-    stock
-    allowRefund
-    vat
-    price
-    priceWithoutVAT
-    category {
-      id
-      name
-    }
+    ...ProductFragment
   }
 }
-    `;
+    ${ProductFragmentFragmentDoc}`;
 
 /**
  * __useProductsAllQuery__

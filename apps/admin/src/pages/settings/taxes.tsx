@@ -9,7 +9,13 @@ import {
   MenuList,
   useToast,
 } from '@chakra-ui/react'
-import { Refetch, Tax, useTaxDeleteMutation, useTaxesQuery } from '@iomis/api'
+import {
+  ETaxType,
+  Refetch,
+  Tax,
+  useTaxDeleteMutation,
+  useTaxesQuery,
+} from '@iomis/api'
 import { useDeepCompareEffect } from '@iomis/utils/hooks'
 import { CellContext, ColumnDef, PaginationState } from '@tanstack/react-table'
 import {
@@ -19,11 +25,7 @@ import {
   useCustomModal,
 } from 'components/organisms'
 import { Layout } from 'components/templates'
-import {
-  TaxForm,
-  TAX_SCOPE_LABELS,
-  TAX_TYPE_LABELS,
-} from 'components/templates/TaxForm'
+import { TaxForm, TAX_SCOPE_LABELS } from 'components/templates/TaxForm'
 import { useHandleError } from 'hooks/useHandleError'
 import { useCallback, useState } from 'react'
 
@@ -84,7 +86,8 @@ const getColumns = (refetch: Refetch): ColumnDef<Tax>[] => [
   {
     id: 'amount',
     header: 'Valor',
-    accessorFn: (r) => r.amount,
+    accessorFn: (r) =>
+      `${r.amount} ${r.type === ETaxType.Percentage ? '%' : ''}`,
     cell: (info) => info.getValue(),
   },
   {
@@ -97,12 +100,6 @@ const getColumns = (refetch: Refetch): ColumnDef<Tax>[] => [
     id: 'key',
     header: 'Key',
     accessorFn: (r) => r.key,
-    cell: (info) => info.getValue(),
-  },
-  {
-    id: 'type',
-    header: 'Grupo',
-    accessorFn: (r) => TAX_TYPE_LABELS[r.type],
     cell: (info) => info.getValue(),
   },
   {

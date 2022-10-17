@@ -30,13 +30,13 @@ const columns: ColumnDef<CategoryNode>[] = [
     cell: (info) => info.getValue(),
   },
   {
-    id: 'vat',
+    id: 'taxes',
     header: 'Impuestos',
-    accessorFn: (r) => r.vat,
+    accessorFn: (r) => r.taxes.map((tax) => tax?.amount).join(', '),
     cell: (info) => info.getValue(),
   },
   {
-    id: 'vat',
+    id: 'products',
     header: '# Productos',
     accessorFn: (r) => r._count.products,
     cell: (info) => info.getValue(),

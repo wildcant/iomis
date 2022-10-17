@@ -1,32 +1,5 @@
 query Product($id: ID!) {
   product(id: $id) {
-    id
-    deleted
-    archived
-    categoryId
-    category {
-      id
-      name
-    }
-    name
-    description
-    plu
-    image
-    color
-    barcode
-    productIngredients {
-      id
-      quantity
-      ingredient {
-        id
-        name
-      }
-    }
-    cost
-    stock
-    allowRefund
-    vat
-    price
-    priceWithoutVAT
+    ...ProductFragment
   }
 }

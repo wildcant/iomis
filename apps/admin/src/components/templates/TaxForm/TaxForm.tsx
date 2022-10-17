@@ -211,7 +211,7 @@ export function TaxForm(props: ITaxFormProps) {
             type='submit'
             disabled={createLoading || updateLoading}
           >
-            {mode === 'edit' ? 'Update' : 'Crear'}
+            {mode === 'edit' ? 'Guardar' : 'Crear'}
           </Button>
         </Flex>
       </form>

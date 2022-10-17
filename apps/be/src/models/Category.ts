@@ -2,6 +2,7 @@ import 'reflect-metadata'
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql'
 import { Menu } from './Menu'
 import { Product } from './Product'
+import { Tax } from './Tax'
 
 @ObjectType()
 export class Category {
@@ -17,14 +18,14 @@ export class Category {
   @Field(() => String, { nullable: true })
   description?: string
 
-  @Field(() => String, { nullable: true })
-  vat?: string
+  @Field(() => [Tax], { nullable: 'items' })
+  taxes?: Tax[]
 
-  @Field(() => String, { nullable: true })
-  deliveryVat?: string
+  // @Field(() => String, { nullable: true })
+  // deliveryVat?: string
 
-  @Field(() => String, { nullable: true })
-  takeawayVat?: string
+  // @Field(() => String, { nullable: true })
+  // takeawayVat?: string
 
   @Field(() => Int, { nullable: true })
   course?: number

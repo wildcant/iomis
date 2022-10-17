@@ -1,16 +1,5 @@
 query CategoriesAll($query: CategoriesQueryArgs) {
   categoriesAll(query: $query) {
-    id
-    name
-    description
-    vat
-    deliveryVat
-    takeawayVat
-    course
-    image
-    visible
-    _count {
-      products
-    }
+    ...CategoryNodeFragment
   }
 }

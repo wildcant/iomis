@@ -38,6 +38,8 @@ export function NumberInputField<TValues extends FieldValues>({
     defaultValue,
   })
 
+  const { onChange, ...rest } = field
+
   return (
     <FormControl isInvalid={!!error?.message} isRequired={!!rules?.required}>
       <FormLabel fontSize={'xs'}>
@@ -48,7 +50,11 @@ export function NumberInputField<TValues extends FieldValues>({
           </Tooltip>
         )}
       </FormLabel>
-      <NumberInput {...props} {...field}>
+      <NumberInput
+        {...props}
+        {...rest}
+        onChange={(_, valueAsNumber) => onChange(valueAsNumber)}
+      >
         <CNumberInputField />
         <NumberInputStepper>
           <NumberIncrementStepper />

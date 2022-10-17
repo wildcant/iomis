@@ -1,6 +1,12 @@
 import { Box, Button, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import { CategoryCreateInput, useCategoryCreateMutation } from '@iomis/api'
-import { CheckboxField, InputField, Panel } from 'components/atoms'
+import {
+  CheckboxField,
+  InputField,
+  Option,
+  Panel,
+  TaxSelectField,
+} from 'components/atoms'
 import { DropzoneField } from 'components/molecules'
 import { useCustomModal } from 'components/organisms'
 import { Layout } from 'components/templates'
@@ -102,42 +108,53 @@ function useCategoriesImagesSelector<TValues extends FieldValues>({
   return { open, close }
 }
 
+interface ICategoryForm extends CategoryCreateInput {
+  taxesOptions: Option[]
+}
+
 export default function NewCategory() {
   const { goToCategoryDetails } = usePageNavigation()
-  const [addMenu, { loading, error, data, called }] =
-    useCategoryCreateMutation()
-  const isSuccess = called && data
-  useHandleError(error)
 
-  const { handleSubmit, control, watch } = useForm<CategoryCreateInput>({
+  const [addMenu, { loading: createLoading, error: createError }] =
+    useCategoryCreateMutation()
+  useHandleError(createError)
+
+  const { handleSubmit, control, watch } = useForm<ICategoryForm>({
     defaultValues: {
       image: defaultImage,
       visible: true,
     },
   })
 
-  const saveCategory = async (data: CategoryCreateInput) =>
-    addMenu({
-      variables: { input: _.omitBy(data, _.isNil) as CategoryCreateInput },
-    })
+  const toast = useToast()
+  const saveCategory = async (data: ICategoryForm) => {
+    const { taxesOptions, ...categoryCreateInput } = _.omitBy(
+      data,
+      _.isNil
+    ) as ICategoryForm
 
+    addMenu({
+      variables: {
+        input: {
+          ...categoryCreateInput,
+          taxes: taxesOptions.map(({ value }) => value),
+        },
+      },
+      onCompleted: (data) => {
+        toast({
+          status: 'success',
+          description: 'Tu categoría fue creada.',
+        })
+        if (data?.categoryCreate?.id) {
+          goToCategoryDetails(data.categoryCreate.id)
+        }
+      },
+    })
+  }
   const { open } = useCategoriesImagesSelector({
     control,
     name: 'image',
   })
-
-  const toast = useToast()
-  useEffect(() => {
-    if (isSuccess) {
-      toast({
-        status: 'success',
-        description: 'Tu categoría fue creada.',
-      })
-      if (data?.categoryCreate?.id) {
-        goToCategoryDetails(data.categoryCreate.id)
-      }
-    }
-  }, [isSuccess, toast, goToCategoryDetails, data?.categoryCreate.id])
 
   return (
     <form onSubmit={handleSubmit(saveCategory)} noValidate>
@@ -146,8 +163,8 @@ export default function NewCategory() {
         <Button
           type='submit'
           colorScheme={'blue'}
-          disabled={loading}
-          isLoading={loading}
+          disabled={createLoading}
+          isLoading={createLoading}
           size={{ base: 'xs', md: 'md' }}
         >
           Guardar
@@ -177,14 +194,7 @@ export default function NewCategory() {
       </Panel>
 
       <Panel title='Impuestos'>
-        <InputField
-          control={control}
-          name='vat'
-          label='Tasa de impuesto'
-          type='number'
-          step={1}
-          min={1}
-        />
+        <TaxSelectField control={control} name='taxesOptions' isMulti />
 
         {/* <InputField
           control={control}

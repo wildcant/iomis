@@ -41,9 +41,12 @@ class CategoryConnection extends EntityConnection(CategoryNode) {}
 @InputType()
 class CategoryCreateInput extends OmitType(
   Category,
-  ['id', 'deleted', 'menus', 'products'],
+  ['id', 'deleted', 'menus', 'products', 'taxes'],
   InputType
-) {}
+) {
+  @Field(() => [ID], { nullable: 'itemsAndList' })
+  taxes?: string[]
+}
 
 @InputType()
 class CategoriesQueryArgs {
@@ -67,7 +70,10 @@ export class CategoryResolver {
       this.prisma.category.findMany({
         take: limit,
         skip: offset,
-        include: { _count: { select: { products: true } } },
+        include: {
+          taxes: { select: { id: true, name: true, amount: true, type: true } },
+          _count: { select: { products: true } },
+        },
       }),
     ])
 
@@ -88,22 +94,28 @@ export class CategoryResolver {
 
     return this.prisma.category.findMany({
       where,
-      include: { _count: { select: { products: true } } },
+      include: { taxes: {}, _count: { select: { products: true } } },
     })
   }
 
   @Query(() => Category)
   async category(@Args('id', { type: () => ID }) id: string) {
     return this.prisma.category
-      .findUnique({ where: { id } })
+      .findUnique({
+        where: { id },
+        include: {
+          taxes: { select: { id: true, name: true, amount: true, type: true } },
+        },
+      })
       .then((r) => r)
       .catch(throwUnexpectedError)
   }
 
   @Mutation(() => Category)
   async categoryCreate(@Args('input') input: CategoryCreateInput) {
+    const { taxes, ...createInput } = input
     return this.prisma.category.create({
-      data: input,
+      data: { ...createInput, taxes: { connect: taxes.map((id) => ({ id })) } },
     })
   }
 

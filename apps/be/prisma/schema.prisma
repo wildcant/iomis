@@ -68,13 +68,13 @@ model Product {
     // trackStock
 
     // *** Taxes ***
-    vat Int?
+    taxes Tax[]
     // deliveryVat String?
     // takeawayVat String?
 
     // *** Pricing ***
-    price           Float
-    priceWithoutVAT Float
+    price             Float
+    priceWithoutTaxes Float
     // deliveryPrice
     // deliveryPriceWithoutVAT
     // takeawayPriceWithoutVAT
@@ -98,9 +98,9 @@ model Category {
     deleted     Boolean   @default(false)
     name        String    @db.VarChar(255)
     description String?
-    vat         String?
-    deliveryVat String?
-    takeawayVat String?
+    taxes       Tax[]
+    // deliveryVat String?
+    // takeawayVat String?
     course      Int?
     image       String?   @db.VarChar(255)
     visible     Boolean   @default(false)
@@ -165,14 +165,16 @@ enum ETaxType {
 }
 
 model Tax {
-    id      String    @id @default(uuid()) @db.Uuid
-    deleted Boolean   @default(false)
-    name    String    @db.VarChar(255)
-    key     String    @db.VarChar(255)
-    scope   ETaxScope @default(SALES)
-    type    ETaxType  @default(PERCENTAGE)
-    amount  Float     @default(0)
-    status  Boolean   @default(true)
+    id         String     @id @default(uuid()) @db.Uuid
+    deleted    Boolean    @default(false)
+    name       String     @db.VarChar(255)
+    key        String     @db.VarChar(255)
+    scope      ETaxScope  @default(SALES)
+    type       ETaxType   @default(PERCENTAGE)
+    amount     Float      @default(0)
+    status     Boolean    @default(true)
+    products   Product[]
+    categories Category[]
 }
 
 enum EOrderState {

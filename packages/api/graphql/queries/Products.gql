@@ -1,25 +1,7 @@
 query Products($offset: Int, $limit: Int, $query: ProductsQueryArgs) {
   products(offset: $offset, limit: $limit, query: $query) {
     nodes {
-      id
-      deleted
-      archived
-      name
-      description
-      plu
-      image
-      color
-      barcode
-      cost
-      stock
-      allowRefund
-      vat
-      price
-      priceWithoutVAT
-      category {
-        id
-        name
-      }
+      ...ProductFragment
     }
     totalCount
     pageInfo {
