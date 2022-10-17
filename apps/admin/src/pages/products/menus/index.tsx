@@ -29,10 +29,10 @@ import { useHandleSuccess } from 'hooks/useHandleSuccess'
 import { ERoutes } from 'hooks/useNavigation'
 import { useCallback, useState } from 'react'
 
-interface IActionCell {
+interface IMenuActionsCell {
   info: CellContext<Menu, unknown>
 }
-function ActionCell({ info }: IActionCell) {
+function MenuActionsCell({ info }: IMenuActionsCell) {
   const { refetchMenus } = useMenusTableContext()
   const menuId = info.row.original.id
   const [menuDelete, { loading, error, called }] = useMenuDeleteMutation()
@@ -49,11 +49,7 @@ function ActionCell({ info }: IActionCell) {
     useConfirmationModal({
       id: 'delete-product-modal',
       containerProps: { closeOnOverlayClick: false },
-      titleProps: { children: 'Aviso' },
-      children: '¿Estás seguro?',
       primaryProps: {
-        children: 'Confirmar',
-        disabled: loading,
         isLoading: loading,
         onClick: async () => {
           await deleteMenu()
@@ -99,7 +95,7 @@ const columns: ColumnDef<Menu>[] = [
   },
   {
     id: 'actions',
-    cell: (info) => <ActionCell info={info} />,
+    cell: (info) => <MenuActionsCell info={info} />,
     size: 50,
     maxSize: 50,
     minSize: 50,

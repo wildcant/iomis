@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import {
   Button,
   ButtonProps,
@@ -28,9 +29,11 @@ const [Provider, useContext] = createContext<IModalProviderProps>({
   providerName: 'ModalProvider',
 })
 
+type ModalVariant = 'confirmation' | 'custom'
+
 interface IModalProps {
   id: string
-  variant: 'confirmation' | 'custom'
+  variant: ModalVariant
   isLoading?: boolean
   titleProps?: TextProps
   children?: ReactNode
@@ -39,6 +42,28 @@ interface IModalProps {
   closeButton?: boolean
   containerProps?: Omit<ModalProps, 'isOpen' | 'onClose' | 'children'>
   onClose?: () => void
+}
+
+function getTitleContent(variant: ModalVariant, children: ReactNode) {
+  if (children) {
+    return children
+  }
+  switch (variant) {
+    case 'confirmation':
+    default:
+      return 'Aviso'
+  }
+}
+
+function getModalContent(variant: ModalVariant, children: ReactNode) {
+  if (children) {
+    return children
+  }
+  switch (variant) {
+    case 'confirmation':
+    default:
+      return '¿Estás seguro?'
+  }
 }
 
 export function Modal(props: IModalProps) {
@@ -71,16 +96,19 @@ export function Modal(props: IModalProps) {
       <ModalContent padding={'1rem'}>
         {closeButton && <ModalCloseButton fontSize={'10px'} color={'gray'} />}
         {modal?.isLoading && <Progress size='xs' isIndeterminate />}
-        {titleProps && isConfirmation && (
-          <Text color={'gray.700'} {...titleProps} />
+        {isConfirmation && (
+          <Text color={'gray.700'} {...titleProps}>
+            {getTitleContent(variant, titleProps?.children)}
+          </Text>
         )}
-        {children}
+        {getModalContent(variant, children)}
         {isConfirmation && (
           <Flex justifyContent={'flex-end'} columnGap={2} mt={4}>
             <Button
               colorScheme={'red'}
               size={{ base: 'xs', md: 'sm' }}
               {...primaryProps}
+              disabled={primaryProps?.disabled || modal?.isLoading}
             >
               {primaryProps?.children ?? 'Confirmar'}
             </Button>
@@ -88,6 +116,7 @@ export function Modal(props: IModalProps) {
               onClick={() => closeModal(id)}
               size={{ base: 'xs', md: 'sm' }}
               {...secondaryProps}
+              disabled={secondaryProps?.disabled || modal?.isLoading}
             >
               {secondaryProps?.children ?? 'Cancelar'}
             </Button>

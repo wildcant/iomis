@@ -560,6 +560,8 @@ export type UnitTypeUpdateInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type TaxFragmentFragment = { __typename?: 'Tax', id: string, name: string, key: string, scope: ETaxScope, type: ETaxType, amount: number, status: boolean };
+
 export type CategoryCreateMutationVariables = Exact<{
   input: CategoryCreateInput;
 }>;
@@ -668,6 +670,21 @@ export type TaxCreateMutationVariables = Exact<{
 
 
 export type TaxCreateMutation = { __typename?: 'Mutation', taxCreate: { __typename?: 'Tax', id: string } };
+
+export type TaxDeleteMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type TaxDeleteMutation = { __typename?: 'Mutation', taxDelete: { __typename?: 'Tax', id: string } };
+
+export type TaxUpdateMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: TaxUpdateInput;
+}>;
+
+
+export type TaxUpdateMutation = { __typename?: 'Mutation', taxUpdate: { __typename?: 'Tax', id: string } };
 
 export type UnitTypeCreateMutationVariables = Exact<{
   input: UnitTypeCreateInput;
@@ -795,7 +812,17 @@ export type UnitTypesAllQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type UnitTypesAllQuery = { __typename?: 'Query', unitTypesAll: Array<{ __typename?: 'UnitType', id: string, name: string, deleted: boolean, ingredients?: Array<{ __typename?: 'Ingredient', id: string }> | null }> };
 
-
+export const TaxFragmentFragmentDoc = gql`
+    fragment TaxFragment on Tax {
+  id
+  name
+  key
+  scope
+  type
+  amount
+  status
+}
+    `;
 export const CategoryCreateDocument = gql`
     mutation CategoryCreate($input: CategoryCreateInput!) {
   categoryCreate(input: $input) {
@@ -1295,6 +1322,73 @@ export function useTaxCreateMutation(baseOptions?: Apollo.MutationHookOptions<Ta
 export type TaxCreateMutationHookResult = ReturnType<typeof useTaxCreateMutation>;
 export type TaxCreateMutationResult = Apollo.MutationResult<TaxCreateMutation>;
 export type TaxCreateMutationOptions = Apollo.BaseMutationOptions<TaxCreateMutation, TaxCreateMutationVariables>;
+export const TaxDeleteDocument = gql`
+    mutation TaxDelete($id: ID!) {
+  taxDelete(id: $id) {
+    id
+  }
+}
+    `;
+export type TaxDeleteMutationFn = Apollo.MutationFunction<TaxDeleteMutation, TaxDeleteMutationVariables>;
+
+/**
+ * __useTaxDeleteMutation__
+ *
+ * To run a mutation, you first call `useTaxDeleteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTaxDeleteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [taxDeleteMutation, { data, loading, error }] = useTaxDeleteMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useTaxDeleteMutation(baseOptions?: Apollo.MutationHookOptions<TaxDeleteMutation, TaxDeleteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<TaxDeleteMutation, TaxDeleteMutationVariables>(TaxDeleteDocument, options);
+      }
+export type TaxDeleteMutationHookResult = ReturnType<typeof useTaxDeleteMutation>;
+export type TaxDeleteMutationResult = Apollo.MutationResult<TaxDeleteMutation>;
+export type TaxDeleteMutationOptions = Apollo.BaseMutationOptions<TaxDeleteMutation, TaxDeleteMutationVariables>;
+export const TaxUpdateDocument = gql`
+    mutation TaxUpdate($id: ID!, $input: TaxUpdateInput!) {
+  taxUpdate(id: $id, input: $input) {
+    id
+  }
+}
+    `;
+export type TaxUpdateMutationFn = Apollo.MutationFunction<TaxUpdateMutation, TaxUpdateMutationVariables>;
+
+/**
+ * __useTaxUpdateMutation__
+ *
+ * To run a mutation, you first call `useTaxUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTaxUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [taxUpdateMutation, { data, loading, error }] = useTaxUpdateMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useTaxUpdateMutation(baseOptions?: Apollo.MutationHookOptions<TaxUpdateMutation, TaxUpdateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<TaxUpdateMutation, TaxUpdateMutationVariables>(TaxUpdateDocument, options);
+      }
+export type TaxUpdateMutationHookResult = ReturnType<typeof useTaxUpdateMutation>;
+export type TaxUpdateMutationResult = Apollo.MutationResult<TaxUpdateMutation>;
+export type TaxUpdateMutationOptions = Apollo.BaseMutationOptions<TaxUpdateMutation, TaxUpdateMutationVariables>;
 export const UnitTypeCreateDocument = gql`
     mutation UnitTypeCreate($input: UnitTypeCreateInput!) {
   unitTypeCreate(input: $input) {
@@ -1944,13 +2038,7 @@ export const TaxesDocument = gql`
     query Taxes($offset: Int, $limit: Int) {
   taxes(offset: $offset, limit: $limit) {
     nodes {
-      id
-      name
-      key
-      scope
-      type
-      amount
-      status
+      ...TaxFragment
     }
     totalCount
     pageInfo {
@@ -1959,7 +2047,7 @@ export const TaxesDocument = gql`
     }
   }
 }
-    `;
+    ${TaxFragmentFragmentDoc}`;
 
 /**
  * __useTaxesQuery__
@@ -1992,16 +2080,10 @@ export type TaxesQueryResult = Apollo.QueryResult<TaxesQuery, TaxesQueryVariable
 export const TaxesAllDocument = gql`
     query TaxesAll {
   taxesAll {
-    id
-    name
-    key
-    scope
-    type
-    amount
-    status
+    ...TaxFragment
   }
 }
-    `;
+    ${TaxFragmentFragmentDoc}`;
 
 /**
  * __useTaxesAllQuery__

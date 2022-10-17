@@ -10,11 +10,11 @@ import {
   Option,
   Panel,
   TextAreaField,
+  CategorySelectField,
+  ColorPickerField,
+  IngredientSelectField,
+  NumberInputField,
 } from 'components/atoms'
-import { CategorySelectField } from 'components/atoms/CategorySelectField'
-import { ColorPickerField } from 'components/atoms/ColorPickerField'
-import { IngredientSelectField } from 'components/atoms/IngredientSelectField'
-import { NumberInputField } from 'components/atoms/NumberInputField'
 import { DropzoneField } from 'components/molecules'
 import { useDeepCompareEffect } from '@iomis/utils/hooks'
 import { useHandleError } from 'hooks/useHandleError'

@@ -1,7 +1,11 @@
 import { Button, Flex, Heading } from '@chakra-ui/react'
 import { Menu, useMenuCreateMutation } from '@iomis/api'
-import { InputField, Option, Panel } from 'components/atoms'
-import { CategorySelectField } from 'components/atoms/CategorySelectField/CategorySelectField'
+import {
+  InputField,
+  Option,
+  Panel,
+  CategorySelectField,
+} from 'components/atoms'
 import { Layout } from 'components/templates'
 import { useHandleError } from 'hooks/useHandleError'
 import { useHandleSuccess } from 'hooks/useHandleSuccess'
